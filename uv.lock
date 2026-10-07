@@ -21,7 +21,7 @@ wheels = [
 ]
 
 [[package]]
-name = "llm-control-plane"
+name = "llm-gateway"
 version = "0.1.0"
 source = { virtual = "." }
 
