@@ -3,10 +3,16 @@ name = "llm-gateway"
 version = "0.1.0"
 description = "A gateway in front of LLM calls that routes by cost, verifies routing quality, caches, fails over and enforces budgets."
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "fastapi>=0.142.2",
+    "pyyaml>=6.0.3",
+]
 
 [dependency-groups]
-dev = ["pytest>=8"]
+dev = [
+    "httpx2>=2.13.1",
+    "pytest>=8",
+]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

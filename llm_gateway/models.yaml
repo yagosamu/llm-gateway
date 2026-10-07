@@ -1,0 +1,58 @@
+# Model registry. Prices are standard tier, short context, USD per million tokens, copied from the
+# provider's official pricing page on the date in price_checked. Reasoning and thinking tokens are
+# billed as output tokens by all three providers, so output_per_mtok applies to them too.
+#
+# Tiers: high is the reference model the router is measured against, medium and low are the cheaper
+# options. reasoning_effort is pinned instead of left to each provider's default, because a default
+# can change between releases and silently change cost.
+
+models:
+  - id: claude-opus-5-5
+    provider: anthropic
+    provider_model: claude-opus-5-5
+    tier: high
+    input_per_mtok: 4.00
+    output_per_mtok: 20.00
+    reasoning_effort: medium
+    price_source: https://platform.claude.com/docs/en/about-claude/pricing
+    price_checked: 2026-10-07
+
+  - id: claude-sonnet-5-5
+    provider: anthropic
+    provider_model: claude-sonnet-5-5
+    tier: medium
+    input_per_mtok: 2.00
+    output_per_mtok: 10.00
+    reasoning_effort: medium
+    price_source: https://platform.claude.com/docs/en/about-claude/pricing
+    price_checked: 2026-10-07
+
+  - id: gpt-6.1-sol
+    provider: openai
+    provider_model: gpt-6.1-sol
+    tier: medium
+    input_per_mtok: 2.00
+    output_per_mtok: 10.00
+    reasoning_effort: medium
+    price_source: https://developers.openai.com/api/docs/pricing
+    price_checked: 2026-10-07
+
+  - id: gpt-6-luna
+    provider: openai
+    provider_model: gpt-6-luna
+    tier: low
+    input_per_mtok: 0.10
+    output_per_mtok: 0.50
+    reasoning_effort: medium
+    price_source: https://developers.openai.com/api/docs/pricing
+    price_checked: 2026-10-07
+
+  - id: gpt-oss-20b
+    provider: groq
+    provider_model: openai/gpt-oss-20b
+    tier: low
+    input_per_mtok: 0.075
+    output_per_mtok: 0.30
+    reasoning_effort: medium
+    price_source: https://console.groq.com/docs/models
+    price_checked: 2026-10-07
