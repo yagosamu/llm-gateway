@@ -4,13 +4,15 @@ version = "0.1.0"
 description = "A gateway in front of LLM calls that routes by cost, verifies routing quality, caches, fails over and enforces budgets."
 requires-python = ">=3.12"
 dependencies = [
+    "anthropic>=1.11.0",
     "fastapi>=0.142.2",
+    "httpx2>=2.13.1",
+    "openai>=3.26.0",
     "pyyaml>=6.0.3",
 ]
 
 [dependency-groups]
 dev = [
-    "httpx2>=2.13.1",
     "pytest>=8",
 ]
 

@@ -27,6 +27,12 @@ def test_the_committed_registry_loads_and_has_every_tier():
     assert {m.provider for m in registry.values()} == {"anthropic", "openai", "groq"}
 
 
+def test_every_tier_has_two_providers_so_failover_stays_in_tier():
+    registry = load_registry()
+    for tier in ("high", "medium", "low"):
+        assert len({m.provider for m in registry.values() if m.tier == tier}) == 2, tier
+
+
 def test_a_duplicate_id_is_refused(tmp_path):
     with pytest.raises(RegistryError, match="more than once"):
         load_registry(write(tmp_path, VALID + VALID))

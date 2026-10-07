@@ -12,7 +12,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
-from llm_gateway.providers.base import Provider
+from llm_gateway.providers.base import Provider, ProviderError
 from llm_gateway.registry import ModelConfig, cost_usd
 from llm_gateway.schemas import (
     AssistantMessage,
@@ -26,6 +26,16 @@ from llm_gateway.schemas import (
 REQUIRED_HEADERS = {"X-Tenant-Id": "tenant", "X-Feature": "feature", "X-Request-Id": "request_id"}
 # Tenant and feature become metric labels later, so they are kept short and free of separators.
 IDENTIFIER = re.compile(r"^[A-Za-z0-9._:-]{1,64}$")
+# How a provider failure reaches the client. The provider's own message is not forwarded: it can
+# name the gateway's account or key, which the client has no business seeing.
+UPSTREAM_STATUS = {
+    "rate_limit": (429, "the provider is rate limiting this gateway; retry later."),
+    "timeout": (504, "the provider did not answer in time."),
+    "connection": (502, "the provider could not be reached."),
+    "server_error": (502, "the provider returned a server error."),
+    "auth": (502, "the gateway's credentials for this provider were refused."),
+    "bad_request": (400, "the provider rejected the request as sent; check the parameters."),
+}
 
 
 def error(status: int, code: str, message: str, param: str | None = None) -> JSONResponse:
@@ -89,7 +99,11 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider])
                          f"Model {chat.model!r} is not in the registry. GET /v1/models lists the options.", "model")
 
         started = time.perf_counter()
-        result = await providers[model.provider].complete(model, chat)
+        try:
+            result = await providers[model.provider].complete(model, chat)
+        except ProviderError as exc:
+            status, hint = UPSTREAM_STATUS[exc.kind]
+            return error(status, f"upstream_{exc.kind}", f"{model.provider} failed ({exc.kind}): {hint}", "model")
         latency_ms = (time.perf_counter() - started) * 1000
 
         response = ChatCompletionResponse(

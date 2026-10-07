@@ -9,7 +9,7 @@ import yaml
 DEFAULT_PATH = Path(__file__).with_name("models.yaml")
 PROVIDERS = ("anthropic", "openai", "groq")
 TIERS = ("high", "medium", "low")
-EFFORTS = ("low", "medium", "high")
+EFFORTS = ("none", "low", "medium", "high")
 
 
 class RegistryError(ValueError):

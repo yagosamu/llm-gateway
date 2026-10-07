@@ -94,3 +94,22 @@ def test_models_lists_every_registry_entry_with_its_price(client):
     assert [m["id"] for m in data] == list(load_registry())
     luna = next(m for m in data if m["id"] == "gpt-6-luna")
     assert (luna["input_per_mtok"], luna["output_per_mtok"], luna["tier"]) == (0.10, 0.50, "low")
+
+
+class FailingProvider:
+    def __init__(self, kind):
+        self.kind = kind
+
+    async def complete(self, model, request):
+        from llm_gateway.providers.base import ProviderError
+        raise ProviderError(self.kind, model.provider, "secret account detail sk-123", 500)
+
+
+@pytest.mark.parametrize("kind, status", [("rate_limit", 429), ("timeout", 504), ("connection", 502),
+                                          ("server_error", 502), ("auth", 502), ("bad_request", 400)])
+def test_a_provider_failure_reaches_the_client_as_its_kind_without_the_provider_message(kind, status):
+    app = create_app(load_registry(), {p: FailingProvider(kind) for p in ("anthropic", "openai", "groq")})
+    response = TestClient(app).post("/v1/chat/completions", json=BODY, headers=HEADERS)
+    assert response.status_code == status
+    assert response.json()["error"]["code"] == f"upstream_{kind}"
+    assert "sk-123" not in response.text
