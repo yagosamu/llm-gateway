@@ -1,0 +1,28 @@
+{
+  "dataset": "databricks/databricks-dolly-15k",
+  "revision": "bdd27f4d94b9c1f951818a7da7fd7aeea5dbff1a",
+  "sha256": "2df9083338b4abd6bceb5635764dab5d833b393b55759dffb0959b6fcbf794ec",
+  "license": "CC BY-SA 3.0",
+  "n_source": 15011,
+  "n_duplicates_dropped": 187,
+  "source_category_counts": {
+    "brainstorming": 1757,
+    "classification": 2132,
+    "closed_qa": 1763,
+    "creative_writing": 697,
+    "general_qa": 2097,
+    "information_extraction": 1501,
+    "open_qa": 3691,
+    "summarization": 1186
+  },
+  "seed": 20261007,
+  "per_category": 30,
+  "n_rows": 240,
+  "tenants": [
+    "tenant-a",
+    "tenant-b",
+    "tenant-c"
+  ],
+  "system_prompt_version": "v1",
+  "system_prompt": "You are a helpful assistant. Answer the user's request directly."
+}
