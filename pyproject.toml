@@ -8,7 +8,9 @@ dependencies = [
     "fastapi>=0.142.2",
     "httpx2>=2.13.1",
     "openai>=3.26.0",
+    "prometheus-client>=0.26.0",
     "pyyaml>=6.0.3",
+    "uvicorn>=0.54.0",
 ]
 
 [dependency-groups]

@@ -1,19 +1,24 @@
-"""The gateway's HTTP surface: an OpenAI-shaped /v1/chat/completions plus /v1/models.
+"""The gateway's HTTP surface: an OpenAI-shaped /v1/chat/completions, /v1/models and /metrics.
 
 Every request must say who it is for (X-Tenant-Id), which product feature sent it (X-Feature) and
 carry its own id (X-Request-Id). Without the first two, cost cannot be attributed; without the
 third, a retry cannot be told apart from a new request. A request missing any of them is refused
-before its body is read."""
+before its body is read.
+
+Every request, answered or refused, leaves exactly one row in the request log and one increment in
+the metrics, written in one place after the response is decided."""
 import json
 import re
 import time
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from pydantic import ValidationError
 
+from llm_gateway.metrics import GatewayMetrics
 from llm_gateway.providers.base import Provider, ProviderError
 from llm_gateway.registry import ModelConfig, cost_usd
+from llm_gateway.request_log import RequestLog, RequestRecord, now_utc, prompt_sha256
 from llm_gateway.schemas import (
     AssistantMessage,
     ChatCompletionRequest,
@@ -24,7 +29,7 @@ from llm_gateway.schemas import (
 )
 
 REQUIRED_HEADERS = {"X-Tenant-Id": "tenant", "X-Feature": "feature", "X-Request-Id": "request_id"}
-# Tenant and feature become metric labels later, so they are kept short and free of separators.
+# Tenant and feature are metric labels, so they are kept short and free of separators.
 IDENTIFIER = re.compile(r"^[A-Za-z0-9._:-]{1,64}$")
 # How a provider failure reaches the client. The provider's own message is not forwarded: it can
 # name the gateway's account or key, which the client has no business seeing.
@@ -44,28 +49,18 @@ def error(status: int, code: str, message: str, param: str | None = None) -> JSO
         "error": {"message": message, "type": "invalid_request_error", "param": param, "code": code}})
 
 
-def read_metadata(request: Request) -> dict[str, str] | JSONResponse:
-    metadata = {}
-    for header, key in REQUIRED_HEADERS.items():
-        value = request.headers.get(header)
-        if not value:
-            return error(400, "missing_metadata", f"Header {header} is required on every request.", header)
-        if not IDENTIFIER.match(value):
-            return error(400, "invalid_metadata",
-                         f"Header {header} must be 1 to 64 characters from A-Z, a-z, 0-9, '.', '_', ':' or '-'.",
-                         header)
-        metadata[key] = value
-    return metadata
-
-
 def _validation_message(exc: ValidationError) -> tuple[str, str | None]:
     first = exc.errors()[0]
     param = ".".join(str(part) for part in first["loc"]) or None
     return f"{param}: {first['msg']}" if param else first["msg"], param
 
 
-def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider]) -> FastAPI:
+def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
+               request_log: RequestLog | None = None, metrics: GatewayMetrics | None = None) -> FastAPI:
+    request_log = request_log or RequestLog(":memory:")
+    metrics = metrics or GatewayMetrics()
     app = FastAPI(title="llm-gateway")
+    app.state.request_log, app.state.metrics = request_log, metrics
 
     @app.get("/v1/models")
     async def list_models() -> dict:
@@ -75,48 +70,78 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider])
              "price_checked": m.price_checked.isoformat()}
             for m in registry.values()]}
 
+    @app.get("/metrics")
+    async def prometheus_metrics() -> Response:
+        return Response(metrics.render(), media_type=metrics.content_type)
+
     @app.post("/v1/chat/completions")
     async def chat_completions(request: Request):
-        metadata = read_metadata(request)
-        if isinstance(metadata, JSONResponse):
-            return metadata
+        record = RequestRecord(received_at=now_utc())
+        response = await handle(request, record)
+        record.http_status = response.status_code
+        request_log.write(record)
+        metrics.observe(record)
+        return response
+
+    async def handle(request: Request, record: RequestRecord) -> JSONResponse:
+        def reject(status: int, code: str, message: str, param: str | None = None) -> JSONResponse:
+            record.outcome, record.error_code = "rejected", code
+            return error(status, code, message, param)
+
+        problem = None
+        for header, key in REQUIRED_HEADERS.items():
+            value = request.headers.get(header)
+            if value and IDENTIFIER.match(value):
+                setattr(record, key, value)
+            elif problem is None and not value:
+                problem = ("missing_metadata", f"Header {header} is required on every request.", header)
+            elif problem is None:
+                problem = ("invalid_metadata", f"Header {header} must be 1 to 64 characters from A-Z, a-z, "
+                                               "0-9, '.', '_', ':' or '-'.", header)
+        if problem:
+            return reject(400, *problem)
         try:
             body = await request.json()
         except json.JSONDecodeError:
-            return error(400, "invalid_json", "The request body is not valid JSON.")
+            return reject(400, "invalid_json", "The request body is not valid JSON.")
         try:
             chat = ChatCompletionRequest.model_validate(body)
         except ValidationError as exc:
             message, param = _validation_message(exc)
-            return error(400, "invalid_request", message, param)
-        if chat.stream:
-            return error(400, "stream_not_supported", "This gateway does not stream; send stream=false.", "stream")
-        if chat.tools:
-            return error(400, "tools_not_supported", "This gateway does not forward tools.", "tools")
+            return reject(400, "invalid_request", message, param)
+        record.prompt_sha256 = prompt_sha256([m.model_dump() for m in chat.messages])
         model = registry.get(chat.model)
         if model is None:
-            return error(404, "model_not_found",
-                         f"Model {chat.model!r} is not in the registry. GET /v1/models lists the options.", "model")
+            return reject(404, "model_not_found",
+                          f"Model {chat.model!r} is not in the registry. GET /v1/models lists the options.", "model")
+        record.model, record.provider, record.tier = model.id, model.provider, model.tier
+        if chat.stream:
+            return reject(400, "stream_not_supported", "This gateway does not stream; send stream=false.", "stream")
+        if chat.tools:
+            return reject(400, "tools_not_supported", "This gateway does not forward tools.", "tools")
 
         started = time.perf_counter()
         try:
             result = await providers[model.provider].complete(model, chat)
         except ProviderError as exc:
             status, hint = UPSTREAM_STATUS[exc.kind]
-            return error(status, f"upstream_{exc.kind}", f"{model.provider} failed ({exc.kind}): {hint}", "model")
-        latency_ms = (time.perf_counter() - started) * 1000
+            record.outcome, record.error_code = "upstream_error", f"upstream_{exc.kind}"
+            return error(status, record.error_code, f"{model.provider} failed ({exc.kind}): {hint}", "model")
+        record.latency_ms = (time.perf_counter() - started) * 1000
+        record.outcome, record.finish_reason = "ok", result.finish_reason
+        record.input_tokens, record.output_tokens = result.input_tokens, result.output_tokens
+        record.cost_usd = cost_usd(model, result.input_tokens, result.output_tokens)
 
         response = ChatCompletionResponse(
-            id=f"chatcmpl-{metadata['request_id']}",
+            id=f"chatcmpl-{record.request_id}",
             created=int(time.time()),
             model=model.id,
             choices=[Choice(message=AssistantMessage(content=result.text), finish_reason=result.finish_reason)],
             usage=Usage(prompt_tokens=result.input_tokens, completion_tokens=result.output_tokens,
                         total_tokens=result.input_tokens + result.output_tokens),
-            gateway=GatewayInfo(**metadata, provider=model.provider,
-                                cost_usd=cost_usd(model, result.input_tokens, result.output_tokens),
-                                latency_ms=latency_ms),
+            gateway=GatewayInfo(request_id=record.request_id, tenant=record.tenant, feature=record.feature,
+                                provider=model.provider, cost_usd=record.cost_usd, latency_ms=record.latency_ms),
         )
-        return JSONResponse(response.model_dump(), headers={"X-Request-Id": metadata["request_id"]})
+        return JSONResponse(response.model_dump(), headers={"X-Request-Id": record.request_id})
 
     return app

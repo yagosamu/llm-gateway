@@ -1,0 +1,14 @@
+"""The served app: the committed registry, real provider adapters and a request log on disk.
+
+Usage: uv run --env-file .env uvicorn llm_gateway.main:app --port 8000"""
+import os
+from pathlib import Path
+
+from llm_gateway.api import create_app
+from llm_gateway.providers.factory import build_providers
+from llm_gateway.registry import load_registry
+from llm_gateway.request_log import RequestLog
+
+registry = load_registry()
+app = create_app(registry, build_providers({m.provider for m in registry.values()}),
+                 RequestLog(Path(os.environ.get("LLM_GATEWAY_LOG", "var/requests.sqlite3"))))

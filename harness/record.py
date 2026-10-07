@@ -23,9 +23,11 @@ from harness import budget
 from harness.traffic.build import TRAFFIC_PATH
 from llm_gateway.api import create_app
 from llm_gateway.registry import ModelConfig, load_registry
+from llm_gateway.request_log import RequestLog
 
 OUTPUT_LIMIT = 1024
 RECORDINGS_PATH = Path("data/recordings/matrix.jsonl")
+REQUEST_LOG_PATH = Path("var/record_requests.sqlite3")
 
 
 def load_rows(path: Path = TRAFFIC_PATH) -> list[dict]:
@@ -164,7 +166,7 @@ def main() -> None:
     if args.dry_run or not calls:
         return
     run_name = args.run_name or f"record-{_now()}"
-    app = create_app(registry, build_providers({m.provider for m in models}))
+    app = create_app(registry, build_providers({m.provider for m in models}), RequestLog(REQUEST_LOG_PATH))
     records = asyncio.run(run(calls, app, run_name))
     print()
     print(summarize(records, len(rows)))
