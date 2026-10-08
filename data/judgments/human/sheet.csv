@@ -1,0 +1,630 @@
+﻿item,request,reference_answer,candidate_answer,acceptable,note
+1,"Given this paragraph about Kevum, explain when it is typically consumed?
+
+Context:
+Kevum or Kavum is a deep-fried Sri Lankan sweet made from rice flour and kithul (sugar-palm) treacle, with a number of variants adding additional ingredients. It is also known as oil cake. Kevum is traditionally given and consumed during celebrations of Sinhala and Tamil New Year.",Kevum is typically consumed during celebrations of Sinhala and Tamil New Year.,Kevum is typically given and eaten during Sinhala and Tamil New Year celebrations.,,
+2,How much did the United States pay for Alaska when it bought the land from Russia?,The United States paid Russia **$7.2 million** for Alaska in **1867**—about **2 cents per acre**.,"The United States paid $7.2 million for Alaska when it purchased the territory from Russia in 1867. This was negotiated by Secretary of State William H. Seward and is often referred to as ""Seward's Folly"" or ""Seward's Icebox"" because many Americans at the time thought it was a wasteful purchase. However, it proved to be an excellent investment, as Alaska is rich in natural resources including gold, oil, and fish.",,
+3,"Which of the following items would I need on a surf trip? Surfboard, leash, tent, knife, wetsuit, batteries, granola bars, bag of grapes, lead weights, a dump truck, the complete collection of Beach Boys albums on vinyl.","For a surf trip, I’d pack:
+
+- **Surfboard and leash:** Essentials.
+- **Wetsuit:** If the water is cold; otherwise, swimwear may suffice.
+- **Granola bars and a bag of grapes:** Good snacks.
+
+Depending on your plans:
+- **Tent:** If you’re camping.
+- **Knife:** Useful for camping, but not necessary for surfing.
+- **Batteries:** If your flashlight or other gear needs them.
+
+Leave behind:
+- **Lead weights:** Not needed for surfing.
+- **Dump truck:** Definitely overkill.
+- **Complete Beach Boys collection on vinyl:** Excellent theme music, impractical beach luggage.
+
+Also bring **drinking water, sunscreen, and a towel**.","# Items You'd Need for a Surf Trip
+
+**Essential:**
+- **Surfboard** - obviously!
+- **Leash** - keeps your board from floating away
+- **Wetsuit** - depends on water temperature, but very useful
+- **Granola bars** - good quick energy
+- **Bag of grapes** - hydration and snacks
+
+**Possibly useful:**
+- **Tent** - if you're camping/traveling for the trip
+- **Batteries** - for lights, cameras, etc.
+- **Knife** - multi-tool utility (ding repair kit, general camp use)
+
+**Not needed:**
+- **Lead weights** - no practical purpose for surfing
+- **Dump truck** - impractical and unnecessary
+- **Beach Boys vinyl collection** - nice to have at the beach house maybe, but not essential!
+
+So you'd realistically want the first 5 items from my ""essential"" list, plus a tent if you're doing a trip away from home. The rest range from situationally useful to completely unnecessary.",,
+4,"Identify which instrument is string or percussion: Handchime, Nyatiti","- **Handchime:** Percussion instrument
+- **Nyatiti:** String instrument","Handchime: percussion  
+Nyatiti: string",,
+5,"In the field of economics, what is considered a monopoly?","In economics, a **monopoly** is a market in which a single seller supplies a good or service that has **no close substitutes**.
+
+Because buyers have few alternatives, the seller has substantial power to influence prices. Monopolies are usually protected by **barriers to entry**, such as patents, control of essential resources, government restrictions, or high startup costs.
+
+For example, a local water utility may be a monopoly because building a competing pipe network would be prohibitively expensive.
+
+A large company is not necessarily a monopoly—the key is whether it faces meaningful competition in its market.","In economics, a **monopoly** is a market in which a single seller—or a firm with overwhelming market power—supplies a product or service with no close substitutes. Because customers have few alternatives, the firm can influence prices or other market terms.
+
+Monopolies are often protected by barriers that make it difficult for competitors to enter, such as legal restrictions, control of essential resources, or very large startup costs. A sole seller isn’t necessarily a monopoly if customers can readily switch to close substitutes.",,
+6,What should I look for when looking for a used car?,"When buying a used car, focus on **its condition, history, and total cost—not just the asking price.**
+
+### 1. Choose a car that fits your budget
+- Set a budget that includes **taxes, registration, insurance, maintenance, and repairs**.
+- Research reliability and common problems for the exact **model year, engine, and transmission**.
+- Compare similar cars locally to judge whether the price is fair.
+
+### 2. Check its history and paperwork
+- Make sure the **VIN matches** on the car, title, and paperwork.
+- Check for accidents, title brands such as salvage or flood, mileage inconsistencies, and outstanding recalls.
+- Ask for service records, especially for major scheduled work such as a timing-belt replacement.
+- Confirm the seller owns the car and that any loan or lien will be cleared.
+
+**A clean history report isn’t proof that a car is problem-free:** accidents and repairs don’t always get reported.
+
+### 3. Inspect it in daylight
+Look for:
+- **Rust**, especially underneath and around structural areas.
+- Mismatched paint, uneven panel gaps, or other signs of collision repairs.
+- Fluid leaks, worn tires, and uneven tire wear.
+- Musty smells, damp carpets, or corrosion that could suggest water damage.
+- Working lights, windows, locks, air conditioning, heater, and electronics.
+
+Ask to see it **start from cold**. Listen for unusual noises and watch for excessive exhaust smoke. Dashboard warning lights should illuminate during the startup check, then go out as appropriate.
+
+### 4. Take a proper test drive
+Try city streets and highway speeds, where safe. Check that:
+- The engine accelerates smoothly and the transmission shifts normally.
+- Braking is smooth, without pulling, grinding, or strong vibration.
+- Steering feels stable and the car tracks straight.
+- There are no unusual rattles, clunks, or overheating.
+
+### 5. Get an independent inspection
+**Before buying, have a mechanic you choose perform a pre-purchase inspection.** Ideally, it should include a lift inspection, diagnostic scan, and an estimate of upcoming repairs. For an EV or hybrid, ask about battery health and remaining battery warranty.
+
+A seller refusing a reasonable independent inspection is a strong reason to walk away.
+
+### 6. Check the deal—not just the monthly payment
+- Get the **full out-the-door price** in writing.
+- Review financing rates, loan length, fees, warranties, and add-ons.
+- Understand whether it’s sold **“as is”** and what protections apply where you live.
+- Don’t assume you’ll have a cooling-off period or a right to return it.
+- Put any promised repairs or conditions in writing before paying.
+
+**Big red flags:** pressure to buy immediately, missing ownership documents, unexplained mileage discrepancies, flood damage, serious rust, or a price far below comparable cars.
+
+If you share your **budget, location, and a few models you’re considering**, I can help you narrow down what to look for.","# Key Things to Check When Buying a Used Car
+
+## Vehicle History
+- **Get a Carfax or AutoCheck report** to spot accidents, title issues, or service records
+- Check for flood damage, salvage titles, or odometer rollback
+
+## Mechanical Condition
+- Have a trusted mechanic inspect it before buying
+- Check fluid levels (oil, coolant, brake fluid)
+- Test the engine, brakes, transmission, and steering
+- Look for rust, leaks, or unusual sounds
+
+## Exterior & Interior
+- Examine paint for inconsistencies (signs of repainting)
+- Check all lights, wipers, and windows
+- Inspect tire tread and condition
+- Look for upholstery damage or odors
+
+## Mileage & Age
+- Consider typical annual mileage (12,000-15,000 miles/year is average)
+- Factor in the car's maintenance history
+
+## Documentation
+- Verify the VIN matches all paperwork
+- Confirm ownership history
+- Ask about warranty options
+
+## Test Drive
+- Drive in various conditions (highway, city, parking)
+- Feel for vibrations or pulling to one side
+- Test acceleration, braking, and handling
+
+## Pricing
+- Research the market value for that make/model/year
+- Compare prices across listings
+- Be prepared to negotiate
+
+**Pro tip:** Take your time and don't feel pressured. A good deal should feel right on all fronts.",,
+7,Give me list of last 10 presidents of US.,"Here are the **10 most recent U.S. presidents**, listed from most recent to oldest (counting Donald Trump once):
+
+1. **Donald Trump** — 2017–2021; 2025–present
+2. **Joe Biden** — 2021–2025
+3. **Barack Obama** — 2009–2017
+4. **George W. Bush** — 2001–2009
+5. **Bill Clinton** — 1993–2001
+6. **George H. W. Bush** — 1989–1993
+7. **Ronald Reagan** — 1981–1989
+8. **Jimmy Carter** — 1977–1981
+9. **Gerald Ford** — 1974–1977
+10. **Richard Nixon** — 1969–1974","The 10 most recent **individuals** to serve as U.S. president, newest first:
+
+1. Donald Trump (2025–present; also 2017–2021)
+2. Joe Biden (2021–2025)
+3. Barack Obama (2009–2017)
+4. George W. Bush (2001–2009)
+5. Bill Clinton (1993–2001)
+6. George H. W. Bush (1989–1993)
+7. Ronald Reagan (1981–1989)
+8. Jimmy Carter (1977–1981)
+9. Gerald Ford (1974–1977)
+10. Richard Nixon (1969–1974)",,
+8,How can I choose a favorite professional basketball team?,"A favorite team usually grows on you—you don’t have to pick the “right” one. Here are a few ways to find a connection:
+
+- **Start local.** A nearby team gives you a hometown connection, fellow fans, and a chance to attend games.
+- **Follow a player you enjoy.** Their skill, personality, or story can draw you in. Just know they may change teams.
+- **Find a style you like.** Watch for fast-paced offense, creative passing, tough defense, or a young roster developing together.
+- **Choose your kind of journey.** A contender offers big playoff moments; an underdog offers the fun of watching a team grow.
+- **Consider practical details.** Convenient game times and accessible broadcasts make a team easier to follow.
+- **Enjoy the identity.** Team history, fan culture, uniforms, and even the mascot are perfectly valid reasons.
+
+**Try a short audition:** Pick three teams, watch a couple of games from each, and notice whose wins make you happiest—and whose losses actually bother you. That’s often your answer.
+
+There’s no loyalty test: you can follow several teams while figuring it out. If you tell me where you live and whether you prefer a powerhouse, an underdog, or a particular playing style, I can suggest a shortlist.","# Ways to Choose a Favorite Basketball Team
+
+**Connection to location**
+- Root for your hometown or college team
+- Follow a team in a city you've lived in or feel connected to
+
+**Player appreciation**
+- Watch games and gravitate toward teams with players whose style you enjoy
+- Follow specific athletes you admire
+
+**Team history and culture**
+- Research team traditions, playing style, and values
+- Some people prefer underdog stories; others like winning dynasties
+
+**Practical viewing**
+- Start watching games and see which team naturally engages you
+- Try following a few teams before committing
+
+**Peer influence**
+- Friends and family often share team loyalty (can be fun or create rivalry)
+- Join fan communities to experience the culture
+
+**Let it develop naturally**
+- You don't have to force it—fandom often grows over time through exposure
+- It's okay to appreciate multiple teams initially
+
+**Personal factors**
+- Consider whether you prefer exciting offenses, strong defenses, young rosters, or veteran teams
+- Think about coaching styles or front office philosophies you respect
+
+The key is spending time watching games and seeing what clicks. Your favorite team will likely emerge naturally as you discover which players, styles, and communities resonate with you most.",,
+9,How to take care of indoor plants?,"Indoor plants do best when their **light, watering, and soil match their needs**. Here are the basics:
+
+- **Find the right light.** Most common houseplants prefer bright, indirect light—near a window but out of harsh midday sun. Succulents and cacti usually need more direct sunlight.
+- **Check before watering.** For many leafy plants, water when the top 1–2 inches of soil feel dry. Water thoroughly until it drains out, then empty the saucer. Avoid a fixed watering schedule; plants often need less water in winter.
+- **Use pots with drainage holes.** Choose a potting mix suited to the plant, such as cactus mix for succulents or bark-based mix for orchids. Don’t let roots sit in water.
+- **Keep conditions steady.** Avoid heating vents, air-conditioning blasts, and cold drafts. Most houseplants are comfortable at typical indoor temperatures.
+- **Feed lightly.** During active growth, use a houseplant fertilizer according to its label. Reduce or pause feeding when growth slows.
+- **Do simple upkeep.** Remove dead leaves, gently wipe dust from foliage, and check regularly for pests—especially under leaves and around stems.
+- **Repot when needed.** If roots crowd the pot or grow through drainage holes, move the plant into a pot just one size larger.
+
+**Watch for clues:** yellow leaves can signal several issues, including overwatering; brown edges may come from dryness, salt buildup, or low humidity. Check the soil and growing conditions before changing your care.
+
+If you have pets or young children, check whether the plant is toxic before bringing it home.
+
+What plants do you have, and how much window light do they get?","# Indoor Plant Care Guide
+
+## **Watering**
+- Check soil moisture before watering (top inch should feel dry)
+- Most plants need water 1-2 times per week
+- Use room-temperature water
+- Avoid overwatering—it's the #1 cause of plant death
+
+## **Light**
+- Place plants near windows (south/west-facing for more light)
+- Rotate plants every 1-2 weeks for even growth
+- Low-light plants: pothos, snake plant, ZZ plant
+- High-light plants: succulents, cacti, herbs
+
+## **Humidity & Temperature**
+- Most plants prefer 40-60% humidity
+- Mist leaves or use a humidifier in dry climates
+- Keep away from cold drafts and heat vents
+- Ideal temperature: 60-75°F (15-24°C)
+
+## **Soil & Containers**
+- Use well-draining potting soil (not garden soil)
+- Repot every 12-18 months or when roots show
+- Ensure pots have drainage holes
+
+## **Feeding**
+- Fertilize during growing season (spring/summer)
+- Use balanced indoor plant fertilizer
+- Follow package instructions for frequency
+
+## **General Maintenance**
+- Wipe leaves monthly to remove dust
+- Prune dead/yellowing leaves
+- Check regularly for pests (spider mites, mealybugs)
+- Adjust care based on plant species
+
+**Tip:** Start with hardy plants like pothos or snake plants if you're a beginner!",,
+10,"What was the Tower Chowk renamed?
+
+Context:
+Rajendra Tower (Hindi: राजेंद्र टावर), locally known as Tower Chowk, is a historic clock tower in Gaya, Bihar, India. Built sometime between 1910 and 1914 during the British rule by the-then collector George Oldhum, it was renamed as Rajendra Tower after the first Indian president Dr. Rajendra Prasad in 1981 by the administration of Bihar's Chief Minister Jagannath Mishra. The tower is widely considered to be the symbol of the city.
+
+History
+The clock tower was built during the British Raj by George Oldhum, the-then collector of Gaya district, which was under Bihar and Orissa Province sometime between 1910 and 1914. The clock tower gradually became symbolic for the city of Gaya. After the end of British rule in 1947, the clock tower eventually became the property of the new Indian state of Bihar. It was renamed Rajendra Tower in 1981 after Dr. Rajendra Prasad, the first President of India by the administration of Jagannath Mishra, the-then Chief Minister of Bihar. According to locals, there were four clocks in the tower on each side and people used to hear the chimes of the clock from meters away whereas pedestrians used to match their accurate time by taking the reference of the clock. Due to the presence of the clock tower, the area gradually became a commercial district and goes by the name of Tower Chowk.","Tower Chowk was renamed **Rajendra Tower** in 1981, in honor of Dr. Rajendra Prasad, India’s first President.","Tower Chowk was renamed **Rajendra Tower** in 1981, after India’s first president, Dr. Rajendra Prasad.",,
+11,What is the best day for cold calling?,"For **B2B cold calling, Tuesday through Thursday are usually the best days**. If you need one day to start with, try **Wednesday**.
+
+Good time windows to test, in the prospect’s local time:
+- **10–11:30 a.m.**
+- **4–5 p.m.**
+
+Monday mornings often get swallowed by planning and meetings, while Friday afternoons tend to have lower engagement.
+
+There’s no universal winner, though. **Track qualified conversations and meetings booked—not just answered calls**—to find what works for your audience.","# Best Days for Cold Calling
+
+**Tuesday through Thursday** are generally considered optimal, with **Wednesday** often cited as the sweet spot.
+
+## Why these days work well:
+
+- **Monday**: People are catching up from the weekend; less receptive
+- **Tuesday-Thursday**: Settled into their week, in problem-solving mode, accessible
+- **Friday**: Winding down, rushing to finish tasks; lower engagement
+
+## Time matters too:
+
+- **10-11 AM** or **2-4 PM** tend to work better than early morning or late afternoon
+- Avoid lunch hours and end-of-day
+
+## Other considerations:
+
+- **Industry matters**: Sales reps, decision-makers, and busy executives have different rhythms
+- **Your market**: Different regions/industries may vary
+- **Consistency beats timing**: Regular, persistent calling often matters more than picking the ""perfect"" day
+
+## Pro tip:
+Track your own results. The ""best"" day may be specific to your industry and target audience. Use your data to optimize rather than relying solely on general advice.",,
+12,"Classify the below companies based on their country of origin -
+LG Corporation, Samsung, Apple Inc., Tesla, Inc.","| Company | Country of origin |
+|---|---|
+| LG Corporation | South Korea |
+| Samsung | South Korea |
+| Apple Inc. | United States |
+| Tesla, Inc. | United States |","- LG Corporation — South Korea
+- Samsung — South Korea
+- Apple Inc. — United States
+- Tesla, Inc. — United States",,
+13,"Tell me which of these stores sells furnitures: Safeway, dollar tree, HEB, IKEA, home depot, walmart","These stores sell furniture:
+
+- **IKEA** — a wide range of home and office furniture.
+- **Home Depot** — indoor and outdoor furniture, with a broader selection online.
+- **Walmart** — home, office, and outdoor furniture.
+
+**Safeway, Dollar Tree, and HEB** generally don’t carry regular furniture selections, though some locations may offer occasional seasonal items.","**IKEA, Home Depot, and Walmart** sell furniture. H‑E‑B may carry limited seasonal or outdoor items, but it isn’t typically a furniture store. Safeway and Dollar Tree generally don’t sell furniture.",,
+14,List 3 cities on the east coast of Australia.,"- Sydney, New South Wales
+- Brisbane, Queensland
+- Gold Coast, Queensland","Here are 3 cities on the east coast of Australia:
+
+1. **Sydney, New South Wales** - Australia's largest city, known for the Opera House and Harbour Bridge
+2. **Brisbane, Queensland** - The capital of Queensland, located on the Brisbane River
+3. **Melbourne, Victoria** - Australia's second-largest city, known for its arts, culture, and coffee scene",,
+15,Write a stern email to your dog asking him not to chew on the couch leg anymore.,"**Subject: Immediate Cessation of Couch-Leg Chewing**
+
+Dear Dog,
+
+It has come to my attention—again—that you have been chewing on the couch leg. This behavior is unacceptable and must stop immediately.
+
+The couch is furniture, not a snack. Your chew toys, on the other hand, are specifically designed for this purpose. Please familiarize yourself with the distinction.
+
+Going forward, I expect all chewing activities to be directed toward approved items. Looking adorable after the fact does not constitute an apology, nor does it repair the couch.
+
+Consider this your final written warning. Further incidents will result in restricted couch access and a mandatory review of your toy collection.
+
+I trust we understand each other.
+
+Sternly,  
+Your Human","**Subject: We Need to Talk About the Couch**
+
+Dear Buddy,
+
+I am writing to you regarding a serious matter that has become impossible to ignore.
+
+The couch leg is **not** a chew toy. I don't know how many times we need to go over this, but apparently several more times is the answer.
+
+I have provided you with:
+- Actual chew toys
+- Rope toys
+- Rawhide treats
+- A perfectly good Kong
+
+And yet, here we are. Again. With splinters on the hardwood floor and exposed wood where the leg used to be.
+
+This behavior stops now. I'm not angry—I'm disappointed. You're better than this. You're smarter than this. And frankly, so am I for repeatedly hoping this would resolve itself.
+
+There will be consequences. Reduced treat rations. Shorter walks. A serious review of your off-leash privileges.
+
+I expect this to improve immediately. We can have a good relationship, but it requires you to make better choices.
+
+The couch leg is off-limits. Final answer.
+
+Sincerely,
+
+Your Very Frustrated Human
+
+---
+
+*P.S. Don't think those sad eyes are going to work on me this time.*",,
+16,What are four universities in the state of Texas?,"Four universities in Texas are:
+
+1. **The University of Texas at Austin** — Austin
+2. **Texas A&M University** — College Station
+3. **Rice University** — Houston
+4. **Texas Tech University** — Lubbock","Four universities in Texas are:
+
+- The University of Texas at Austin
+- Texas A&M University
+- Rice University
+- Baylor University",,
+17,Why are all the planets and moons round in shape? What makes them round? Does there exist another shape?,"**Gravity is what makes large planets and moons nearly round—but not all moons are round, and no planet is a perfect sphere.**
+
+### Why does gravity produce a round shape?
+Gravity pulls a body’s material inward from every direction. When a body is large enough, this pull overcomes the strength of its rock or ice. Over long periods, high regions sink and material shifts until the body settles into a roughly spherical shape.
+
+A sphere is the natural result because, without rotation or other outside influences, no direction is special. Imagine a cube-shaped planet: its corners stick out farther than its faces, and gravity would gradually pull those protruding regions down, deforming the cube toward a sphere.
+
+This balance between gravity and internal pressure is called **hydrostatic equilibrium**. Gas and liquid settle into it readily; solid rock and ice can also deform under enormous pressure over geological time.
+
+### Are there other shapes?
+Yes:
+
+- **Flattened spheres:** Rotation makes planets bulge at the equator and flatten at the poles. Earth does this slightly; Saturn does it much more noticeably.
+- **Elongated bodies:** Rapid rotation or strong tidal forces from a nearby companion can stretch a body. The dwarf planet **Haumea** is an example of a strongly elongated body.
+- **Irregular, potato-like shapes:** Small objects have too little gravity to overcome the strength of their material. Many asteroids, comets, and moons—including Mars’s moons **Phobos and Deimos**—are irregular.
+- **Two-lobed shapes:** Some small bodies consist of two joined lobes, such as the comet **67P**.
+
+So the rule is: **large bodies tend to become round because gravity dominates; small bodies can retain many other shapes because their material strength dominates.**","# Why Planets and Moons Are Round
+
+## The Primary Force: Gravity
+
+The answer comes down to **gravity**. Objects massive enough experience gravitational force pulling equally toward their center from all directions. This naturally produces a sphere—the shape with the smallest surface area for a given volume, requiring the least energy to maintain.
+
+When an object is large enough (roughly 600+ km in diameter), its own gravity overcomes the material strength of rock and metal, causing it to collapse into a sphere.
+
+## Does Another Shape Exist?
+
+**Yes, but rarely:**
+
+- **Very small bodies** (asteroids, small moons like Phobos or Eros) can be irregularly shaped because their gravity is too weak to overcome their structural rigidity. They remain potato-shaped or jagged.
+
+- **Neutron stars** are spheres like planets, but far denser.
+
+- **Black holes** are spherical (or rotating as oblate spheroids), but follow different physics.
+
+- **Theoretically**, a rapidly rotating body can bulge at the equator (oblate spheroid)—though planets are still roughly spherical.
+
+## The Bottom Line
+
+**Gravity wins.** Once an object gets massive enough, gravity molds everything into a sphere, regardless of what it's made of. It's not a choice—it's physics. The perfectly round shape is actually nature's solution to balancing gravitational forces in all directions.",,
+18,"Who was Lester Menke
+
+Context:
+Lester D. Menke (December 16, 1918 – March 5, 2016) was a state Representative from the Iowa's 5th and 7th Districts. He served in the Iowa House of Representatives from 1973 to 1985, serving as Speaker pro Tempore from 1981 to 1985. After he served in the Iowa House, Menke served as a liaison between Governor Terry Branstad and the legislature for two years. Menke has a B.A. from Morningside College, where he later served as a member of the board of directors, and attended The University of Iowa College of Law for one year. He worked as a farm owner and for an insurance agency. He served on various school boards and served as president of the Iowa Association of School Boards and State Board of Public Instruction and as director of the National Association of State Boards of Education, as well as serving on the Iowa Educational Radio and Television Facilities Board. Menke received Morningside College's Distinguished Alumni award in 1975.","Lester D. Menke (December 16, 1918 – March 5, 2016) was an Iowa state legislator, farmer, insurance professional, and education leader. He represented Iowa’s 5th and 7th districts in the Iowa House of Representatives from 1973 to 1985, serving as **Speaker pro tempore from 1981 to 1985**. Afterward, he spent two years as a liaison between Governor Terry Branstad and the legislature.
+
+A graduate of Morningside College, Menke also attended the University of Iowa College of Law for one year. He served on several school boards and held leadership roles in state and national education organizations, including as president of the Iowa Association of School Boards and the State Board of Public Instruction.","# Lester Menke
+
+Lester D. Menke (1918–2016) was an Iowa politician and public servant. Key highlights of his life include:
+
+**Political Career:**
+- Served in the Iowa House of Representatives from 1973 to 1985, representing Iowa's 5th and 7th Districts
+- Served as Speaker pro Tempore from 1981 to 1985
+- Later worked as a liaison between Governor Terry Branstad and the legislature for two years
+
+**Education & Professional Background:**
+- Earned a B.A. from Morningside College
+- Attended The University of Iowa College of Law for one year
+- Worked as a farm owner and in the insurance industry
+
+**Community Service:**
+- Served on various school boards
+- Served as president of the Iowa Association of School Boards
+- Served on the State Board of Public Instruction and National Association of State Boards of Education
+- Served on the Iowa Educational Radio and Television Facilities Board
+- Member of Morningside College's board of directors
+
+**Honors:**
+- Received Morningside College's Distinguished Alumni Award in 1975
+
+He lived from December 16, 1918, to March 5, 2016.",,
+19,"What Peloton instructor should I take a cycling class with for the following moods and why? Happy, Sad, Angry, Unmotivated","Here’s my mood-to-instructor lineup—based on their coaching styles, not a guarantee that every class will have the same vibe:
+
+| Mood | Instructor | Why |
+|---|---|---|
+| **Happy** | **Cody Rigsby** | His humor, playful commentary, and pop-heavy playlists make a ride feel like a party. Great when you want to celebrate your good mood rather than get overly serious about training. |
+| **Sad** | **Sam Yo** | His calm, warm encouragement can feel supportive without demanding that you suddenly be cheerful. Try a **low-impact ride** if you want gentle movement and a little breathing room. |
+| **Angry** | **Tunde Oyeneyin** | Her powerful coaching and challenging rides give that energy somewhere constructive to go. An **intervals ride** could be a good outlet—just keep the resistance and effort appropriate for you. |
+| **Unmotivated** | **Alex Toussaint** | His direct, energetic, accountability-focused coaching is a strong choice when you need a push to get moving. Start with a **short ride** so showing up feels manageable. |
+
+**Quick version:** Cody for joy, Sam for comfort, Tunde for release, Alex for a kick-start.","| Mood | Try | Why |
+|---|---|---|
+| **Happy** | **Cody Rigsby** | His playful, high-energy classes and pop-culture banter can make a good mood even more fun. |
+| **Sad** | **Christine D’Ercole** | Her thoughtful, encouraging coaching often makes room for reflection without demanding that you feel upbeat. |
+| **Angry** | **Alex Toussaint** | His intense, confident coaching can help you channel that energy into a powerful ride. |
+| **Unmotivated** | **Robin Arzón** | She’s known for direct, energizing pep talks that can help get you moving when starting feels like the hardest part. |
+
+Instructor styles vary by class, so check the class description and music too—sometimes the right playlist is the real motivator.",,
+20,"Who adopted Superman as per the passage?
+
+Context:
+Superman was born on the fictional planet Krypton and was named Kal-El. When he was a baby, his parents sent him to Earth in a small spaceship moments before Krypton was destroyed in a natural cataclysm. His ship landed in the American countryside, near the fictional town of Smallville. He was found and adopted by farmers Jonathan and Martha Kent, who named him Clark Kent. Clark developed various superhuman abilities, such as incredible strength and impervious skin. His adoptive parents advised him to use his abilities for the benefit of humanity, and he decided to fight crime. To protect his personal life, he changes into a colorful costume and uses the alias ""Superman"" when fighting crime. Clark resides in the fictional American city of Metropolis, where he works as a journalist for the Daily Planet. Superman's supporting characters include his love interest and fellow journalist Lois Lane, Daily Planet photographer Jimmy Olsen and editor-in-chief Perry White, and enemies such as Brainiac, General Zod, and his archenemy Lex Luthor.",Superman was adopted by farmers Jonathan and Martha Kent.,"Farmers Jonathan and Martha Kent adopted Superman, naming him Clark Kent.",,
+21,"Who is Sasha? How does her life compare to Becky?
+
+Context:
+A lonely twentysomething, Becky Green, becomes obsessed with the suicide of her estranged childhood friend Chloe and assumes a new identity as Sasha to engineer a ""chance"" meeting with Chloe's best friend, Livia, at an art event, followed by another run-in at a yoga class.
+
+Sasha then infiltrates Chloe's group of close-knit friends. She also gains a job outside her genuine work experience through Livia's contacts as she attempts to discover why Chloe died. Through her new alter-ego, she leads a life that is far more exciting than her life as Becky.
+
+A series of flashbacks reveals that Becky had two missed calls from Chloe minutes before her death. As Sasha, Becky eventually uncovers the truth of Chloe’s clandestine activities she has hidden from her husband and friends.
+
+Becky starts an affair with Chloe's widowed husband, Elliot; whereas the rest of the group including Elliot's mother disapproves of their relationship. Elliot decides to run for election, Becky and Livia run his campaign along with Elliot's friend Nish.","Sasha is the new identity Becky Green adopts to infiltrate the close-knit circle of her estranged childhood friend, Chloe, and investigate why Chloe died.
+
+As Becky, she is a lonely twentysomething with a relatively uneventful life. As Sasha, she gains access to an exciting social world, gets a job beyond her actual experience through Livia’s connections, begins an affair with Chloe’s widower, Elliot, and helps run his election campaign. Sasha’s life is much more socially connected and eventful, but it is built on deception and complicated by her investigation into Chloe’s death.","Sasha is Becky Green’s invented identity. Becky uses it to get close to Chloe’s friends and investigate why Chloe died, while presenting herself as a more confident, exciting person.
+
+Becky’s real life is lonely and constrained; as Sasha, she gains access to Chloe’s close-knit social circle, a job through Livia’s connections, and a more adventurous life. But the identity is also a means of deception: Becky uses it to investigate Chloe, and her involvement deepens when she begins an affair with Chloe’s widower, Elliot.",,
+22,List all the planets in our solar system with more than one moon.,"The planets in our solar system with more than one moon are:
+
+- **Mars**
+- **Jupiter**
+- **Saturn**
+- **Uranus**
+- **Neptune**","The planets with more than one moon are **Mars, Jupiter, Saturn, Uranus, and Neptune**.",,
+23,"What is the old name for The Go Between Bridge?
+
+Context:
+The Go Between Bridge, formerly known as the Hale Street Link, is a toll bridge for vehicles, pedestrians and cyclists over the Brisbane River in inner-city Brisbane, Queensland, Australia. The bridge connects Merivale and Cordelia Streets in West End to Hale Street and the Inner City Bypass at Milton. It is Brisbane's first inner-city traffic bridge in 40 years and carries around 12,000 vehicles per day. The bridge opened to traffic on 5 July 2010 and is now operated by Transurban Queensland.",The old name for the Go Between Bridge was the **Hale Street Link**.,The old name for The Go Between Bridge was the **Hale Street Link**.,,
+24,"I want to buy a new car. This is a difficult financial decision, but our car is 12 years old. Can you write some reasons I can give to my partner so she's on board with this decision.","You can make a good case for replacing a 12-year-old car—but the strongest approach is to explain **why it makes sense for your household**, rather than just trying to persuade her. Age alone doesn’t mean the car needs replacing.
+
+Here are reasons you could discuss, if they apply:
+
+- **Reliability:** “I want us to have a car we can count on, especially for work, family commitments, or longer trips.” This is stronger if your current car has had breakdowns or a mechanic expects major repairs.
+- **Safety:** “A newer car could give us better crash protection and features like automatic emergency braking.” Check the specific models, since features and safety ratings vary.
+- **More predictable expenses:** “I’d like to compare the cost of keeping this car—including likely repairs—with the cost of replacing it.” A newer car may reduce repair uncertainty, but payments, insurance, taxes, and depreciation can cost more overall.
+- **Planning instead of reacting:** “If replacement is likely in the next year or two, shopping while this car still works gives us time to compare options rather than buying urgently after a breakdown.”
+- **Better fit for your needs:** “Our needs have changed, and a replacement could improve fuel economy, space, comfort, or accessibility.” Focus on needs you both recognize, not just appealing upgrades.
+
+You could open the conversation like this:
+
+> “I know replacing the car is a big financial decision, and I don’t want to rush it or dismiss your concerns. I’m worried about its reliability and whether we’ll face bigger repairs soon. Could we get a mechanic’s assessment, compare the cost of keeping it with replacing it, and agree on a budget together? I’d also be open to a reliable used car if that makes more sense.”
+
+**Bring numbers, not just reasons:** a repair estimate, the current car’s value, and the full replacement cost—including interest and insurance. Also ask what would make her comfortable with the decision. That turns it into a shared problem to solve rather than a case she has to accept.","A 12-year-old car can be a good reason to **review your options**, but it doesn’t automatically mean you need a new one. You’ll probably have a better conversation if you make the case honestly and invite her to weigh the numbers with you.
+
+You could say:
+
+> “I’d like us to look at whether replacing the car makes sense—not decide in advance that we have to. It’s 12 years old, and I’m concerned about reliability, upcoming repairs, and whether it still meets our needs. Let’s compare the cost of keeping it with the full cost of a replacement and decide together.”
+
+Useful points to discuss, if they’re true for your situation:
+
+- **Reliability:** Has it been breaking down, or would a failure disrupt work, childcare, or other commitments?
+- **Repair costs:** What repairs are likely soon, and how do those compare with the cost of replacing it? Get an independent inspection or mechanic’s estimate.
+- **Safety and practical needs:** Does it lack safety features you’d now value, or no longer suit your family’s needs?
+- **Total cost—not just the payment:** Compare insurance, fuel, maintenance, financing, depreciation, and taxes with the current car’s costs.
+- **A shared budget:** Agree on a maximum price and monthly cost, and make sure the purchase won’t crowd out savings or other priorities.
+- **Alternatives:** Consider repairing it, buying a newer used car, or waiting and saving more, alongside buying new.
+
+Try to present the decision as a joint problem to solve rather than a case she needs to be persuaded to accept.",,
+25,"Classify the following water bodies into oceans, seas, rivers and lakes- aral, pacific, baikal, superior, amazon, colorado, indian, arabian, north, baltic, okhotosk, tahoe, victoria, lena, danube, arctic, mekong","| Category | Water bodies |
+|---|---|
+| **Oceans** | Pacific, Indian, Arctic |
+| **Seas** | Arabian, North, Baltic, Okhotsk |
+| **Rivers** | Amazon, Colorado, Lena, Danube, Mekong |
+| **Lakes** | Aral, Baikal, Superior, Tahoe, Victoria |
+
+**Note:** Despite its name, the **Aral Sea** is classified as a lake because it is an inland body of water.","# Classification of Water Bodies
+
+## **Oceans**
+- Pacific
+- Indian
+- Arctic
+
+## **Seas**
+- Arabian
+- North
+- Baltic
+- Okhotsk
+
+## **Rivers**
+- Amazon
+- Colorado
+- Lena
+- Danube
+- Mekong
+
+## **Lakes**
+- Aral
+- Baikal
+- Superior
+- Tahoe
+- Victoria",,
+26,What is an acoholic?,"If you mean **“alcoholic,”** it usually refers to a person with **alcohol use disorder**—a condition where someone has difficulty controlling their drinking and continues despite harm to their health, relationships, or daily life.
+
+“Alcoholic” can also describe something that contains alcohol, like an alcoholic drink.","An **alcoholic** is a common, sometimes stigmatizing term for someone who has **alcohol use disorder**—a pattern of drinking that’s hard to control and continues despite harm. Many people prefer “person with alcohol use disorder.” Drinking heavily doesn’t automatically mean someone has the disorder, but it can still be harmful.",,
+27,Write a letter to my mom to convince her that I should be able to get a cat.,"Dear Mom,
+
+I’d really love to get a cat, and I hope you’ll consider it. I know a pet is a big responsibility—not just something cute to play with—and I want to show you that I’m ready to take it seriously.
+
+A cat would be a wonderful companion, but I understand that it would also need daily care. I’m willing to handle feeding, fresh water, litter-box cleaning, and playtime. Before we make any decision, I’d like to work with you on a realistic plan for food, supplies, vet visits, and who would care for the cat when we’re away.
+
+I also want to hear your concerns, whether they’re about cost, allergies, mess, or the extra work. We could research those things together and visit a shelter to learn more about finding a cat whose personality fits our home—without committing right away.
+
+To show you I’m serious, I’m willing to follow a regular chore schedule for a month first. That would give me a chance to demonstrate responsibility instead of just promising it.
+
+I’m not asking you to say yes without thinking it through. I’m asking for a chance to talk about it and show you that I can help give a cat a safe, loving home.
+
+Love,  
+[Your name]","# Dear Mom,
+
+I hope you're having a great day! I wanted to talk to you about something that's really important to me – getting a cat.
+
+I've been thinking a lot about this, and I genuinely believe a cat would be a wonderful addition to our home. Here's why I think this is a good idea:
+
+**I'm ready for the responsibility.** I understand that a cat requires daily care – feeding, fresh water, a clean litter box, playtime, and attention. I'm committed to handling these tasks myself and not leaving them to you.
+
+**Cats are independent and low-maintenance.** Unlike some pets, cats are naturally independent and don't need constant supervision. They're great for our lifestyle and won't require extensive time commitments like a dog might.
+
+**There are real benefits for our family.** Studies show that pets reduce stress and anxiety, improve mood, and bring joy to a home. A cat's companionship would be good for all of us.
+
+**I've done my research.** I know about proper nutrition, veterinary care, environmental enrichment, and how to handle the financial costs. I'm not asking for this lightly.
+
+**I promise to be responsible.** I'll maintain the litter box, ensure the cat has food and water, take them to vet appointments when needed, and handle any messes or problems that arise.
+
+I really hope we can discuss this further. I'd love to show you more about what having a cat would mean, or even visit a shelter to see if the right cat might be waiting for us.
+
+Thank you for considering it.
+
+Love,
+[Your name]",,
+28,"What are Heat Shock proteins?
+
+Context:
+Heat shock proteins (HSP) are a family of proteins produced by cells in response to exposure to stressful conditions. They were first described in relation to heat shock, but are now known to also be expressed during other stresses including exposure to cold, UV light and during wound healing or tissue remodeling. Many members of this group perform chaperone functions by stabilizing new proteins to ensure correct folding or by helping to refold proteins that were damaged by the cell stress. This increase in expression is transcriptionally regulated. The dramatic upregulation of the heat shock proteins is a key part of the heat shock response and is induced primarily by heat shock factor (HSF). HSPs are found in virtually all living organisms, from bacteria to humans.","**Heat shock proteins (HSPs)** are a family of proteins that help protect cells from stress. Although first discovered in cells exposed to high temperatures, they also respond to stresses such as cold, UV radiation, injury, and tissue remodeling.
+
+Many HSPs act as **molecular chaperones**: they help newly made proteins fold correctly, stabilize proteins, and help damaged proteins refold. This helps prevent proteins from clumping together and supports cell survival.
+
+Their production often increases during stress, largely through activation of **heat shock factors (HSFs)**, which regulate HSP gene expression. HSPs are found in virtually all living organisms, from bacteria to humans.","Heat shock proteins (HSPs) are a family of proteins that cells produce in response to stress, such as heat, cold, UV exposure, injury, or tissue remodeling. Many act as molecular chaperones: they help newly made proteins fold correctly and help repair or refold proteins damaged by stress. Their production often rises through a cellular stress response regulated mainly by heat shock factor (HSF). HSPs occur in organisms from bacteria to humans.",,
+29,"Identify which instrument is string or percussion: Jew's Harp, Bass Stick","- **Jew’s Harp:** Percussion
+- **Bass Stick:** String","# Instrument Classification
+
+**Jew's Harp** - String instrument
+- It's a small frame instrument with a flexible metal tongue that vibrates to produce sound
+
+**Bass Stick** - Percussion instrument
+- It's a wooden stick struck to produce percussive sounds, commonly used in folk music and rhythm sections",,
+30,Give me 3 ways you can cook eggs,"1. **Scrambled:** Beat eggs with a pinch of salt, then cook in a buttered pan over medium-low heat, stirring gently until set.
+2. **Fried:** Crack an egg into a lightly oiled pan and cook until the white sets. Flip it if you want it over-easy or over-hard.
+3. **Hard-boiled:** Place eggs in a saucepan, cover with water, and bring to a boil. Turn off the heat, cover for 10–12 minutes, then cool in ice water and peel.","# 3 Ways to Cook Eggs
+
+1. **Scrambled**
+   - Beat eggs with a splash of milk or cream
+   - Pour into a buttered pan over medium heat
+   - Stir gently until soft curds form
+   - Creamy and soft texture
+
+2. **Fried**
+   - Heat butter or oil in a pan
+   - Crack eggs directly into the pan
+   - Cook until whites are set (sunny-side up) or flip for over-easy, over-medium, or over-hard
+   - Yolk stays runny or becomes firmer depending on preference
+
+3. **Boiled**
+   - Place eggs in a pot of cold water
+   - Bring to a boil, then remove from heat
+   - Let sit covered (soft-boiled: 4-6 minutes, hard-boiled: 10-12 minutes)
+   - Cool and peel
+   - Great for meal prep or snacks
+
+Each method takes just a few minutes and offers different textures and flavors!",,

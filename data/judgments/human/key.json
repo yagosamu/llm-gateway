@@ -1,0 +1,152 @@
+{
+ "1": {
+  "prompt_id": "dolly-01682",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "2": {
+  "prompt_id": "dolly-08448",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ },
+ "3": {
+  "prompt_id": "dolly-12473",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ },
+ "4": {
+  "prompt_id": "dolly-04389",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "5": {
+  "prompt_id": "dolly-03676",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "6": {
+  "prompt_id": "dolly-06768",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ },
+ "7": {
+  "prompt_id": "dolly-12051",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "8": {
+  "prompt_id": "dolly-05322",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ },
+ "9": {
+  "prompt_id": "dolly-14215",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ },
+ "10": {
+  "prompt_id": "dolly-07538",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "11": {
+  "prompt_id": "dolly-11922",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ },
+ "12": {
+  "prompt_id": "dolly-12447",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "13": {
+  "prompt_id": "dolly-12421",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "14": {
+  "prompt_id": "dolly-12245",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ },
+ "15": {
+  "prompt_id": "dolly-12971",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ },
+ "16": {
+  "prompt_id": "dolly-12478",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "17": {
+  "prompt_id": "dolly-00477",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ },
+ "18": {
+  "prompt_id": "dolly-08143",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ },
+ "19": {
+  "prompt_id": "dolly-12793",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "20": {
+  "prompt_id": "dolly-13481",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "21": {
+  "prompt_id": "dolly-09115",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "22": {
+  "prompt_id": "dolly-07405",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "23": {
+  "prompt_id": "dolly-00317",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ },
+ "24": {
+  "prompt_id": "dolly-09010",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "25": {
+  "prompt_id": "dolly-00368",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ },
+ "26": {
+  "prompt_id": "dolly-02231",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "27": {
+  "prompt_id": "dolly-01447",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ },
+ "28": {
+  "prompt_id": "dolly-10598",
+  "tier": "low",
+  "model": "gpt-6-luna"
+ },
+ "29": {
+  "prompt_id": "dolly-09763",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ },
+ "30": {
+  "prompt_id": "dolly-08996",
+  "tier": "medium",
+  "model": "claude-haiku-4-5"
+ }
+}
