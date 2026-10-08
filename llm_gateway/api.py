@@ -19,14 +19,18 @@ from llm_gateway.metrics import GatewayMetrics
 from llm_gateway.providers.base import Provider, ProviderError
 from llm_gateway.registry import ModelConfig, cost_usd
 from llm_gateway.request_log import RequestLog, RequestRecord, now_utc, prompt_sha256
+from llm_gateway.routing import Router
 from llm_gateway.schemas import (
     AssistantMessage,
     ChatCompletionRequest,
     ChatCompletionResponse,
     Choice,
     GatewayInfo,
+    RoutingInfo,
     Usage,
 )
+
+AUTO_MODEL = "auto"
 
 REQUIRED_HEADERS = {"X-Tenant-Id": "tenant", "X-Feature": "feature", "X-Request-Id": "request_id"}
 # Tenant and feature are metric labels, so they are kept short and free of separators.
@@ -56,7 +60,8 @@ def _validation_message(exc: ValidationError) -> tuple[str, str | None]:
 
 
 def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
-               request_log: RequestLog | None = None, metrics: GatewayMetrics | None = None) -> FastAPI:
+               request_log: RequestLog | None = None, metrics: GatewayMetrics | None = None,
+               router: Router | None = None) -> FastAPI:
     request_log = request_log or RequestLog(":memory:")
     metrics = metrics or GatewayMetrics()
     app = FastAPI(title="llm-gateway")
@@ -109,11 +114,25 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
         except ValidationError as exc:
             message, param = _validation_message(exc)
             return reject(400, "invalid_request", message, param)
-        record.prompt_sha256 = prompt_sha256([m.model_dump() for m in chat.messages])
-        model = registry.get(chat.model)
+        messages = [m.model_dump() for m in chat.messages]
+        record.prompt_sha256 = prompt_sha256(messages)
+        record.requested_model = chat.model
+        routing = None
+        if chat.model == AUTO_MODEL:
+            if router is None:
+                return reject(400, "routing_disabled", "This gateway has no routing config; name a model.", "model")
+            model_id, decision, config = router.route(record.feature, messages)
+            record.routed_tier, record.routing_policy, record.routing_version = (
+                decision.tier, config.policy_name, config.version)
+            routing = RoutingInfo(tier=decision.tier, policy=config.policy_name, reason=decision.reason,
+                                  config_version=config.version)
+            model = registry[model_id]
+        else:
+            model = registry.get(chat.model)
         if model is None:
             return reject(404, "model_not_found",
-                          f"Model {chat.model!r} is not in the registry. GET /v1/models lists the options.", "model")
+                          f"Model {chat.model!r} is not in the registry. GET /v1/models lists the options, "
+                          f"or send {AUTO_MODEL!r} to let the gateway choose.", "model")
         record.model, record.provider, record.tier = model.id, model.provider, model.tier
         if chat.stream:
             return reject(400, "stream_not_supported", "This gateway does not stream; send stream=false.", "stream")
@@ -140,7 +159,8 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
             usage=Usage(prompt_tokens=result.input_tokens, completion_tokens=result.output_tokens,
                         total_tokens=result.input_tokens + result.output_tokens),
             gateway=GatewayInfo(request_id=record.request_id, tenant=record.tenant, feature=record.feature,
-                                provider=model.provider, cost_usd=record.cost_usd, latency_ms=record.latency_ms),
+                                provider=model.provider, cost_usd=record.cost_usd, latency_ms=record.latency_ms,
+                                routing=routing),
         )
         return JSONResponse(response.model_dump(), headers={"X-Request-Id": record.request_id})
 

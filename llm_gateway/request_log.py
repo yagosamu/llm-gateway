@@ -31,7 +31,11 @@ CREATE TABLE IF NOT EXISTS requests (
     output_tokens INTEGER,
     cost_usd REAL,
     latency_ms REAL,
-    prompt_sha256 TEXT
+    prompt_sha256 TEXT,
+    requested_model TEXT,
+    routed_tier TEXT,
+    routing_policy TEXT,
+    routing_version TEXT
 )"""
 OUTCOMES = ("ok", "rejected", "upstream_error")
 
@@ -54,6 +58,10 @@ class RequestRecord:
     cost_usd: float | None = None
     latency_ms: float | None = None
     prompt_sha256: str | None = None
+    requested_model: str | None = None  # "auto" or a registry id; free text from the client otherwise
+    routed_tier: str | None = None
+    routing_policy: str | None = None
+    routing_version: str | None = None
 
 
 def now_utc() -> str:
@@ -74,6 +82,11 @@ class RequestLog:
         self._conn.execute(SCHEMA)
         self._lock = threading.Lock()
         self._columns = [f.name for f in fields(RequestRecord)]
+        # A log file created by an older version lacks the newer columns; add them in place.
+        existing = {row[1] for row in self._conn.execute("PRAGMA table_info(requests)")}
+        for column in self._columns:
+            if column not in existing:
+                self._conn.execute(f"ALTER TABLE requests ADD COLUMN {column}")
 
     def write(self, record: RequestRecord) -> None:
         if record.outcome not in OUTCOMES:

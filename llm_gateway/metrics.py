@@ -26,10 +26,14 @@ class GatewayMetrics:
                               ["tenant", "feature", "model", "direction"], registry=self.registry)
         self.cost = Counter("llm_gateway_cost_usd", "Cost at registry prices.",
                             ["tenant", "feature", "model"], registry=self.registry)
+        self.routed = Counter("llm_gateway_routed", "Requests sent with model auto, by chosen tier.",
+                              ["feature", "tier", "policy"], registry=self.registry)
 
     def observe(self, record: RequestRecord) -> None:
         tenant, feature, model = record.tenant or UNKNOWN, record.feature or UNKNOWN, record.model or UNKNOWN
         self.requests.labels(tenant, feature, model, record.outcome, record.error_code or "none").inc()
+        if record.routed_tier:
+            self.routed.labels(feature, record.routed_tier, record.routing_policy).inc()
         if record.outcome != "ok":
             return
         self.latency.labels(record.provider, model).observe(record.latency_ms / 1000)

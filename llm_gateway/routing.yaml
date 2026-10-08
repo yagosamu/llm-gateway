@@ -1,0 +1,16 @@
+# Routing for requests sent with "model": "auto". The gateway reads this file again whenever it
+# changes; an invalid edit is refused and the previous config stays in force.
+#
+# policy: always_low | always_medium | always_high | feature_table | classifier
+# feature_table and classifier read their estimates from the file named in `estimates`, written by
+# the training step (python -m harness.routing.train). Until it exists, the safe default is
+# always_high.
+
+version: "2026-10-08.1"
+policy: always_high
+decision_threshold: 0.95
+estimates: routing_estimates.json
+tier_map:
+  low: gpt-6-luna
+  medium: claude-haiku-4-5
+  high: gpt-6.1-sol

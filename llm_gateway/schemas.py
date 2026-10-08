@@ -48,6 +48,14 @@ class Choice(BaseModel):
     finish_reason: str
 
 
+class RoutingInfo(BaseModel):
+    """Present when the request asked for model "auto": which tier was chosen, by what, and why."""
+    tier: str
+    policy: str
+    reason: str
+    config_version: str
+
+
 class GatewayInfo(BaseModel):
     """Extra top-level field; OpenAI clients ignore keys they do not know."""
     request_id: str
@@ -56,6 +64,7 @@ class GatewayInfo(BaseModel):
     provider: str
     cost_usd: float
     latency_ms: float
+    routing: RoutingInfo | None = None
 
 
 class ChatCompletionResponse(BaseModel):
