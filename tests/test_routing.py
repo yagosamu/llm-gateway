@@ -44,9 +44,10 @@ def msgs(text):
     return [{"role": "system", "content": "Be brief."}, {"role": "user", "content": text}]
 
 
-def test_the_committed_config_loads_with_the_safe_default():
+def test_the_committed_config_serves_the_measured_choice_with_the_verifier_on():
     config = load_config(DEFAULT_CONFIG_PATH, IDS)
-    assert config.policy_name == "always_high" and config.tier_map["high"] == "gpt-6.1-sol"
+    assert config.policy_name == "always_low" and config.tier_map["high"] == "gpt-6.1-sol"
+    assert 0 < config.verifier.sample_rate <= 1 and config.verifier.daily_budget_usd > 0
 
 
 def test_features_read_the_instruction_and_detect_a_context_block():

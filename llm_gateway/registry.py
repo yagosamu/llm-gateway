@@ -67,3 +67,20 @@ def load_registry(path: Path = DEFAULT_PATH) -> dict[str, ModelConfig]:
 def cost_usd(model: ModelConfig, input_tokens: int, output_tokens: int) -> float:
     """What one call cost at the registry price. Output tokens include reasoning tokens."""
     return (input_tokens * model.input_per_mtok + output_tokens * model.output_per_mtok) / 1_000_000
+
+
+# Worst-case cost of a call before it is made. Output is bounded by the output limit sent. Input is
+# bounded by the UTF-8 byte count of the messages plus a per-message allowance: a byte-level BPE
+# tokenizer, as OpenAI's and Groq's models use, never emits more tokens than bytes. Anthropic does not
+# document its tokenizer, so its byte count is doubled as a margin, not a proof.
+TOKENS_PER_MESSAGE = 16
+INPUT_SAFETY = {"anthropic": 2.0}
+
+
+def input_token_bound(messages: list[dict], provider: str) -> int:
+    raw = sum(len(m["content"].encode("utf-8")) + TOKENS_PER_MESSAGE for m in messages)
+    return int(raw * INPUT_SAFETY.get(provider, 1.0))
+
+
+def call_ceiling_usd(model: ModelConfig, messages: list[dict], max_output_tokens: int) -> float:
+    return cost_usd(model, input_token_bound(messages, model.provider), max_output_tokens)

@@ -1,21 +1,16 @@
 """The project's own spending cap: US$ 10 across every paid run, recorded in a committed ledger.
 
 Before a run starts, its worst case is added to what the ledger already holds; if the sum passes the
-cap, the run does not start. Output tokens are bounded by the max_completion_tokens the run sends.
-Input tokens are bounded by the UTF-8 byte count of the messages plus a per-message allowance: a
-byte-level BPE tokenizer, as OpenAI's and Groq's models use, never emits more tokens than bytes.
-Anthropic does not document its tokenizer, so its byte count is doubled as a margin, not a proof."""
+cap, the run does not start. The worst case of a call is llm_gateway.registry.call_ceiling_usd, the
+same bound the gateway's verifier uses for its daily cap."""
 import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from llm_gateway.registry import ModelConfig, cost_usd
+from llm_gateway.registry import TOKENS_PER_MESSAGE, call_ceiling_usd, input_token_bound  # noqa: F401
 
 BUDGET_USD = 10.0
 LEDGER_PATH = Path("data/spend_ledger.jsonl")
-# Role markers and separators the providers add around each message, generously rounded up.
-TOKENS_PER_MESSAGE = 16
-INPUT_SAFETY = {"anthropic": 2.0}
 
 
 class BudgetExceeded(RuntimeError):
@@ -31,15 +26,6 @@ class LedgerEntry:
     output_tokens: int
     cost_usd: float
     recorded_at: str
-
-
-def input_token_bound(messages: list[dict], provider: str) -> int:
-    raw = sum(len(m["content"].encode("utf-8")) + TOKENS_PER_MESSAGE for m in messages)
-    return int(raw * INPUT_SAFETY.get(provider, 1.0))
-
-
-def call_ceiling_usd(model: ModelConfig, messages: list[dict], max_output_tokens: int) -> float:
-    return cost_usd(model, input_token_bound(messages, model.provider), max_output_tokens)
 
 
 def spent_usd(path: Path = LEDGER_PATH) -> float:

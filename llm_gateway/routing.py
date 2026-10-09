@@ -105,11 +105,31 @@ class LogisticClassifier:
 
 
 @dataclass(frozen=True)
+class VerifierConfig:
+    """Sampled after-the-fact verification of routed answers. sample_rate 0 turns it off."""
+    sample_rate: float = 0.0
+    daily_budget_usd: float = 0.0
+
+
+@dataclass(frozen=True)
 class RoutingConfig:
     version: str
     policy_name: str
     tier_map: dict[str, str]
     policy: object  # FixedTier | FeatureTable | LogisticClassifier
+    verifier: VerifierConfig = VerifierConfig()
+
+
+def _verifier_config(data: dict) -> VerifierConfig:
+    section = data.get("verifier") or {}
+    if not isinstance(section, dict):
+        raise RoutingConfigError("verifier must be a mapping")
+    rate, budget = section.get("sample_rate", 0.0), section.get("daily_budget_usd", 0.0)
+    if not isinstance(rate, (int, float)) or not 0 <= rate <= 1:
+        raise RoutingConfigError("verifier.sample_rate must be a number in [0, 1]")
+    if not isinstance(budget, (int, float)) or budget < 0:
+        raise RoutingConfigError("verifier.daily_budget_usd must be a non-negative number")
+    return VerifierConfig(float(rate), float(budget))
 
 
 def load_config(path: Path, model_ids: set[str]) -> RoutingConfig:
@@ -144,7 +164,7 @@ def load_config(path: Path, model_ids: set[str]) -> RoutingConfig:
         section = estimates[policy_name]
         policy = FeatureTable(section, threshold) if policy_name == "feature_table" else LogisticClassifier(section, threshold)
     return RoutingConfig(version=str(data.get("version", "")), policy_name=policy_name, tier_map=dict(tier_map),
-                         policy=policy)
+                         policy=policy, verifier=_verifier_config(data))
 
 
 class Router:

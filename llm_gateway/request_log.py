@@ -38,6 +38,41 @@ CREATE TABLE IF NOT EXISTS requests (
     routing_version TEXT
 )"""
 OUTCOMES = ("ok", "rejected", "upstream_error")
+# One row per sampled verification. Rows with acceptable = 0 are the routing failures; they keep the
+# prompt's routing features (never its text), which is what retraining the classifier needs.
+VERIFICATION_SCHEMA = """
+CREATE TABLE IF NOT EXISTS verifications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    verified_at TEXT NOT NULL,
+    request_id TEXT,
+    feature TEXT,
+    routed_tier TEXT,
+    routed_model TEXT,
+    reference_model TEXT,
+    outcome TEXT NOT NULL,
+    acceptable INTEGER,
+    reason TEXT,
+    cost_usd REAL NOT NULL,
+    prompt_sha256 TEXT,
+    prompt_features TEXT
+)"""
+VERIFICATION_OUTCOMES = ("judged", "rejected_by_rule", "no_reference", "error")
+
+
+@dataclass
+class VerificationRecord:
+    verified_at: str
+    request_id: str | None
+    feature: str | None
+    routed_tier: str | None
+    routed_model: str | None
+    reference_model: str
+    outcome: str
+    acceptable: bool | None
+    reason: str
+    cost_usd: float
+    prompt_sha256: str | None
+    prompt_features: str  # JSON of llm_gateway.routing.prompt_features
 
 
 @dataclass
@@ -80,6 +115,7 @@ class RequestLog:
         self._conn = sqlite3.connect(str(path), check_same_thread=False, isolation_level=None)
         self._conn.execute("PRAGMA journal_mode=WAL")
         self._conn.execute(SCHEMA)
+        self._conn.execute(VERIFICATION_SCHEMA)
         self._lock = threading.Lock()
         self._columns = [f.name for f in fields(RequestRecord)]
         # A log file created by an older version lacks the newer columns; add them in place.
@@ -101,6 +137,29 @@ class RequestLog:
         with self._lock:
             cursor = self._conn.execute(f"SELECT {', '.join(self._columns)} FROM requests ORDER BY id")
             return [dict(zip(self._columns, row)) for row in cursor.fetchall()]
+
+    def write_verification(self, record: VerificationRecord) -> None:
+        if record.outcome not in VERIFICATION_OUTCOMES:
+            raise ValueError(f"unknown verification outcome {record.outcome!r}")
+        values = asdict(record)
+        columns = [f.name for f in fields(VerificationRecord)]
+        with self._lock:
+            self._conn.execute(f"INSERT INTO verifications ({', '.join(columns)}) VALUES "
+                               f"({', '.join('?' for _ in columns)})", [values[c] for c in columns])
+
+    def verifications(self) -> list[dict]:
+        columns = [f.name for f in fields(VerificationRecord)]
+        with self._lock:
+            cursor = self._conn.execute(f"SELECT {', '.join(columns)} FROM verifications ORDER BY id")
+            return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+    def verification_spend(self, day: str) -> float:
+        """What verification cost on a UTC day (YYYY-MM-DD). Read from the table, so the daily cap
+        survives a restart."""
+        with self._lock:
+            row = self._conn.execute("SELECT COALESCE(SUM(cost_usd), 0) FROM verifications "
+                                     "WHERE substr(verified_at, 1, 10) = ?", (day,)).fetchone()
+        return float(row[0])
 
     def close(self) -> None:
         self._conn.close()

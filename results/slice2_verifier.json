@@ -1,0 +1,57 @@
+{
+ "n_prompts": 238,
+ "policy": "always_low",
+ "verifier_judge": "gpt-4.1-mini",
+ "serving_per_1k_usd": 0.089161,
+ "always_high_per_1k_usd": 2.046454,
+ "verification_cost_each_usd": 0.00232781,
+ "two_judge_verification_cost_ratio": 2.4319,
+ "verifications_per_usd": 429.6,
+ "failures": 10,
+ "failure_rate": 0.042017,
+ "caught_by_verifier": 7,
+ "verifier_sensitivity": 0.7,
+ "daily_requests_assumed": 1000,
+ "rates": [
+  {
+   "sample_rate": 0.01,
+   "verifications_per_1k": 10.0,
+   "overhead_per_1k_usd": 0.023278,
+   "overhead_vs_serving": 0.261079,
+   "total_per_1k_usd": 0.112439,
+   "reduction_vs_always_high": 0.945057,
+   "failures_caught_per_1k": 0.294118,
+   "daily_failure_rate_half_width": 0.12435
+  },
+  {
+   "sample_rate": 0.05,
+   "verifications_per_1k": 50.0,
+   "overhead_per_1k_usd": 0.11639,
+   "overhead_vs_serving": 1.305396,
+   "total_per_1k_usd": 0.205551,
+   "reduction_vs_always_high": 0.899557,
+   "failures_caught_per_1k": 1.470588,
+   "daily_failure_rate_half_width": 0.055611
+  },
+  {
+   "sample_rate": 0.1,
+   "verifications_per_1k": 100.0,
+   "overhead_per_1k_usd": 0.232781,
+   "overhead_vs_serving": 2.610792,
+   "total_per_1k_usd": 0.321942,
+   "reduction_vs_always_high": 0.842683,
+   "failures_caught_per_1k": 2.941176,
+   "daily_failure_rate_half_width": 0.039323
+  },
+  {
+   "sample_rate": 0.25,
+   "verifications_per_1k": 250.0,
+   "overhead_per_1k_usd": 0.581952,
+   "overhead_vs_serving": 6.526981,
+   "total_per_1k_usd": 0.671113,
+   "reduction_vs_always_high": 0.672061,
+   "failures_caught_per_1k": 7.352941,
+   "daily_failure_rate_half_width": 0.02487
+  }
+ ]
+}

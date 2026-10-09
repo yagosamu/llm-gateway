@@ -111,6 +111,24 @@ class Judges:
         return json.loads(text), *usage
 
 
+class VerifierJudge:
+    """The gateway verifier's judge: gpt-4.1-mini with the pre-registered rubric. One judge, not the
+    evaluation's pair: a Sonnet verdict costs about nine times a gpt-4.1-mini one, and adding it would
+    make each verification about 2.4 times as expensive. results/slice2_verifier.md measures both the
+    cost and what the single judge misses."""
+    model = GPT_41_MINI
+    rubric = prereg.RUBRIC
+    max_output_tokens = MAX_OUTPUT_TOKENS
+
+    def __init__(self, judges: Judges | None = None):
+        self.judges = judges or Judges()
+
+    async def grade(self, request: str, reference: str, candidate: str) -> tuple[bool, str, int, int]:
+        pair = {"request": request, "reference_text": reference, "candidate_text": candidate}
+        verdict, input_tokens, output_tokens = await self.judges.grade("gpt-4.1-mini", pair)
+        return bool(verdict["acceptable"]), str(verdict["reason"]), input_tokens, output_tokens
+
+
 def plan(pairs: list[dict], done: set[str], limit: int | None = None,
          judges: tuple[str, ...] = prereg.JUDGES) -> list[tuple[dict, str]]:
     """(pair, judge) calls still to make, for pairs the rules do not already reject. With a limit, the

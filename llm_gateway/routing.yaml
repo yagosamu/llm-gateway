@@ -3,14 +3,21 @@
 #
 # policy: always_low | always_medium | always_high | feature_table | classifier
 # feature_table and classifier read their estimates from the file named in `estimates`, written by
-# the training step (python -m harness.routing.train). Until it exists, the safe default is
-# always_high.
+# python -m harness.routing.train.
+#
+# always_low was chosen from the slice 2 measurement (results/slice2.md): on the recorded traffic it
+# was as often acceptable as the learned policies (95.8%) at the lowest cost. The verifier is what
+# watches that choice in production: it re-asks a sample of routed requests to the high tier, has a
+# judge compare the answers, and records every verdict, within a daily spending cap.
 
-version: "2026-10-08.1"
-policy: always_high
+version: "2026-10-09.1"
+policy: always_low
 decision_threshold: 0.95
 estimates: routing_estimates.json
 tier_map:
   low: gpt-6-luna
   medium: claude-haiku-4-5
   high: gpt-6.1-sol
+verifier:
+  sample_rate: 0.05
+  daily_budget_usd: 0.50

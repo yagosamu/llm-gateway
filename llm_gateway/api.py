@@ -8,6 +8,7 @@ before its body is read.
 Every request, answered or refused, leaves exactly one row in the request log and one increment in
 the metrics, written in one place after the response is decided."""
 import json
+import random
 import re
 import time
 
@@ -20,6 +21,7 @@ from llm_gateway.providers.base import Provider, ProviderError
 from llm_gateway.registry import ModelConfig, cost_usd
 from llm_gateway.request_log import RequestLog, RequestRecord, now_utc, prompt_sha256
 from llm_gateway.routing import Router
+from llm_gateway.verifier import Judge, Verifier
 from llm_gateway.schemas import (
     AssistantMessage,
     ChatCompletionRequest,
@@ -61,11 +63,14 @@ def _validation_message(exc: ValidationError) -> tuple[str, str | None]:
 
 def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                request_log: RequestLog | None = None, metrics: GatewayMetrics | None = None,
-               router: Router | None = None) -> FastAPI:
+               router: Router | None = None, verifier_judge: Judge | None = None,
+               verifier_rng: random.Random | None = None) -> FastAPI:
     request_log = request_log or RequestLog(":memory:")
     metrics = metrics or GatewayMetrics()
+    verifier = (Verifier(router, registry, providers, verifier_judge, request_log, metrics, verifier_rng)
+                if router is not None and verifier_judge is not None else None)
     app = FastAPI(title="llm-gateway")
-    app.state.request_log, app.state.metrics = request_log, metrics
+    app.state.request_log, app.state.metrics, app.state.verifier = request_log, metrics, verifier
 
     @app.get("/v1/models")
     async def list_models() -> dict:
@@ -162,6 +167,8 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                                 provider=model.provider, cost_usd=record.cost_usd, latency_ms=record.latency_ms,
                                 routing=routing),
         )
-        return JSONResponse(response.model_dump(), headers={"X-Request-Id": record.request_id})
+        # The verification, when sampled, runs after the response is sent; the client never waits for it.
+        task = verifier.maybe_schedule(record, chat, result) if verifier else None
+        return JSONResponse(response.model_dump(), headers={"X-Request-Id": record.request_id}, background=task)
 
     return app

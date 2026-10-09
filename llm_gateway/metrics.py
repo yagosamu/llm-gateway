@@ -28,6 +28,15 @@ class GatewayMetrics:
                             ["tenant", "feature", "model"], registry=self.registry)
         self.routed = Counter("llm_gateway_routed", "Requests sent with model auto, by chosen tier.",
                               ["feature", "tier", "policy"], registry=self.registry)
+        self.verifications = Counter("llm_gateway_verifications", "Sampled verifications of routed answers.",
+                                     ["feature", "tier", "outcome", "acceptable"], registry=self.registry)
+        self.verification_cost = Counter("llm_gateway_verification_cost_usd", "Spent on verification.",
+                                         registry=self.registry)
+
+    def observe_verification(self, row) -> None:
+        acceptable = "unknown" if row.acceptable is None else str(bool(row.acceptable)).lower()
+        self.verifications.labels(row.feature or UNKNOWN, row.routed_tier or UNKNOWN, row.outcome, acceptable).inc()
+        self.verification_cost.inc(row.cost_usd)
 
     def observe(self, record: RequestRecord) -> None:
         tenant, feature, model = record.tenant or UNKNOWN, record.feature or UNKNOWN, record.model or UNKNOWN
