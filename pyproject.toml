@@ -11,11 +11,13 @@ dependencies = [
     "openai>=3.26.0",
     "prometheus-client>=0.26.0",
     "pyyaml>=6.0.3",
+    "redis>=8.1.0",
     "uvicorn>=0.54.0",
 ]
 
 [dependency-groups]
 dev = [
+    "fakeredis>=2.39.0",
     "pytest>=8",
 ]
 
