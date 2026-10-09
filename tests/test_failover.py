@@ -155,21 +155,25 @@ def test_every_committed_fallback_is_on_another_provider():
         assert all(REGISTRY[m].provider != primary for m in models), tier
 
 
-def test_fallback_quality_scores_both_models_the_same_way():
-    from harness.routing.fallback_quality import FALLBACK, PRIMARY, build_results
+def test_fallback_quality_scores_every_candidate_the_same_way():
     from harness.routing import prereg
+    from harness.routing.fallback_quality import CHOSEN, PRIMARY, build_results
     rows = [{"id": f"p{i}"} for i in range(4)]
     matrix = {}
     for i in range(4):
-        for model in (prereg.REFERENCE_MODEL, prereg.FALLBACK_REFERENCE_MODEL, PRIMARY):
-            matrix[(f"p{i}", model)] = {"model": model, "text": "a", "finish_reason": "stop"}
-        matrix[(f"p{i}", FALLBACK)] = {"model": FALLBACK, "text": "a", "finish_reason": "length" if i == 0 else "stop"}
+        for model in (prereg.REFERENCE_MODEL, prereg.FALLBACK_REFERENCE_MODEL, PRIMARY, CHOSEN):
+            matrix[(f"p{i}", model)] = {"model": model, "text": "a", "finish_reason": "stop", "cost_usd": 0.001}
+        matrix[(f"p{i}", "gpt-oss-20b")] = {"model": "gpt-oss-20b", "text": "a", "cost_usd": 0.0001,
+                                            "finish_reason": "length" if i == 0 else "stop"}
     verdict = lambda pid, tier, ok: {"prompt_id": pid, "tier": tier, "judge": "gpt-4.1-mini", "acceptable": ok, "status": "ok"}
-    primary = [verdict(f"p{i}", "low", True) for i in range(4)]
-    fallback = [verdict(f"p{i}", f"fallback-{FALLBACK}", i != 1) for i in range(1, 4)]
-    r = build_results(rows, matrix, primary, fallback)
-    assert r["primary"]["acceptance"][0] == 1.0 and r["fallback"]["acceptance"][0] == 0.5  # p0 cut, p1 rejected
-    assert r["fallback"]["cut_by_limit"] == 1 and (r["paired"]["b"], r["paired"]["c"]) == (2, 0)
+    slice2 = [verdict(f"p{i}", "low", True) for i in range(4)] + [verdict(f"p{i}", "medium", True) for i in range(4)]
+    fallback = [verdict(f"p{i}", "fallback-gpt-oss-20b", i != 1) for i in range(1, 4)]
+    r = build_results(rows, matrix, slice2, fallback)
+    haiku, oss = r["candidates"]
+    assert r["primary"]["acceptance"][0] == 1.0 and haiku["acceptance"][0] == 1.0
+    assert oss["acceptance"][0] == 0.5 and oss["cut_by_limit"] == 1  # p0 cut, p1 rejected
+    assert (oss["paired_vs_primary"]["b"], oss["paired_vs_primary"]["c"]) == (2, 0)
+    assert oss["cost_per_1k_usd"] == pytest.approx(0.1)
 
 
 @pytest.mark.gate

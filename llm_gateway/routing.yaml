@@ -25,10 +25,13 @@ verifier:
 # timeout, connection, server error, auth) or its provider's circuit is open, the gateway tries these
 # models in order, each on another provider, within one deadline for all attempts. A request that
 # names a model never fails over: it gets that model or an error.
+# The low tier falls back to claude-haiku-4-5, not gpt-oss-20b: under the same judge Haiku matched
+# gpt-6-luna (97.1%) while gpt-oss-20b dropped to 85.3%, at twelve times luna's cost during an outage
+# instead of about the same (results/slice3_fallback_quality.md).
 failover:
   deadline_seconds: 90
   fallbacks:
-    low: [gpt-oss-20b]
+    low: [claude-haiku-4-5]
     medium: [gpt-oss-120b]
     high: [claude-sonnet-5-5]
 # Per-provider circuit breaker. A circuit opens when, over the shared 60 s window and at least

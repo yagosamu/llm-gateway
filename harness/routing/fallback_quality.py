@@ -1,9 +1,12 @@
-"""How much answer quality the low tier gives up while it fails over from gpt-6-luna to gpt-oss-20b.
+"""Which model the low tier should fail over to, by answer quality and cost.
 
-Descriptive, not pre-registered. Both models are scored the same way on the same 238 prompts: an
+Descriptive, not pre-registered. Every model is scored the same way on the same 238 prompts: an
 answer cut by the output limit or empty fails by rule, and otherwise gpt-4.1-mini's verdict decides.
 That is the verifier's judge, more lenient than the slice 2 two-judge consensus, so the absolute
-rates read higher than slice 2's; the comparison between the two models is like for like.
+rates read higher than slice 2's; comparisons between models are like for like.
+
+The candidates were claude-haiku-4-5 (its gpt-4.1-mini verdicts come from the slice 2 judging, where
+it was the medium tier) and gpt-oss-20b (judged for this comparison). Haiku was chosen.
 
 Usage: uv run python -m harness.routing.fallback_quality"""
 import json
@@ -21,7 +24,10 @@ from harness.routing.pairs import excluded_prompts, is_auto_unacceptable
 from llm_gateway.registry import load_registry
 
 JUDGE = "gpt-4.1-mini"
-PRIMARY, FALLBACK = prereg.TIER_MAP["low"], "gpt-oss-20b"
+PRIMARY = prereg.TIER_MAP["low"]
+CHOSEN = "claude-haiku-4-5"
+# model -> (which verdict file, the label its verdicts carry)
+CANDIDATES = {CHOSEN: ("slice2", "medium"), "gpt-oss-20b": ("fallback", "fallback-gpt-oss-20b")}
 JSON_PATH = Path("results/slice3_fallback_quality.json")
 MD_PATH = Path("results/slice3_fallback_quality.md")
 
@@ -40,35 +46,51 @@ def acceptance(ids, matrix, model, verdicts, tier_label) -> list[bool]:
     return out
 
 
-def build_results(rows, matrix, primary_verdicts, fallback_verdicts) -> dict:
+def build_results(rows, matrix, slice2_verdicts, fallback_verdicts) -> dict:
     excluded = set(excluded_prompts(rows, matrix))
     ids = [r["id"] for r in rows if r["id"] not in excluded]
-    primary = acceptance(ids, matrix, PRIMARY, primary_verdicts, "low")
-    fallback = acceptance(ids, matrix, FALLBACK, fallback_verdicts, f"fallback-{FALLBACK}")
+    sources = {"slice2": slice2_verdicts, "fallback": fallback_verdicts}
     rng = np.random.default_rng(prereg.SEED)
-    cut = lambda model: sum(matrix[(pid, model)]["finish_reason"] == "length" for pid in ids)
-    return {"n_prompts": len(ids), "judge": JUDGE,
-            "primary": {"model": PRIMARY, "acceptance": bootstrap_mean(primary, rng), "cut_by_limit": cut(PRIMARY)},
-            "fallback": {"model": FALLBACK, "acceptance": bootstrap_mean(fallback, rng), "cut_by_limit": cut(FALLBACK)},
-            "paired": mcnemar_exact(primary, fallback),
-            "difference": bootstrap_mean([float(a) - float(b) for a, b in zip(primary, fallback)], rng)}
+    primary = acceptance(ids, matrix, PRIMARY, slice2_verdicts, "low")
+
+    def describe(model: str, accepted: list[bool]) -> dict:
+        return {"model": model, "acceptance": bootstrap_mean(accepted, rng),
+                "cost_per_1k_usd": round(1000 * sum(matrix[(p, model)]["cost_usd"] for p in ids) / len(ids), 6),
+                "cut_by_limit": sum(matrix[(p, model)]["finish_reason"] == "length" for p in ids)}
+
+    result = {"n_prompts": len(ids), "judge": JUDGE, "chosen": CHOSEN, "primary": describe(PRIMARY, primary),
+              "candidates": []}
+    for model, (source, label) in CANDIDATES.items():
+        accepted = acceptance(ids, matrix, model, sources[source], label)
+        entry = describe(model, accepted)
+        entry["paired_vs_primary"] = mcnemar_exact(primary, accepted)
+        entry["difference_vs_primary"] = bootstrap_mean([float(a) - float(b) for a, b in zip(primary, accepted)], rng)
+        result["candidates"].append(entry)
+    return result
 
 
 def render_markdown(r: dict) -> str:
-    p, f, d = r["primary"], r["fallback"], r["difference"]
     pct = lambda v: f"{100 * v[0]:.1f}% [{100 * v[1]:.1f}, {100 * v[2]:.1f}]"
-    return "\n".join([
-        "# Slice 3: answer quality during a low-tier failover", "",
-        f"Scored by {r['judge']} alone, with cut or empty answers failing by rule, on the same {r['n_prompts']} prompts. "
-        "Descriptive, not pre-registered.", "",
-        "| model | role | acceptable (95% CI) | cut by the 1,024-token limit |", "|---|---|---|---|",
-        f"| {p['model']} | low tier | {pct(p['acceptance'])} | {p['cut_by_limit']} |",
-        f"| {f['model']} | its failover | {pct(f['acceptance'])} | {f['cut_by_limit']} |", "",
-        f"While the low tier fails over, acceptance drops by {100 * d[0]:.1f} points (95% CI {100 * d[1]:.1f} to "
-        f"{100 * d[2]:.1f}). Paired exact McNemar: only {p['model']} acceptable on {r['paired']['b']} prompts, only "
-        f"{f['model']} on {r['paired']['c']}, p = {r['paired']['p']:.4f}.", "",
-        f"{r['judge']} is the verifier's judge and more lenient than the slice 2 two-judge consensus, so both rates "
-        "read higher than slice 2's; the comparison between the two models is like for like.", ""])
+    p = r["primary"]
+    lines = ["# Slice 3: which model the low tier fails over to", "",
+             f"Scored by {r['judge']} alone, with cut or empty answers failing by rule, on the same {r['n_prompts']} "
+             "prompts. Descriptive, not pre-registered.", "",
+             "| model | role | acceptable (95% CI) | drop vs the low tier, points | cost per 1,000, US$ | cut by the limit |",
+             "|---|---|---|---|---|---|",
+             f"| {p['model']} | low tier | {pct(p['acceptance'])} | - | {p['cost_per_1k_usd']:.3f} | {p['cut_by_limit']} |"]
+    for c in r["candidates"]:
+        role = "failover (chosen)" if c["model"] == r["chosen"] else "failover (rejected)"
+        d = c["difference_vs_primary"]
+        lines.append(f"| {c['model']} | {role} | {pct(c['acceptance'])} | {100 * d[0]:.1f} [{100 * d[1]:.1f}, "
+                     f"{100 * d[2]:.1f}] | {c['cost_per_1k_usd']:.3f} | {c['cut_by_limit']} |")
+    lines += ["", "Paired exact McNemar against the low tier: " + "; ".join(
+        f"{c['model']}: only the low tier acceptable on {c['paired_vs_primary']['b']} prompts, only {c['model']} on "
+        f"{c['paired_vs_primary']['c']}, p = {c['paired_vs_primary']['p']:.4f}" for c in r["candidates"]) + ".", "",
+        f"{r['chosen']} keeps the low tier's quality during an outage at about twelve times its cost; gpt-oss-20b "
+        "would have kept the cost and lost quality. The cost only applies while the failover lasts.", "",
+        f"{r['judge']} is more lenient than the slice 2 two-judge consensus, under which {r['chosen']} was accepted "
+        "on 85.7% against gpt-6-luna's 95.8%; the equal rates here depend on the judge.", ""]
+    return "\n".join(lines)
 
 
 def main() -> None:

@@ -1,6 +1,7 @@
 {
  "n_prompts": 238,
  "judge": "gpt-4.1-mini",
+ "chosen": "claude-haiku-4-5",
  "primary": {
   "model": "gpt-6-luna",
   "acceptance": [
@@ -8,25 +9,49 @@
    0.945378,
    0.991597
   ],
+  "cost_per_1k_usd": 0.089161,
   "cut_by_limit": 2
  },
- "fallback": {
-  "model": "gpt-oss-20b",
-  "acceptance": [
-   0.852941,
-   0.806723,
-   0.894958
-  ],
-  "cut_by_limit": 16
- },
- "paired": {
-  "b": 31,
-  "c": 3,
-  "p": 7.660128176212311e-07
- },
- "difference": [
-  0.117647,
-  0.07563,
-  0.163866
+ "candidates": [
+  {
+   "model": "claude-haiku-4-5",
+   "acceptance": [
+    0.970588,
+    0.945378,
+    0.991597
+   ],
+   "cost_per_1k_usd": 1.103618,
+   "cut_by_limit": 0,
+   "paired_vs_primary": {
+    "b": 5,
+    "c": 5,
+    "p": 1.0
+   },
+   "difference_vs_primary": [
+    0.0,
+    -0.02521,
+    0.02521
+   ]
+  },
+  {
+   "model": "gpt-oss-20b",
+   "acceptance": [
+    0.852941,
+    0.806723,
+    0.894958
+   ],
+   "cost_per_1k_usd": 0.120038,
+   "cut_by_limit": 16,
+   "paired_vs_primary": {
+    "b": 31,
+    "c": 3,
+    "p": 7.660128176212311e-07
+   },
+   "difference_vs_primary": [
+    0.117647,
+    0.07563,
+    0.163866
+   ]
+  }
  ]
 }
