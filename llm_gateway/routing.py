@@ -27,6 +27,7 @@ DEFAULT_CONFIG_PATH = Path(__file__).with_name("routing.yaml")
 TIERS = ("low", "medium", "high")
 CANDIDATE_ORDER = ("low", "medium")  # cheapest first; high is the fallback
 POLICY_KINDS = ("always_low", "always_medium", "always_high", "feature_table", "classifier")
+BREAKER_MODES = ("time_window", "count_window")
 CONTEXT_LABEL = re.compile(r"\n\s*Context:\s*\n")
 PATTERNS = {
     "asks_list": re.compile(r"\b(list|what are some|name (a few|some|several|\d+|two|three|four|five|ten))\b", re.I),
@@ -114,13 +115,20 @@ class VerifierConfig:
 @dataclass(frozen=True)
 class BreakerConfig:
     """When a provider's circuit opens, how long it stays open, and how a half-open probe is leased.
-    enabled false lets every call through and never moves a circuit, for comparison runs."""
+    enabled false lets every call through and never moves a circuit, for comparison runs.
+
+    mode time_window (v1): evaluate the shared 60 s health window, failures and the p95 of successes.
+    mode count_window (v2): evaluate the last window_calls calls admitted since the circuit last
+    moved; a call counts as slow once it has run slow_call_seconds, even before it finishes."""
     enabled: bool = True
+    mode: str = "time_window"
     error_rate_threshold: float = 0.5
     min_calls: int = 10
     p95_budget_ms: float = 30_000.0
     open_seconds: float = 15.0
     probe_lease_seconds: float = 70.0  # longer than a provider call's 60 s timeout
+    window_calls: int = 20
+    slow_call_seconds: float = 30.0
 
 
 @dataclass(frozen=True)
@@ -177,15 +185,22 @@ def _breaker_config(data: dict) -> BreakerConfig:
             if not isinstance(value, bool):
                 raise RoutingConfigError("breaker.enabled must be true or false")
             values[key] = value
+        elif key == "mode":
+            if value not in BREAKER_MODES:
+                raise RoutingConfigError(f"breaker.mode must be one of {BREAKER_MODES}")
+            values[key] = value
         elif isinstance(value, bool) or not isinstance(value, (int, float)):
             raise RoutingConfigError(f"breaker.{key} must be a number")
         else:
-            values[key] = int(value) if key == "min_calls" else float(value)
+            values[key] = int(value) if key in ("min_calls", "window_calls") else float(value)
     config = BreakerConfig(**values)
     if not 0 < config.error_rate_threshold <= 1:
         raise RoutingConfigError("breaker.error_rate_threshold must be in (0, 1]")
-    if config.min_calls < 1 or config.p95_budget_ms <= 0 or config.open_seconds <= 0 or config.probe_lease_seconds <= 0:
-        raise RoutingConfigError("breaker.min_calls, p95_budget_ms, open_seconds and probe_lease_seconds must be positive")
+    if min(config.min_calls, config.p95_budget_ms, config.open_seconds, config.probe_lease_seconds,
+           config.window_calls, config.slow_call_seconds) <= 0:
+        raise RoutingConfigError("breaker numbers must be positive")
+    if config.window_calls < config.min_calls:
+        raise RoutingConfigError("breaker.window_calls must be at least min_calls")
     return config
 
 

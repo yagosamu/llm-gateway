@@ -67,19 +67,22 @@ def summarize(values: list) -> dict:
             "missing": len(values) - len(present)}
 
 
-def build_results(runs: list[dict], notes: list[str] | None = None) -> dict:
+def build_results(runs: list[dict], notes: list[str] | None = None, scenarios: dict | None = None,
+                  configs: tuple | None = None) -> dict:
     """runs: [{"scenario", "config", "rep", "metrics"}] -> per scenario and config, each metric's
-    median, min and max over the repetitions."""
+    median, min and max over the repetitions. Scenarios and configurations default to the slice 3 study."""
+    scenarios = prereg.SCENARIOS if scenarios is None else scenarios
+    configs = prereg.CONFIGS if configs is None else configs
     table = {}
-    for scenario in prereg.SCENARIOS:
-        for config in prereg.CONFIGS:
+    for scenario in scenarios:
+        for config in configs:
             reps = [r["metrics"] for r in runs if r["scenario"] == scenario and r["config"] == config]
             if not reps:
                 continue
             table.setdefault(scenario, {})[config] = {"reps": len(reps)} | {m: summarize([x[m] for x in reps])
                                                                             for m in METRICS}
     return {"rate_rps": prereg.RATE, "fault_window_s": [prereg.FAULT_START, prereg.FAULT_END],
-            "duration_s": prereg.DURATION, "scenarios": prereg.SCENARIOS, "results": table,
+            "duration_s": prereg.DURATION, "scenarios": scenarios, "results": table,
             "notes": list(notes or [])}
 
 
@@ -103,7 +106,8 @@ def render_markdown(r: dict) -> str:
              "Each cell is the median of the repetitions, with min to max in brackets when they differ. Design: "
              "harness/chaos/prereg.py.", ""]
     for scenario, by_config in r["results"].items():
-        lines += [f"## {scenario}: {json.dumps(r['scenarios'][scenario])}", "",
+        fault = r["scenarios"][scenario]
+        lines += [f"## {scenario}: {json.dumps(fault) if fault else 'no fault injected'}", "",
                   "| configuration | client errors | p50 latency | p95 latency | wasted calls | served by fallback | "
                   "circuit opened after | closed after recovery | reopened after closing | errors after recovery |",
                   "|---|---|---|---|---|---|---|---|---|---|"]

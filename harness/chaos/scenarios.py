@@ -16,13 +16,14 @@ import os
 import subprocess
 import sys
 import time
+from dataclasses import dataclass
 from pathlib import Path
 
 import httpx2
 import redis.asyncio as redis
 import yaml
 
-from harness.chaos import prereg
+from harness.chaos import prereg, prereg_v2
 from harness.chaos.analyze import MANIFEST_PATH, RUNS_DIR
 from harness.chaos.load import generate
 from llm_gateway.routing import DEFAULT_CONFIG_PATH
@@ -32,11 +33,37 @@ REDIS_URL = os.environ.get("LLM_GATEWAY_REDIS_URL", "redis://127.0.0.1:6379/0")
 ADMIN = {"X-Admin-Token": os.environ.get("LLM_GATEWAY_ADMIN_TOKEN", "chaos-local")}
 
 
+@dataclass(frozen=True)
+class Study:
+    """Which faults, which configurations, how many repetitions, and where the raw runs go."""
+    name: str
+    design: str
+    faults: dict
+    configs: tuple
+    reps: int
+    runs_dir: Path
+    manifest_path: Path
+
+
+STUDIES = {
+    "v1": Study("v1", "harness/chaos/prereg.py", prereg.SCENARIOS, prereg.CONFIGS, prereg.REPS, RUNS_DIR, MANIFEST_PATH),
+    "v2": Study("v2", "harness/chaos/prereg_v2.py", prereg_v2.SCENARIOS, prereg_v2.CONFIGS, prereg_v2.REPS,
+                Path("data/chaos/v2/runs"), Path("data/chaos/v2/manifest.json")),
+}
+
+
 def routing_for(config: str) -> dict:
-    """The committed routing config, with failover and the breaker switched as the configuration says."""
+    """The committed routing config, with failover and the breaker switched as the configuration says.
+    breaker_v1 and breaker_v2 are failover_breaker with the breaker's mode set to time_window or
+    count_window; nothing else differs between them."""
     data = yaml.safe_load(DEFAULT_CONFIG_PATH.read_text(encoding="utf-8"))
     data["version"] = f"chaos-{config}"
-    data["breaker"] = dict(data.get("breaker") or {}) | {"enabled": config == "failover_breaker"}
+    breaker = dict(data.get("breaker") or {})
+    if config in prereg_v2.MODES:
+        breaker |= {"enabled": True, "mode": prereg_v2.MODES[config]}
+    else:
+        breaker |= {"enabled": config == "failover_breaker"}
+    data["breaker"] = breaker
     if config == "none":
         data["failover"] = dict(data.get("failover") or {}) | {"fallbacks": {}}
     return data
@@ -70,7 +97,7 @@ async def wait_ready(client: httpx2.AsyncClient) -> None:
     raise RuntimeError("the chaos instances did not come up")
 
 
-async def run_once(scenario: str, config: str, rep: int, client: httpx2.AsyncClient, store) -> dict:
+async def run_once(study: Study, scenario: str, config: str, rep: int, client: httpx2.AsyncClient, store) -> dict:
     write_routing(config)
     keys = [k async for k in store.scan_iter("llmgw:*")]
     if keys:
@@ -90,8 +117,10 @@ async def run_once(scenario: str, config: str, rep: int, client: httpx2.AsyncCli
             await asyncio.sleep(prereg.TIMELINE_INTERVAL)
 
     async def inject():
+        fault = study.faults[scenario]
         await asyncio.sleep(prereg.FAULT_START - (time.perf_counter() - started))
-        await client.post(f"{bases[0]}/admin/chaos/{prereg.FAULTY_PROVIDER}", json=prereg.SCENARIOS[scenario], headers=ADMIN)
+        if fault is not None:  # a control scenario injects nothing
+            await client.post(f"{bases[0]}/admin/chaos/{prereg.FAULTY_PROVIDER}", json=fault, headers=ADMIN)
         await asyncio.sleep(prereg.FAULT_END - (time.perf_counter() - started))
         await client.delete(f"{bases[1]}/admin/chaos", headers=ADMIN)
 
@@ -101,7 +130,7 @@ async def run_once(scenario: str, config: str, rep: int, client: httpx2.AsyncCli
     stop.set()
     await poller
     name = f"{scenario}__{config}__{rep}"
-    folder = RUNS_DIR / name
+    folder = study.runs_dir / name
     folder.mkdir(parents=True, exist_ok=True)
     for file, rows in (("requests.jsonl", requests), ("timeline.jsonl", timeline)):
         (folder / file).write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8", newline="\n")
@@ -109,9 +138,9 @@ async def run_once(scenario: str, config: str, rep: int, client: httpx2.AsyncCli
             "started_at": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")}
 
 
-async def run_all(reps: int, scenarios: list[str]) -> list[dict]:
+async def run_all(study: Study, reps: int, scenarios: list[str]) -> list[dict]:
     store = redis.Redis.from_url(REDIS_URL)
-    write_routing("failover_breaker")
+    write_routing(study.configs[-1])
     procs = start_instances()
     entries = []
     try:
@@ -119,8 +148,8 @@ async def run_all(reps: int, scenarios: list[str]) -> list[dict]:
             await wait_ready(client)
             for rep in range(1, reps + 1):  # repetitions outermost, so slow drift spreads over every pair
                 for scenario in scenarios:
-                    for config in prereg.CONFIGS:
-                        entry = await run_once(scenario, config, rep, client, store)
+                    for config in study.configs:
+                        entry = await run_once(study, scenario, config, rep, client, store)
                         entries.append(entry)
                         print(f"{entry['name']} done", flush=True)
     finally:
@@ -133,19 +162,23 @@ async def run_all(reps: int, scenarios: list[str]) -> list[dict]:
 def main() -> None:
     sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser()
-    parser.add_argument("--reps", type=int, default=prereg.REPS)
-    parser.add_argument("--only", choices=list(prereg.SCENARIOS), default=None)
+    parser.add_argument("--study", choices=list(STUDIES), default="v1")
+    parser.add_argument("--reps", type=int, default=None)
+    parser.add_argument("--only", default=None, help="one scenario of the study")
     args = parser.parse_args()
-    scenarios = [args.only] if args.only else list(prereg.SCENARIOS)
-    entries = asyncio.run(run_all(args.reps, scenarios))
+    study = STUDIES[args.study]
+    if args.only and args.only not in study.faults:
+        parser.error(f"--only must be one of {list(study.faults)}")
+    scenarios = [args.only] if args.only else list(study.faults)
+    entries = asyncio.run(run_all(study, args.reps or study.reps, scenarios))
     # New runs replace earlier ones of the same name; the others, and any notes, are kept.
-    manifest = (json.loads(MANIFEST_PATH.read_text(encoding="utf-8")) if MANIFEST_PATH.exists()
-                else {"design": "harness/chaos/prereg.py", "rate_rps": prereg.RATE, "duration_s": prereg.DURATION})
+    manifest = (json.loads(study.manifest_path.read_text(encoding="utf-8")) if study.manifest_path.exists()
+                else {"design": study.design, "rate_rps": prereg.RATE, "duration_s": prereg.DURATION})
     fresh = {e["name"] for e in entries}
     manifest["runs"] = [e for e in manifest.get("runs", []) if e["name"] not in fresh] + entries
-    MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
-    MANIFEST_PATH.write_text(json.dumps(manifest, indent=1) + "\n", encoding="utf-8", newline="\n")
-    print(f"{len(entries)} runs -> {MANIFEST_PATH} ({len(manifest['runs'])} in total)")
+    study.manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    study.manifest_path.write_text(json.dumps(manifest, indent=1) + "\n", encoding="utf-8", newline="\n")
+    print(f"{len(entries)} runs -> {study.manifest_path} ({len(manifest['runs'])} in total)")
 
 
 if __name__ == "__main__":

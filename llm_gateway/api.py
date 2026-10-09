@@ -247,6 +247,7 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                 attempts.append(FailoverAttempt(model=candidate.id, outcome="circuit_open"))
                 continue
             started = time.perf_counter()
+            watch = breaker.watch(candidate.provider, admission) if admission is not None else None
             try:
                 call = providers[candidate.provider].complete(candidate, chat)
                 result = await (asyncio.wait_for(call, remaining) if math.isfinite(remaining) else call)
@@ -255,16 +256,20 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                 if health is not None:
                     await health.record(candidate.provider, kind)
                 if admission is not None:
-                    await breaker.on_result(candidate.provider, kind, admission)
+                    await breaker.on_result(candidate.provider, kind, admission,
+                                            time.perf_counter() - started, watch)
                 attempts.append(FailoverAttempt(model=candidate.id, outcome=kind))
                 if kind not in FAILOVER_KINDS:
                     break
                 continue
+            finally:
+                if watch is not None and watch.task is not None:
+                    watch.task.cancel()  # a call that raised anything else must not be listed as slow later
             record.latency_ms = (time.perf_counter() - started) * 1000
             if health is not None:
                 await health.record(candidate.provider, "ok", record.latency_ms / 1000)
             if admission is not None:
-                await breaker.on_result(candidate.provider, "ok", admission)
+                await breaker.on_result(candidate.provider, "ok", admission, record.latency_ms / 1000, watch)
             attempts.append(FailoverAttempt(model=candidate.id, outcome="ok"))
             model = candidate
             break
