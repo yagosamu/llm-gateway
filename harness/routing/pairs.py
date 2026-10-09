@@ -25,15 +25,16 @@ def excluded_prompts(rows: list[dict], matrix: dict) -> list[str]:
     return [row["id"] for row in rows if reference_for(row["id"], matrix) is None]
 
 
-def build_pairs(rows: list[dict], matrix: dict) -> list[dict]:
-    """One pair per evaluated prompt and candidate tier, in traffic order then tier order."""
+def build_pairs(rows: list[dict], matrix: dict, candidates: dict[str, str] | None = None) -> list[dict]:
+    """One pair per evaluated prompt and candidate, in traffic order then candidate order. Candidates
+    map a label (the tier, in the verdict key) to a model; by default the pre-registered tiers."""
+    candidates = candidates or {tier: prereg.TIER_MAP[tier] for tier in prereg.CANDIDATE_TIERS}
     pairs = []
     for row in rows:
         reference = reference_for(row["id"], matrix)
         if reference is None:
             continue
-        for tier in prereg.CANDIDATE_TIERS:
-            model = prereg.TIER_MAP[tier]
+        for tier, model in candidates.items():
             candidate = matrix[(row["id"], model)]
             pairs.append({
                 "prompt_id": row["id"], "category": row["category"], "tier": tier, "model": model,

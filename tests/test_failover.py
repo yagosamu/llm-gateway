@@ -153,3 +153,32 @@ def test_every_committed_fallback_is_on_another_provider():
     for tier, models in config.failover.fallbacks.items():
         primary = REGISTRY[config.tier_map[tier]].provider
         assert all(REGISTRY[m].provider != primary for m in models), tier
+
+
+def test_fallback_quality_scores_both_models_the_same_way():
+    from harness.routing.fallback_quality import FALLBACK, PRIMARY, build_results
+    from harness.routing import prereg
+    rows = [{"id": f"p{i}"} for i in range(4)]
+    matrix = {}
+    for i in range(4):
+        for model in (prereg.REFERENCE_MODEL, prereg.FALLBACK_REFERENCE_MODEL, PRIMARY):
+            matrix[(f"p{i}", model)] = {"model": model, "text": "a", "finish_reason": "stop"}
+        matrix[(f"p{i}", FALLBACK)] = {"model": FALLBACK, "text": "a", "finish_reason": "length" if i == 0 else "stop"}
+    verdict = lambda pid, tier, ok: {"prompt_id": pid, "tier": tier, "judge": "gpt-4.1-mini", "acceptable": ok, "status": "ok"}
+    primary = [verdict(f"p{i}", "low", True) for i in range(4)]
+    fallback = [verdict(f"p{i}", f"fallback-{FALLBACK}", i != 1) for i in range(1, 4)]
+    r = build_results(rows, matrix, primary, fallback)
+    assert r["primary"]["acceptance"][0] == 1.0 and r["fallback"]["acceptance"][0] == 0.5  # p0 cut, p1 rejected
+    assert r["fallback"]["cut_by_limit"] == 1 and (r["paired"]["b"], r["paired"]["c"]) == (2, 0)
+
+
+@pytest.mark.gate
+def test_the_committed_fallback_quality_matches_a_fresh_computation():
+    import json
+    from harness.record import RECORDINGS_PATH, load_records, load_rows
+    from harness.replay import current_records
+    from harness.routing.fallback_quality import JSON_PATH, build_results
+    from harness.routing.judge import FALLBACK_VERDICTS_PATH, VERDICTS_PATH, load_verdicts
+    matrix = current_records(load_records(RECORDINGS_PATH), REGISTRY)
+    fresh = build_results(load_rows(), matrix, load_verdicts(VERDICTS_PATH), load_verdicts(FALLBACK_VERDICTS_PATH))
+    assert json.loads(json.dumps(fresh)) == json.loads(JSON_PATH.read_text(encoding="utf-8"))

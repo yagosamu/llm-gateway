@@ -33,6 +33,7 @@ from llm_gateway.providers.base import ProviderError, classify
 from llm_gateway.registry import ModelConfig, cost_usd, load_registry
 
 VERDICTS_PATH = Path("data/judgments/verdicts.jsonl")
+FALLBACK_VERDICTS_PATH = Path("data/judgments/fallback_verdicts.jsonl")
 MAX_OUTPUT_TOKENS = 400
 TIMEOUT_SECONDS = 60.0
 CONCURRENCY = 4
@@ -211,18 +212,24 @@ def main() -> None:
     parser.add_argument("--judge", choices=prereg.JUDGES, default=None, help="run only this judge")
     parser.add_argument("--run-name", default=None)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--fallback", default=None, metavar="MODEL",
+                        help="judge a failover model instead of the pre-registered tiers; verdicts go to "
+                             "data/judgments/fallback_verdicts.jsonl, apart from the slice 2 evaluation")
     args = parser.parse_args()
 
     models = judge_models()
-    pairs = build_pairs(load_rows(), current_records(load_records(RECORDINGS_PATH), load_registry()))
-    done = {r["key"] for r in load_verdicts() if r["status"] == "ok"}
+    candidates, verdicts_path = None, VERDICTS_PATH
+    if args.fallback:
+        candidates, verdicts_path = {f"fallback-{args.fallback}": args.fallback}, FALLBACK_VERDICTS_PATH
+    pairs = build_pairs(load_rows(), current_records(load_records(RECORDINGS_PATH), load_registry()), candidates)
+    done = {r["key"] for r in load_verdicts(verdicts_path) if r["status"] == "ok"}
     calls = plan(pairs, done, args.limit, (args.judge,) if args.judge else prereg.JUDGES)
     print(f"{len(calls)} judge calls planned, worst case US$ {plan_ceiling_usd(calls, models):.2f}; "
           f"already spent US$ {budget.spent_usd():.2f} of US$ {budget.BUDGET_USD:.2f}")
     if args.dry_run or not calls:
         return
     run_name = args.run_name or f"judge-{_now()}"
-    records = asyncio.run(run(calls, Judges(), models, run_name))
+    records = asyncio.run(run(calls, Judges(), models, run_name, verdicts_path))
     print(summarize(records))
     print(f"\nproject total US$ {budget.spent_usd():.4f} of US$ {budget.BUDGET_USD:.2f}")
 
