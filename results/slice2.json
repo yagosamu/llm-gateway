@@ -1,0 +1,268 @@
+{
+ "n_prompts": 238,
+ "excluded": [
+  "dolly-02945",
+  "dolly-06056"
+ ],
+ "seed": 20261008,
+ "n_resamples": 10000,
+ "decision_threshold": 0.95,
+ "quality_bar_lower_bound": 0.9,
+ "tier_map": {
+  "low": "gpt-6-luna",
+  "medium": "claude-haiku-4-5",
+  "high": "gpt-6.1-sol"
+ },
+ "judges": [
+  "gpt-4.1-mini",
+  "claude-sonnet-5-5"
+ ],
+ "rubric_version": "v1",
+ "policies": {
+  "always_high": {
+   "acceptance": [
+    0.995798,
+    0.987395,
+    1.0
+   ],
+   "cost_per_1k_usd": [
+    2.046454,
+    1.833451,
+    2.272671
+   ],
+   "cost_reduction_vs_always_high": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tier_share": {
+    "low": 0.0,
+    "medium": 0.0,
+    "high": 1.0
+   },
+   "meets_quality_bar": true
+  },
+  "always_low": {
+   "acceptance": [
+    0.957983,
+    0.932773,
+    0.983193
+   ],
+   "cost_per_1k_usd": [
+    0.089161,
+    0.079741,
+    0.099242
+   ],
+   "cost_reduction_vs_always_high": [
+    0.956431,
+    0.953439,
+    0.958948
+   ],
+   "tier_share": {
+    "low": 1.0,
+    "medium": 0.0,
+    "high": 0.0
+   },
+   "meets_quality_bar": true
+  },
+  "always_medium": {
+   "acceptance": [
+    0.857143,
+    0.810924,
+    0.89916
+   ],
+   "cost_per_1k_usd": [
+    1.103618,
+    1.029696,
+    1.177846
+   ],
+   "cost_reduction_vs_always_high": [
+    0.460717,
+    0.420311,
+    0.49735
+   ],
+   "tier_share": {
+    "low": 0.0,
+    "medium": 1.0,
+    "high": 0.0
+   },
+   "meets_quality_bar": false
+  },
+  "feature_table": {
+   "acceptance": [
+    0.953782,
+    0.92437,
+    0.978992
+   ],
+   "cost_per_1k_usd": [
+    0.566066,
+    0.423934,
+    0.723043
+   ],
+   "cost_reduction_vs_always_high": [
+    0.723392,
+    0.655741,
+    0.787942
+   ],
+   "tier_share": {
+    "low": 0.752101,
+    "medium": 0.12605,
+    "high": 0.121849
+   },
+   "meets_quality_bar": true
+  },
+  "classifier": {
+   "acceptance": [
+    0.957983,
+    0.932773,
+    0.983193
+   ],
+   "cost_per_1k_usd": [
+    0.785683,
+    0.612088,
+    0.97439
+   ],
+   "cost_reduction_vs_always_high": [
+    0.616076,
+    0.535561,
+    0.692636
+   ],
+   "tier_share": {
+    "low": 0.672269,
+    "medium": 0.0,
+    "high": 0.327731
+   },
+   "meets_quality_bar": true
+  },
+  "oracle": {
+   "acceptance": [
+    0.995798,
+    0.987395,
+    1.0
+   ],
+   "cost_per_1k_usd": [
+    0.190101,
+    0.112268,
+    0.305468
+   ],
+   "cost_reduction_vs_always_high": [
+    0.907107,
+    0.857634,
+    0.943304
+   ],
+   "tier_share": {
+    "low": 0.957983,
+    "medium": 0.02521,
+    "high": 0.016807
+   },
+   "meets_quality_bar": true
+  }
+ },
+ "primary": {
+  "policy": "classifier",
+  "meets_quality_bar": true
+ },
+ "secondary": {
+  "pair": [
+   "classifier",
+   "feature_table"
+  ],
+  "mcnemar": {
+   "b": 1,
+   "c": 0,
+   "p": 1.0
+  },
+  "cost_per_1k_difference_usd": [
+   0.219618,
+   0.097584,
+   0.36103
+  ]
+ },
+ "acceptance_by_category": {
+  "brainstorming": {
+   "low": 0.933333,
+   "medium": 0.766667,
+   "high": 0.966667,
+   "n": 30
+  },
+  "classification": {
+   "low": 0.966667,
+   "medium": 0.9,
+   "high": 1.0,
+   "n": 30
+  },
+  "closed_qa": {
+   "low": 0.933333,
+   "medium": 0.966667,
+   "high": 1.0,
+   "n": 30
+  },
+  "creative_writing": {
+   "low": 0.928571,
+   "medium": 0.928571,
+   "high": 1.0,
+   "n": 28
+  },
+  "general_qa": {
+   "low": 1.0,
+   "medium": 0.8,
+   "high": 1.0,
+   "n": 30
+  },
+  "information_extraction": {
+   "low": 0.966667,
+   "medium": 0.833333,
+   "high": 1.0,
+   "n": 30
+  },
+  "open_qa": {
+   "low": 0.966667,
+   "medium": 0.8,
+   "high": 1.0,
+   "n": 30
+  },
+  "summarization": {
+   "low": 0.966667,
+   "medium": 0.866667,
+   "high": 1.0,
+   "n": 30
+  }
+ },
+ "judge_agreement": {
+  "n": 474,
+  "agreement": 0.932489,
+  "kappa": 0.359676,
+  "first_yes": 462,
+  "second_yes": 434
+ },
+ "human_agreement": {
+  "n": 30,
+  "agreement": 0.9,
+  "kappa": 0.0,
+  "first_yes": 30,
+  "second_yes": 27,
+  "disagreements": [
+   {
+    "item": 14,
+    "prompt_id": "dolly-12245",
+    "tier": "medium",
+    "human": true,
+    "judges": false
+   },
+   {
+    "item": 17,
+    "prompt_id": "dolly-00477",
+    "tier": "medium",
+    "human": true,
+    "judges": false
+   },
+   {
+    "item": 29,
+    "prompt_id": "dolly-09763",
+    "tier": "medium",
+    "human": true,
+    "judges": false
+   }
+  ]
+ }
+}
