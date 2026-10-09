@@ -94,15 +94,20 @@ class HealthTracker:
             if self.metrics is not None:
                 self.metrics.health_write_errors.inc()
 
-    async def snapshot(self, provider: str) -> HealthSnapshot:
+    async def snapshot(self, provider: str, since: float | None = None) -> HealthSnapshot:
+        """The window's totals. With `since`, only buckets that start after the bucket holding `since`
+        count, so events from before a moment (a breaker closing) never weigh on what follows it; the
+        price is ignoring up to one bucket of events after it."""
         now = self.clock()
         first = self._bucket(now - WINDOW_SECONDS + BUCKET_SECONDS)
+        if since is not None:
+            first = max(first, self._bucket(since) + BUCKET_SECONDS)
         buckets = range(first, self._bucket(now) + BUCKET_SECONDS, BUCKET_SECONDS)
+        totals: dict[str, int] = {}
         pipe = self.redis.pipeline(transaction=False)
         for bucket in buckets:
             pipe.hgetall(self._key(provider, bucket))
-        totals: dict[str, int] = {}
-        for fields in await pipe.execute():
+        for fields in (await pipe.execute() if len(buckets) else []):
             for name, value in fields.items():
                 name = name.decode() if isinstance(name, bytes) else name
                 totals[name] = totals.get(name, 0) + int(value)

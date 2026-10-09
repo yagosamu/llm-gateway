@@ -21,3 +21,14 @@ tier_map:
 verifier:
   sample_rate: 0.05
   daily_budget_usd: 0.50
+# Per-provider circuit breaker. A circuit opens when, over the shared 60 s window and at least
+# min_calls calls, the share of failed calls (rate limit, timeout, connection, server error, auth)
+# reaches error_rate_threshold, or the p95 latency of successful calls passes p95_budget_ms. It stays
+# open open_seconds, then lets one probe through; the probe closes it or opens it again. The p95
+# budget sits above the slowest recorded p95 (gpt-6.1-sol, 16.5 s), so normal traffic never trips it.
+breaker:
+  error_rate_threshold: 0.5
+  min_calls: 10
+  p95_budget_ms: 30000
+  open_seconds: 15
+  probe_lease_seconds: 70

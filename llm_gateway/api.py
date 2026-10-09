@@ -18,6 +18,8 @@ from fastapi.responses import JSONResponse, Response
 from pydantic import ValidationError
 from redis.exceptions import RedisError
 
+from llm_gateway.breaker import STATES as BREAKER_STATES
+from llm_gateway.breaker import CircuitBreaker
 from llm_gateway.health import HealthTracker
 from llm_gateway.metrics import GatewayMetrics
 from llm_gateway.providers.base import Provider, ProviderError
@@ -67,13 +69,16 @@ def _validation_message(exc: ValidationError) -> tuple[str, str | None]:
 def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                request_log: RequestLog | None = None, metrics: GatewayMetrics | None = None,
                router: Router | None = None, verifier_judge: Judge | None = None,
-               verifier_rng: random.Random | None = None, health: HealthTracker | None = None) -> FastAPI:
+               verifier_rng: random.Random | None = None, health: HealthTracker | None = None,
+               breaker: CircuitBreaker | None = None) -> FastAPI:
     request_log = request_log or RequestLog(":memory:")
     metrics = metrics or GatewayMetrics()
     verifier = (Verifier(router, registry, providers, verifier_judge, request_log, metrics, verifier_rng)
                 if router is not None and verifier_judge is not None else None)
     if health is not None and health.metrics is None:
         health.metrics = metrics
+    if breaker is not None and breaker.metrics is None:
+        breaker.metrics = metrics
     provider_names = sorted({m.provider for m in registry.values()})
     app = FastAPI(title="llm-gateway")
     app.state.request_log, app.state.metrics, app.state.verifier = request_log, metrics, verifier
@@ -85,6 +90,9 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
         try:
             for provider in provider_names:
                 metrics.observe_health(await health.snapshot(provider))
+                if breaker is not None:
+                    state, _ = await breaker.state(provider)
+                    metrics.breaker_state.labels(provider).set(BREAKER_STATES.index(state))
         except (RedisError, OSError):
             pass  # the scrape still returns the local metrics; the shared view is just stale
 
@@ -94,10 +102,12 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
             return error(503, "health_disabled", "This gateway has no health store configured.")
         try:
             snapshots = [await health.snapshot(p) for p in provider_names]
+            states = {p: (await breaker.state(p))[0] for p in provider_names} if breaker else {}
         except (RedisError, OSError):
             return error(503, "health_store_unavailable", "The shared health store cannot be reached.")
         return {"window_seconds": snapshots[0].window_seconds if snapshots else None,
-                "providers": {s.provider: s.as_dict() for s in snapshots}}
+                "providers": {s.provider: s.as_dict() | ({"circuit": states[s.provider]} if states else {})
+                              for s in snapshots}}
 
     @app.get("/v1/models")
     async def list_models() -> dict:
@@ -172,18 +182,27 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
         if chat.tools:
             return reject(400, "tools_not_supported", "This gateway does not forward tools.", "tools")
 
+        admission = await breaker.allow(model.provider) if breaker is not None else None
+        if admission is not None and not admission.allowed:
+            record.outcome, record.error_code = "upstream_error", "upstream_circuit_open"
+            return error(503, record.error_code, f"{model.provider}'s circuit is {admission.state}; "
+                                                 "the gateway is not sending it traffic.", "model")
         started = time.perf_counter()
         try:
             result = await providers[model.provider].complete(model, chat)
         except ProviderError as exc:
             if health is not None:
                 await health.record(model.provider, exc.kind)
+            if admission is not None:
+                await breaker.on_result(model.provider, exc.kind, admission)
             status, hint = UPSTREAM_STATUS[exc.kind]
             record.outcome, record.error_code = "upstream_error", f"upstream_{exc.kind}"
             return error(status, record.error_code, f"{model.provider} failed ({exc.kind}): {hint}", "model")
         record.latency_ms = (time.perf_counter() - started) * 1000
         if health is not None:
             await health.record(model.provider, "ok", record.latency_ms / 1000)
+        if admission is not None:
+            await breaker.on_result(model.provider, "ok", admission)
         record.outcome, record.finish_reason = "ok", result.finish_reason
         record.input_tokens, record.output_tokens = result.input_tokens, result.output_tokens
         record.cost_usd = cost_usd(model, result.input_tokens, result.output_tokens)

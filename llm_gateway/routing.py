@@ -112,12 +112,38 @@ class VerifierConfig:
 
 
 @dataclass(frozen=True)
+class BreakerConfig:
+    """When a provider's circuit opens, how long it stays open, and how a half-open probe is leased."""
+    error_rate_threshold: float = 0.5
+    min_calls: int = 10
+    p95_budget_ms: float = 30_000.0
+    open_seconds: float = 15.0
+    probe_lease_seconds: float = 70.0  # longer than a provider call's 60 s timeout
+
+
+@dataclass(frozen=True)
 class RoutingConfig:
     version: str
     policy_name: str
     tier_map: dict[str, str]
     policy: object  # FixedTier | FeatureTable | LogisticClassifier
     verifier: VerifierConfig = VerifierConfig()
+    breaker: BreakerConfig = BreakerConfig()
+
+
+def _breaker_config(data: dict) -> BreakerConfig:
+    section = data.get("breaker") or {}
+    if not isinstance(section, dict):
+        raise RoutingConfigError("breaker must be a mapping")
+    unknown = sorted(set(section) - set(BreakerConfig.__dataclass_fields__))
+    if unknown:
+        raise RoutingConfigError(f"breaker has unknown keys {unknown}")
+    config = BreakerConfig(**{k: float(v) if k != "min_calls" else int(v) for k, v in section.items()})
+    if not 0 < config.error_rate_threshold <= 1:
+        raise RoutingConfigError("breaker.error_rate_threshold must be in (0, 1]")
+    if config.min_calls < 1 or config.p95_budget_ms <= 0 or config.open_seconds <= 0 or config.probe_lease_seconds <= 0:
+        raise RoutingConfigError("breaker.min_calls, p95_budget_ms, open_seconds and probe_lease_seconds must be positive")
+    return config
 
 
 def _verifier_config(data: dict) -> VerifierConfig:
@@ -164,7 +190,7 @@ def load_config(path: Path, model_ids: set[str]) -> RoutingConfig:
         section = estimates[policy_name]
         policy = FeatureTable(section, threshold) if policy_name == "feature_table" else LogisticClassifier(section, threshold)
     return RoutingConfig(version=str(data.get("version", "")), policy_name=policy_name, tier_map=dict(tier_map),
-                         policy=policy, verifier=_verifier_config(data))
+                         policy=policy, verifier=_verifier_config(data), breaker=_breaker_config(data))
 
 
 class Router:

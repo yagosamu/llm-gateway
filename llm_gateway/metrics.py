@@ -46,6 +46,12 @@ class GatewayMetrics:
         self.health_write_errors = Counter("llm_gateway_health_write_errors",
                                            "Health writes lost because Redis was unreachable.",
                                            registry=self.registry)
+        # 0 closed, 1 half-open, 2 open: one series per provider makes a readable state timeline.
+        self.breaker_state = Gauge("llm_gateway_breaker_state", "Circuit state: 0 closed, 1 half-open, 2 open.",
+                                   ["provider"], registry=self.registry)
+        self.breaker_transitions = Counter("llm_gateway_breaker_transitions",
+                                           "Circuit transitions made by this instance.",
+                                           ["provider", "from_state", "to_state"], registry=self.registry)
 
     def observe_health(self, snapshot) -> None:
         if snapshot.success_rate is not None:
