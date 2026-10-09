@@ -113,7 +113,9 @@ class VerifierConfig:
 
 @dataclass(frozen=True)
 class BreakerConfig:
-    """When a provider's circuit opens, how long it stays open, and how a half-open probe is leased."""
+    """When a provider's circuit opens, how long it stays open, and how a half-open probe is leased.
+    enabled false lets every call through and never moves a circuit, for comparison runs."""
+    enabled: bool = True
     error_rate_threshold: float = 0.5
     min_calls: int = 10
     p95_budget_ms: float = 30_000.0
@@ -169,7 +171,17 @@ def _breaker_config(data: dict) -> BreakerConfig:
     unknown = sorted(set(section) - set(BreakerConfig.__dataclass_fields__))
     if unknown:
         raise RoutingConfigError(f"breaker has unknown keys {unknown}")
-    config = BreakerConfig(**{k: float(v) if k != "min_calls" else int(v) for k, v in section.items()})
+    values = {}
+    for key, value in section.items():
+        if key == "enabled":
+            if not isinstance(value, bool):
+                raise RoutingConfigError("breaker.enabled must be true or false")
+            values[key] = value
+        elif isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise RoutingConfigError(f"breaker.{key} must be a number")
+        else:
+            values[key] = int(value) if key == "min_calls" else float(value)
+    config = BreakerConfig(**values)
     if not 0 < config.error_rate_threshold <= 1:
         raise RoutingConfigError("breaker.error_rate_threshold must be in (0, 1]")
     if config.min_calls < 1 or config.p95_budget_ms <= 0 or config.open_seconds <= 0 or config.probe_lease_seconds <= 0:

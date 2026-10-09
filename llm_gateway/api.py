@@ -9,6 +9,7 @@ before its body is read.
 Every request, answered or refused, leaves exactly one row in the request log and one increment in
 the metrics, written in one place after the response is decided."""
 import asyncio
+import hmac
 import json
 import math
 import random
@@ -22,6 +23,7 @@ from redis.exceptions import RedisError
 
 from llm_gateway.breaker import STATES as BREAKER_STATES
 from llm_gateway.breaker import CircuitBreaker
+from llm_gateway.chaos import ChaosConfigError, ChaosControl
 from llm_gateway.health import HealthTracker
 from llm_gateway.metrics import GatewayMetrics
 from llm_gateway.providers.base import Provider, ProviderError
@@ -44,6 +46,10 @@ AUTO_MODEL = "auto"
 # Errors that send an "auto" request on to the next model. A bad request would fail the same way
 # anywhere, so it is returned at once.
 FAILOVER_KINDS = ("rate_limit", "timeout", "connection", "server_error", "auth")
+# A fallback attempt that would start with less time than this left in the request's deadline is not
+# made: no provider answers in a few milliseconds, so it could only fail and add a call. The first
+# attempt is always made.
+MIN_ATTEMPT_SECONDS = 0.5
 
 REQUIRED_HEADERS = {"X-Tenant-Id": "tenant", "X-Feature": "feature", "X-Request-Id": "request_id"}
 # Tenant and feature are metric labels, so they are kept short and free of separators.
@@ -76,7 +82,8 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                request_log: RequestLog | None = None, metrics: GatewayMetrics | None = None,
                router: Router | None = None, verifier_judge: Judge | None = None,
                verifier_rng: random.Random | None = None, health: HealthTracker | None = None,
-               breaker: CircuitBreaker | None = None) -> FastAPI:
+               breaker: CircuitBreaker | None = None, chaos: ChaosControl | None = None,
+               admin_token: str | None = None) -> FastAPI:
     request_log = request_log or RequestLog(":memory:")
     metrics = metrics or GatewayMetrics()
     verifier = (Verifier(router, registry, providers, verifier_judge, request_log, metrics, verifier_rng)
@@ -101,6 +108,40 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                     metrics.breaker_state.labels(provider).set(BREAKER_STATES.index(state))
         except (RedisError, OSError):
             pass  # the scrape still returns the local metrics; the shared view is just stale
+
+    def admin_denied(request: Request) -> JSONResponse | None:
+        """Chaos endpoints exist only in an app built with chaos and an admin token; otherwise 404,
+        so the served gateway never exposes them."""
+        if chaos is None or not admin_token:
+            return error(404, "not_found", "No such endpoint.")
+        given = request.headers.get("X-Admin-Token", "")
+        if not hmac.compare_digest(given.encode(), admin_token.encode()):
+            return error(403, "forbidden", "A valid X-Admin-Token header is required.")
+        return None
+
+    @app.get("/admin/chaos")
+    async def chaos_list(request: Request):
+        if (denied := admin_denied(request)) is not None:
+            return denied
+        return {p: await chaos.get(p) for p in provider_names}
+
+    @app.post("/admin/chaos/{provider}")
+    async def chaos_set(provider: str, request: Request):
+        if (denied := admin_denied(request)) is not None:
+            return denied
+        if provider not in provider_names:
+            return error(404, "unknown_provider", f"Provider {provider!r} is not in the registry.")
+        try:
+            return {provider: await chaos.set(provider, await request.json())}
+        except (ChaosConfigError, ValueError, TypeError) as exc:
+            return error(400, "invalid_fault", str(exc))
+
+    @app.delete("/admin/chaos")
+    async def chaos_clear(request: Request):
+        if (denied := admin_denied(request)) is not None:
+            return denied
+        await chaos.clear()
+        return {p: None for p in provider_names}
 
     @app.get("/v1/health")
     async def provider_health():
@@ -198,7 +239,7 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
         attempts, result = [], None
         for candidate in candidates:
             remaining = deadline - time.perf_counter()
-            if remaining <= 0:
+            if remaining <= 0 or (attempts and remaining < MIN_ATTEMPT_SECONDS):
                 attempts.append(FailoverAttempt(model=candidate.id, outcome="deadline"))
                 break
             admission = await breaker.allow(candidate.provider) if breaker is not None else None

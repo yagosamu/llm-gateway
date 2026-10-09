@@ -89,6 +89,8 @@ class CircuitBreaker:
         return True
 
     async def allow(self, provider: str) -> Admission:
+        if not self.config().enabled:
+            return Admission(True, "disabled")
         try:
             state, changed_at = await self.state(provider)
             if state == "open" and self.clock() - changed_at >= self.config().open_seconds:
@@ -107,6 +109,8 @@ class CircuitBreaker:
 
     async def on_result(self, provider: str, outcome: str, admission: Admission) -> None:
         """Called after the call's outcome was recorded in the health window."""
+        if admission.state == "disabled":
+            return
         try:
             if admission.probe:
                 await self.redis.delete(f"{self._key(provider)}:probe")
