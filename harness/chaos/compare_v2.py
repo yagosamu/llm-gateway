@@ -6,11 +6,12 @@ does not, so a gate test regenerates the published verdict.
 
 Usage: uv run python -m harness.chaos.compare_v2"""
 import json
+import math
 import statistics
 import sys
 from pathlib import Path
 
-from harness.chaos import prereg_v2
+from harness.chaos import prereg, prereg_v2
 from harness.chaos.analyze import build_results, load_runs, render_markdown
 
 MANIFEST_PATH = Path("data/chaos/v2/manifest.json")
@@ -79,13 +80,33 @@ def criteria(runs: list[dict]) -> list[dict]:
     return out
 
 
+NOISE_WINDOWS = (20, 40, 60)
+NOISE_ERROR_RATES = (0.10, 0.20, 0.30)
+
+
+def window_noise() -> list[dict]:
+    """Not pre-registered; added after the runs. For a count window of W calls that opens at half of
+    them failing, the exact binomial probability that one evaluation trips under a steady error rate p,
+    and the outage detection time at the study's rate. Consecutive evaluations overlap, so trips per
+    hour are below probability x evaluations per hour."""
+    rows = []
+    for window in NOISE_WINDOWS:
+        needed = window // 2
+        row = {"window_calls": window, "outage_detection_s": round(needed / prereg.RATE, 3)}
+        for p in NOISE_ERROR_RATES:
+            tail = sum(math.comb(window, k) * p ** k * (1 - p) ** (window - k) for k in range(needed, window + 1))
+            row[f"trip_probability_at_{int(p * 100)}pct"] = float(f"{tail:.3e}")
+        rows.append(row)
+    return rows
+
+
 def build(runs: list[dict]) -> dict:
     checks = criteria(runs)
     table = build_results(runs, scenarios=prereg_v2.SCENARIOS, configs=prereg_v2.CONFIGS)
     table["opens_total"] = {s: {c: [r["opens_total"] for r in runs if r["scenario"] == s and r["config"] == c]
                                 for c in prereg_v2.CONFIGS} for s in prereg_v2.SCENARIOS}
     return {"design": "harness/chaos/prereg_v2.py", "v2_better": all(c["pass"] for c in checks),
-            "criteria": checks, "table": table}
+            "criteria": checks, "table": table, "window_noise": window_noise()}
 
 
 def render(r: dict) -> str:
@@ -104,6 +125,20 @@ def render(r: dict) -> str:
     lines += render_markdown(r["table"]).splitlines()[4:]  # drop the slice 3 title and preamble
     lines += ["", "Openings over the whole run, per repetition: " + "; ".join(
         f"{s} v1 {o[V1]} v2 {o[V2]}" for s, o in r["table"]["opens_total"].items()) + ".", ""]
+    rates = [f"{int(p * 100)}%" for p in NOISE_ERROR_RATES]
+    lines += ["## What the criteria did not cover: noise at moderate error rates", "",
+              "Added after the runs, not pre-registered. The mild control (10% errors) never tripped v2, but a "
+              "20-call window is a small sample: under a steady error rate well below the 50% threshold it can "
+              "still see half its calls fail. Exact binomial probability that one evaluation trips, and the "
+              f"outage detection time at {prereg.RATE:.0f} requests per second:", "",
+              "| window, calls | outage detection | " + " | ".join(f"trip probability at {x} errors" for x in rates) + " |",
+              "|---|---|" + "---|" * len(rates)]
+    for row in r["window_noise"]:
+        lines.append(f"| {row['window_calls']} | {row['outage_detection_s']:.1f} s | " + " | ".join(
+            f"{row[f'trip_probability_at_{int(p * 100)}pct']:.1e}" for p in NOISE_ERROR_RATES) + " |")
+    lines += ["", "Every evaluation follows a call, so at 4 requests per second there are 14,400 an hour; overlapping "
+              "windows are correlated, so trips per hour are lower than that product. A trip sends traffic to the "
+              "fallback for the open period: clients see no error, but the fallback costs more.", ""]
     return "\n".join(lines)
 
 

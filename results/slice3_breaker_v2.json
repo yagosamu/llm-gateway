@@ -1,0 +1,1154 @@
+{
+ "design": "harness/chaos/prereg_v2.py",
+ "v2_better": true,
+ "criteria": [
+  {
+   "id": "C1",
+   "scenario": "outage",
+   "check": "median time to open lower than v1",
+   "v1": 20.218,
+   "v2": 2.709,
+   "pass": true
+  },
+  {
+   "id": "C1",
+   "scenario": "timeouts",
+   "check": "median time to open lower than v1",
+   "v1": 30.246,
+   "v2": 12.526,
+   "pass": true
+  },
+  {
+   "id": "C1",
+   "scenario": "latency",
+   "check": "median time to open lower than v1",
+   "v1": 37.522,
+   "v2": 32.51,
+   "pass": true
+  },
+  {
+   "id": "C2",
+   "scenario": "partial",
+   "check": "opens in at least 2 of the repetitions",
+   "v1": 0,
+   "v2": 3,
+   "pass": true
+  },
+  {
+   "id": "C3",
+   "scenario": "outage",
+   "check": "closes after the fault and stays closed, in every repetition where it opened",
+   "v1": [
+    0,
+    0,
+    0
+   ],
+   "v2": [
+    0,
+    0,
+    0
+   ],
+   "pass": true
+  },
+  {
+   "id": "C3",
+   "scenario": "partial",
+   "check": "closes after the fault and stays closed, in every repetition where it opened",
+   "v1": [
+    null,
+    null,
+    null
+   ],
+   "v2": [
+    0,
+    0,
+    0
+   ],
+   "pass": true
+  },
+  {
+   "id": "C3",
+   "scenario": "timeouts",
+   "check": "closes after the fault and stays closed, in every repetition where it opened",
+   "v1": [
+    0,
+    0,
+    0
+   ],
+   "v2": [
+    0,
+    0,
+    0
+   ],
+   "pass": true
+  },
+  {
+   "id": "C3",
+   "scenario": "latency",
+   "check": "closes after the fault and stays closed, in every repetition where it opened",
+   "v1": [
+    1,
+    1,
+    1
+   ],
+   "v2": [
+    0,
+    0,
+    0
+   ],
+   "pass": true
+  },
+  {
+   "id": "C4",
+   "scenario": "healthy",
+   "check": "never opens",
+   "v1": [
+    0,
+    0,
+    0
+   ],
+   "v2": [
+    0,
+    0,
+    0
+   ],
+   "pass": true
+  },
+  {
+   "id": "C4",
+   "scenario": "mild",
+   "check": "never opens",
+   "v1": [
+    0,
+    0,
+    0
+   ],
+   "v2": [
+    0,
+    0,
+    0
+   ],
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "outage",
+   "check": "client errors at most v1 + 0.5 points",
+   "v1": 0.0,
+   "v2": 0.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "outage",
+   "check": "p95 at most v1 x 1.05 + 0.1 s",
+   "v1": 4.89,
+   "v2": 4.903,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "outage",
+   "check": "wasted calls at most v1",
+   "v1": 81.0,
+   "v2": 11.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "outage",
+   "check": "errors after recovery at most v1 + 0.5 points",
+   "v1": 0.0,
+   "v2": 0.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "partial",
+   "check": "client errors at most v1 + 0.5 points",
+   "v1": 0.0,
+   "v2": 0.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "partial",
+   "check": "p95 at most v1 x 1.05 + 0.1 s",
+   "v1": 5.508,
+   "v2": 4.917,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "partial",
+   "check": "wasted calls at most v1",
+   "v1": 84.0,
+   "v2": 15.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "partial",
+   "check": "errors after recovery at most v1 + 0.5 points",
+   "v1": 0.0,
+   "v2": 0.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "timeouts",
+   "check": "client errors at most v1 + 0.5 points",
+   "v1": 0.0,
+   "v2": 0.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "timeouts",
+   "check": "p95 at most v1 x 1.05 + 0.1 s",
+   "v1": 14.751,
+   "v2": 14.552,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "timeouts",
+   "check": "wasted calls at most v1",
+   "v1": 120.0,
+   "v2": 51.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "timeouts",
+   "check": "errors after recovery at most v1 + 0.5 points",
+   "v1": 0.0,
+   "v2": 0.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "latency",
+   "check": "client errors at most v1 + 0.5 points",
+   "v1": 0.0,
+   "v2": 0.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "latency",
+   "check": "p95 at most v1 x 1.05 + 0.1 s",
+   "v1": 41.005,
+   "v2": 41.024,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "latency",
+   "check": "wasted calls at most v1",
+   "v1": 0.0,
+   "v2": 0.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "latency",
+   "check": "errors after recovery at most v1 + 0.5 points",
+   "v1": 0.0,
+   "v2": 0.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "healthy",
+   "check": "client errors at most v1 + 0.5 points",
+   "v1": 0.0,
+   "v2": 0.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "healthy",
+   "check": "p95 at most v1 x 1.05 + 0.1 s",
+   "v1": 6.022,
+   "v2": 6.032,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "healthy",
+   "check": "wasted calls at most v1",
+   "v1": 0.0,
+   "v2": 0.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "healthy",
+   "check": "errors after recovery at most v1 + 0.5 points",
+   "v1": 0.0,
+   "v2": 0.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "mild",
+   "check": "client errors at most v1 + 0.5 points",
+   "v1": 0.0,
+   "v2": 0.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "mild",
+   "check": "p95 at most v1 x 1.05 + 0.1 s",
+   "v1": 5.54,
+   "v2": 5.565,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "mild",
+   "check": "wasted calls at most v1",
+   "v1": 19.0,
+   "v2": 15.0,
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "scenario": "mild",
+   "check": "errors after recovery at most v1 + 0.5 points",
+   "v1": 0.0,
+   "v2": 0.0,
+   "pass": true
+  }
+ ],
+ "table": {
+  "rate_rps": 4.0,
+  "fault_window_s": [
+   20.0,
+   60.0
+  ],
+  "duration_s": 100.0,
+  "scenarios": {
+   "outage": {
+    "error_rate": 1.0,
+    "kind": "server_error"
+   },
+   "partial": {
+    "error_rate": 0.5,
+    "kind": "server_error"
+   },
+   "timeouts": {
+    "error_rate": 1.0,
+    "kind": "timeout",
+    "timeout_seconds": 10.0
+   },
+   "latency": {
+    "error_rate": 0.0,
+    "extra_latency_ms": 35000.0
+   },
+   "healthy": null,
+   "mild": {
+    "error_rate": 0.1,
+    "kind": "server_error"
+   }
+  },
+  "results": {
+   "outage": {
+    "breaker_v1": {
+     "reps": 3,
+     "error_rate": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "latency_p50_s": {
+      "median": 2.888,
+      "min": 2.87,
+      "max": 2.909,
+      "missing": 0
+     },
+     "latency_p95_s": {
+      "median": 4.89,
+      "min": 4.887,
+      "max": 4.92,
+      "missing": 0
+     },
+     "wasted_calls": {
+      "median": 81.0,
+      "min": 80,
+      "max": 81,
+      "missing": 0
+     },
+     "fallback_share": {
+      "median": 1.0,
+      "min": 1.0,
+      "max": 1.0,
+      "missing": 0
+     },
+     "time_to_open_s": {
+      "median": 20.218,
+      "min": 20.117,
+      "max": 20.23,
+      "missing": 0
+     },
+     "time_to_close_s": {
+      "median": 13.522,
+      "min": 11.645,
+      "max": 13.539,
+      "missing": 0
+     },
+     "error_rate_after": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "reopens_after_close": {
+      "median": 0.0,
+      "min": 0,
+      "max": 0,
+      "missing": 0
+     }
+    },
+    "breaker_v2": {
+     "reps": 3,
+     "error_rate": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "latency_p50_s": {
+      "median": 2.873,
+      "min": 2.856,
+      "max": 2.924,
+      "missing": 0
+     },
+     "latency_p95_s": {
+      "median": 4.903,
+      "min": 4.89,
+      "max": 4.903,
+      "missing": 0
+     },
+     "wasted_calls": {
+      "median": 11.0,
+      "min": 11,
+      "max": 12,
+      "missing": 0
+     },
+     "fallback_share": {
+      "median": 1.0,
+      "min": 1.0,
+      "max": 1.0,
+      "missing": 0
+     },
+     "time_to_open_s": {
+      "median": 2.709,
+      "min": 2.611,
+      "max": 2.724,
+      "missing": 0
+     },
+     "time_to_close_s": {
+      "median": 12.605,
+      "min": 9.686,
+      "max": 12.805,
+      "missing": 0
+     },
+     "error_rate_after": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "reopens_after_close": {
+      "median": 0.0,
+      "min": 0,
+      "max": 0,
+      "missing": 0
+     }
+    }
+   },
+   "partial": {
+    "breaker_v1": {
+     "reps": 3,
+     "error_rate": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "latency_p50_s": {
+      "median": 2.49,
+      "min": 2.48,
+      "max": 2.686,
+      "missing": 0
+     },
+     "latency_p95_s": {
+      "median": 5.508,
+      "min": 5.269,
+      "max": 6.024,
+      "missing": 0
+     },
+     "wasted_calls": {
+      "median": 84.0,
+      "min": 75,
+      "max": 85,
+      "missing": 0
+     },
+     "fallback_share": {
+      "median": 0.522,
+      "min": 0.469,
+      "max": 0.528,
+      "missing": 0
+     },
+     "time_to_open_s": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     },
+     "time_to_close_s": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     },
+     "error_rate_after": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "reopens_after_close": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     }
+    },
+    "breaker_v2": {
+     "reps": 3,
+     "error_rate": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "latency_p50_s": {
+      "median": 2.874,
+      "min": 2.834,
+      "max": 2.88,
+      "missing": 0
+     },
+     "latency_p95_s": {
+      "median": 4.917,
+      "min": 4.757,
+      "max": 4.995,
+      "missing": 0
+     },
+     "wasted_calls": {
+      "median": 15.0,
+      "min": 12,
+      "max": 19,
+      "missing": 0
+     },
+     "fallback_share": {
+      "median": 0.906,
+      "min": 0.899,
+      "max": 0.938,
+      "missing": 0
+     },
+     "time_to_open_s": {
+      "median": 5.162,
+      "min": 3.84,
+      "max": 5.49,
+      "missing": 0
+     },
+     "time_to_close_s": {
+      "median": 15.486,
+      "min": 12.156,
+      "max": 16.318,
+      "missing": 0
+     },
+     "error_rate_after": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "reopens_after_close": {
+      "median": 0.0,
+      "min": 0,
+      "max": 0,
+      "missing": 0
+     }
+    }
+   },
+   "timeouts": {
+    "breaker_v1": {
+     "reps": 3,
+     "error_rate": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.012,
+      "missing": 0
+     },
+     "latency_p50_s": {
+      "median": 11.723,
+      "min": 11.714,
+      "max": 11.772,
+      "missing": 0
+     },
+     "latency_p95_s": {
+      "median": 14.751,
+      "min": 14.74,
+      "max": 14.758,
+      "missing": 0
+     },
+     "wasted_calls": {
+      "median": 120.0,
+      "min": 119,
+      "max": 120,
+      "missing": 0
+     },
+     "fallback_share": {
+      "median": 1.0,
+      "min": 1.0,
+      "max": 1.0,
+      "missing": 0
+     },
+     "time_to_open_s": {
+      "median": 30.246,
+      "min": 29.975,
+      "max": 30.321,
+      "missing": 0
+     },
+     "time_to_close_s": {
+      "median": 8.66,
+      "min": 8.577,
+      "max": 9.321,
+      "missing": 0
+     },
+     "error_rate_after": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "reopens_after_close": {
+      "median": 0.0,
+      "min": 0,
+      "max": 0,
+      "missing": 0
+     }
+    },
+    "breaker_v2": {
+     "reps": 3,
+     "error_rate": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "latency_p50_s": {
+      "median": 3.493,
+      "min": 3.406,
+      "max": 3.523,
+      "missing": 0
+     },
+     "latency_p95_s": {
+      "median": 14.552,
+      "min": 14.546,
+      "max": 14.556,
+      "missing": 0
+     },
+     "wasted_calls": {
+      "median": 51.0,
+      "min": 50,
+      "max": 52,
+      "missing": 0
+     },
+     "fallback_share": {
+      "median": 1.0,
+      "min": 1.0,
+      "max": 1.0,
+      "missing": 0
+     },
+     "time_to_open_s": {
+      "median": 12.526,
+      "min": 12.482,
+      "max": 12.771,
+      "missing": 0
+     },
+     "time_to_close_s": {
+      "median": 14.953,
+      "min": 13.771,
+      "max": 15.219,
+      "missing": 0
+     },
+     "error_rate_after": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "reopens_after_close": {
+      "median": 0.0,
+      "min": 0,
+      "max": 0,
+      "missing": 0
+     }
+    }
+   },
+   "latency": {
+    "breaker_v1": {
+     "reps": 3,
+     "error_rate": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "latency_p50_s": {
+      "median": 37.288,
+      "min": 37.287,
+      "max": 37.303,
+      "missing": 0
+     },
+     "latency_p95_s": {
+      "median": 41.005,
+      "min": 41.002,
+      "max": 41.007,
+      "missing": 0
+     },
+     "wasted_calls": {
+      "median": 0.0,
+      "min": 0,
+      "max": 0,
+      "missing": 0
+     },
+     "fallback_share": {
+      "median": 0.068,
+      "min": 0.062,
+      "max": 0.069,
+      "missing": 0
+     },
+     "time_to_open_s": {
+      "median": 37.522,
+      "min": 37.275,
+      "max": 37.686,
+      "missing": 0
+     },
+     "time_to_close_s": {
+      "median": 14.451,
+      "min": 13.701,
+      "max": 14.623,
+      "missing": 0
+     },
+     "error_rate_after": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "reopens_after_close": {
+      "median": 1.0,
+      "min": 1,
+      "max": 1,
+      "missing": 0
+     }
+    },
+    "breaker_v2": {
+     "reps": 3,
+     "error_rate": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "latency_p50_s": {
+      "median": 37.051,
+      "min": 36.985,
+      "max": 37.064,
+      "missing": 0
+     },
+     "latency_p95_s": {
+      "median": 41.024,
+      "min": 41.009,
+      "max": 41.035,
+      "missing": 0
+     },
+     "wasted_calls": {
+      "median": 0.0,
+      "min": 0,
+      "max": 0,
+      "missing": 0
+     },
+     "fallback_share": {
+      "median": 0.193,
+      "min": 0.188,
+      "max": 0.2,
+      "missing": 0
+     },
+     "time_to_open_s": {
+      "median": 32.51,
+      "min": 32.274,
+      "max": 32.561,
+      "missing": 0
+     },
+     "time_to_close_s": {
+      "median": 9.774,
+      "min": 9.606,
+      "max": 10.121,
+      "missing": 0
+     },
+     "error_rate_after": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "reopens_after_close": {
+      "median": 0.0,
+      "min": 0,
+      "max": 0,
+      "missing": 0
+     }
+    }
+   },
+   "healthy": {
+    "breaker_v1": {
+     "reps": 3,
+     "error_rate": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "latency_p50_s": {
+      "median": 2.339,
+      "min": 2.326,
+      "max": 2.359,
+      "missing": 0
+     },
+     "latency_p95_s": {
+      "median": 6.022,
+      "min": 6.009,
+      "max": 6.026,
+      "missing": 0
+     },
+     "wasted_calls": {
+      "median": 0.0,
+      "min": 0,
+      "max": 0,
+      "missing": 0
+     },
+     "fallback_share": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "time_to_open_s": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     },
+     "time_to_close_s": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     },
+     "error_rate_after": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "reopens_after_close": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     }
+    },
+    "breaker_v2": {
+     "reps": 3,
+     "error_rate": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "latency_p50_s": {
+      "median": 2.36,
+      "min": 2.325,
+      "max": 2.364,
+      "missing": 0
+     },
+     "latency_p95_s": {
+      "median": 6.032,
+      "min": 6.011,
+      "max": 6.086,
+      "missing": 0
+     },
+     "wasted_calls": {
+      "median": 0.0,
+      "min": 0,
+      "max": 0,
+      "missing": 0
+     },
+     "fallback_share": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "time_to_open_s": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     },
+     "time_to_close_s": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     },
+     "error_rate_after": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "reopens_after_close": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     }
+    }
+   },
+   "mild": {
+    "breaker_v1": {
+     "reps": 3,
+     "error_rate": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "latency_p50_s": {
+      "median": 2.394,
+      "min": 2.389,
+      "max": 2.42,
+      "missing": 0
+     },
+     "latency_p95_s": {
+      "median": 5.54,
+      "min": 5.491,
+      "max": 5.557,
+      "missing": 0
+     },
+     "wasted_calls": {
+      "median": 19.0,
+      "min": 16,
+      "max": 24,
+      "missing": 0
+     },
+     "fallback_share": {
+      "median": 0.118,
+      "min": 0.099,
+      "max": 0.15,
+      "missing": 0
+     },
+     "time_to_open_s": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     },
+     "time_to_close_s": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     },
+     "error_rate_after": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "reopens_after_close": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     }
+    },
+    "breaker_v2": {
+     "reps": 3,
+     "error_rate": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "latency_p50_s": {
+      "median": 2.371,
+      "min": 2.312,
+      "max": 2.396,
+      "missing": 0
+     },
+     "latency_p95_s": {
+      "median": 5.565,
+      "min": 5.476,
+      "max": 5.579,
+      "missing": 0
+     },
+     "wasted_calls": {
+      "median": 15.0,
+      "min": 15,
+      "max": 18,
+      "missing": 0
+     },
+     "fallback_share": {
+      "median": 0.094,
+      "min": 0.094,
+      "max": 0.113,
+      "missing": 0
+     },
+     "time_to_open_s": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     },
+     "time_to_close_s": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     },
+     "error_rate_after": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "missing": 0
+     },
+     "reopens_after_close": {
+      "median": null,
+      "min": null,
+      "max": null,
+      "missing": 3
+     }
+    }
+   }
+  },
+  "notes": [],
+  "opens_total": {
+   "outage": {
+    "breaker_v1": [
+     1,
+     1,
+     1
+    ],
+    "breaker_v2": [
+     1,
+     2,
+     1
+    ]
+   },
+   "partial": {
+    "breaker_v1": [
+     0,
+     0,
+     0
+    ],
+    "breaker_v2": [
+     3,
+     2,
+     1
+    ]
+   },
+   "timeouts": {
+    "breaker_v1": [
+     1,
+     1,
+     1
+    ],
+    "breaker_v2": [
+     2,
+     2,
+     2
+    ]
+   },
+   "latency": {
+    "breaker_v1": [
+     2,
+     2,
+     2
+    ],
+    "breaker_v2": [
+     1,
+     1,
+     1
+    ]
+   },
+   "healthy": {
+    "breaker_v1": [
+     0,
+     0,
+     0
+    ],
+    "breaker_v2": [
+     0,
+     0,
+     0
+    ]
+   },
+   "mild": {
+    "breaker_v1": [
+     0,
+     0,
+     0
+    ],
+    "breaker_v2": [
+     0,
+     0,
+     0
+    ]
+   }
+  }
+ },
+ "window_noise": [
+  {
+   "window_calls": 20,
+   "outage_detection_s": 2.5,
+   "trip_probability_at_10pct": 7.151e-06,
+   "trip_probability_at_20pct": 0.002595,
+   "trip_probability_at_30pct": 0.04796
+  },
+  {
+   "window_calls": 40,
+   "outage_detection_s": 5.0,
+   "trip_probability_at_10pct": 1.872e-10,
+   "trip_probability_at_20pct": 2.169e-05,
+   "trip_probability_at_30pct": 0.006255
+  },
+  {
+   "window_calls": 60,
+   "outage_detection_s": 7.5,
+   "trip_probability_at_10pct": 5.612e-15,
+   "trip_probability_at_20pct": 2.061e-07,
+   "trip_probability_at_30pct": 0.0009129
+  }
+ ]
+}
