@@ -4,7 +4,7 @@ Each app gets its own CollectorRegistry, so two apps in one process (tests, the 
 never share counters. Label values are bounded on purpose: tenant and feature are validated short
 identifiers, model is a registry id or "unknown", and the request id is never a label, because one
 label value per request would grow the series without limit."""
-from prometheus_client import CONTENT_TYPE_LATEST, CollectorRegistry, Counter, Histogram, generate_latest
+from prometheus_client import CONTENT_TYPE_LATEST, CollectorRegistry, Counter, Gauge, Histogram, generate_latest
 
 from llm_gateway.request_log import RequestRecord
 
@@ -32,6 +32,29 @@ class GatewayMetrics:
                                      ["feature", "tier", "outcome", "acceptable"], registry=self.registry)
         self.verification_cost = Counter("llm_gateway_verification_cost_usd", "Spent on verification.",
                                          registry=self.registry)
+        # The shared sliding-window view kept in Redis (llm_gateway.health), refreshed at each scrape.
+        # Every instance reports the same values; dashboards should take one, not sum them.
+        self.provider_success_rate = Gauge("llm_gateway_provider_success_rate",
+                                           "Share of provider calls that succeeded in the shared window.",
+                                           ["provider"], registry=self.registry)
+        self.provider_calls_window = Gauge("llm_gateway_provider_window_calls",
+                                           "Provider calls in the shared window, by outcome.",
+                                           ["provider", "outcome"], registry=self.registry)
+        self.provider_latency_quantile = Gauge("llm_gateway_provider_window_latency_ms",
+                                               "Latency quantiles of successful calls in the shared window.",
+                                               ["provider", "quantile"], registry=self.registry)
+        self.health_write_errors = Counter("llm_gateway_health_write_errors",
+                                           "Health writes lost because Redis was unreachable.",
+                                           registry=self.registry)
+
+    def observe_health(self, snapshot) -> None:
+        if snapshot.success_rate is not None:
+            self.provider_success_rate.labels(snapshot.provider).set(snapshot.success_rate)
+        for outcome, count in snapshot.outcomes.items():
+            self.provider_calls_window.labels(snapshot.provider, outcome).set(count)
+        for name, value in (("0.5", snapshot.p50_ms), ("0.95", snapshot.p95_ms), ("0.99", snapshot.p99_ms)):
+            if value is not None:
+                self.provider_latency_quantile.labels(snapshot.provider, name).set(value)
 
     def observe_verification(self, row) -> None:
         acceptable = "unknown" if row.acceptable is None else str(bool(row.acceptable)).lower()
