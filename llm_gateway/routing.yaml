@@ -21,6 +21,16 @@ tier_map:
 verifier:
   sample_rate: 0.05
   daily_budget_usd: 0.50
+# Failover for "auto" requests: when the tier's model fails with a retryable error (rate limit,
+# timeout, connection, server error, auth) or its provider's circuit is open, the gateway tries these
+# models in order, each on another provider, within one deadline for all attempts. A request that
+# names a model never fails over: it gets that model or an error.
+failover:
+  deadline_seconds: 90
+  fallbacks:
+    low: [gpt-oss-20b]
+    medium: [gpt-oss-120b]
+    high: [claude-sonnet-5-5]
 # Per-provider circuit breaker. A circuit opens when, over the shared 60 s window and at least
 # min_calls calls, the share of failed calls (rate limit, timeout, connection, server error, auth)
 # reaches error_rate_threshold, or the p95 latency of successful calls passes p95_budget_ms. It stays

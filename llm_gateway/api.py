@@ -8,7 +8,9 @@ before its body is read.
 
 Every request, answered or refused, leaves exactly one row in the request log and one increment in
 the metrics, written in one place after the response is decided."""
+import asyncio
 import json
+import math
 import random
 import re
 import time
@@ -32,12 +34,16 @@ from llm_gateway.schemas import (
     ChatCompletionRequest,
     ChatCompletionResponse,
     Choice,
+    FailoverAttempt,
     GatewayInfo,
     RoutingInfo,
     Usage,
 )
 
 AUTO_MODEL = "auto"
+# Errors that send an "auto" request on to the next model. A bad request would fail the same way
+# anywhere, so it is returned at once.
+FAILOVER_KINDS = ("rate_limit", "timeout", "connection", "server_error", "auth")
 
 REQUIRED_HEADERS = {"X-Tenant-Id": "tenant", "X-Feature": "feature", "X-Request-Id": "request_id"}
 # Tenant and feature are metric labels, so they are kept short and free of separators.
@@ -182,27 +188,61 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
         if chat.tools:
             return reject(400, "tools_not_supported", "This gateway does not forward tools.", "tools")
 
-        admission = await breaker.allow(model.provider) if breaker is not None else None
-        if admission is not None and not admission.allowed:
-            record.outcome, record.error_code = "upstream_error", "upstream_circuit_open"
-            return error(503, record.error_code, f"{model.provider}'s circuit is {admission.state}; "
-                                                 "the gateway is not sending it traffic.", "model")
-        started = time.perf_counter()
-        try:
-            result = await providers[model.provider].complete(model, chat)
-        except ProviderError as exc:
+        # The tier's model first, then its fallbacks: only for "auto" requests, where the gateway chose
+        # the model in the first place.
+        candidates = [model]
+        failover = router.config.failover if routing is not None else None
+        if failover is not None:
+            candidates += [registry[m] for m in failover.fallbacks.get(routing.tier, ())]
+        deadline = time.perf_counter() + (failover.deadline_seconds if failover else math.inf)
+        attempts, result = [], None
+        for candidate in candidates:
+            remaining = deadline - time.perf_counter()
+            if remaining <= 0:
+                attempts.append(FailoverAttempt(model=candidate.id, outcome="deadline"))
+                break
+            admission = await breaker.allow(candidate.provider) if breaker is not None else None
+            if admission is not None and not admission.allowed:
+                attempts.append(FailoverAttempt(model=candidate.id, outcome="circuit_open"))
+                continue
+            started = time.perf_counter()
+            try:
+                call = providers[candidate.provider].complete(candidate, chat)
+                result = await (asyncio.wait_for(call, remaining) if math.isfinite(remaining) else call)
+            except (ProviderError, asyncio.TimeoutError) as exc:
+                kind = exc.kind if isinstance(exc, ProviderError) else "timeout"
+                if health is not None:
+                    await health.record(candidate.provider, kind)
+                if admission is not None:
+                    await breaker.on_result(candidate.provider, kind, admission)
+                attempts.append(FailoverAttempt(model=candidate.id, outcome=kind))
+                if kind not in FAILOVER_KINDS:
+                    break
+                continue
+            record.latency_ms = (time.perf_counter() - started) * 1000
             if health is not None:
-                await health.record(model.provider, exc.kind)
+                await health.record(candidate.provider, "ok", record.latency_ms / 1000)
             if admission is not None:
-                await breaker.on_result(model.provider, exc.kind, admission)
-            status, hint = UPSTREAM_STATUS[exc.kind]
-            record.outcome, record.error_code = "upstream_error", f"upstream_{exc.kind}"
-            return error(status, record.error_code, f"{model.provider} failed ({exc.kind}): {hint}", "model")
-        record.latency_ms = (time.perf_counter() - started) * 1000
-        if health is not None:
-            await health.record(model.provider, "ok", record.latency_ms / 1000)
-        if admission is not None:
-            await breaker.on_result(model.provider, "ok", admission)
+                await breaker.on_result(candidate.provider, "ok", admission)
+            attempts.append(FailoverAttempt(model=candidate.id, outcome="ok"))
+            model = candidate
+            break
+        record.attempts = len(attempts)
+        record.model, record.provider = model.id, model.provider
+        if result is None:
+            failed = [a for a in attempts if a.outcome not in ("circuit_open", "deadline")]
+            if not failed and attempts[-1].outcome == "circuit_open":
+                record.outcome, record.error_code = "upstream_error", "upstream_circuit_open"
+                return error(503, record.error_code, "Every provider for this request has an open circuit; "
+                                                     "the gateway is not sending them traffic.", "model")
+            kind = "timeout" if attempts[-1].outcome == "deadline" else failed[-1].outcome
+            status, hint = UPSTREAM_STATUS[kind]
+            tried = ", ".join(f"{a.model}: {a.outcome}" for a in attempts)
+            record.outcome, record.error_code = "upstream_error", f"upstream_{kind}"
+            return error(status, record.error_code, f"No model could answer ({tried}): {hint}", "model")
+        if model.id != candidates[0].id:
+            record.failover_from = candidates[0].id
+            metrics.failovers.labels(candidates[0].id, model.id, attempts[0].outcome).inc()
         record.outcome, record.finish_reason = "ok", result.finish_reason
         record.input_tokens, record.output_tokens = result.input_tokens, result.output_tokens
         record.cost_usd = cost_usd(model, result.input_tokens, result.output_tokens)
@@ -216,7 +256,7 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                         total_tokens=result.input_tokens + result.output_tokens),
             gateway=GatewayInfo(request_id=record.request_id, tenant=record.tenant, feature=record.feature,
                                 provider=model.provider, cost_usd=record.cost_usd, latency_ms=record.latency_ms,
-                                routing=routing),
+                                routing=routing, attempts=attempts if len(attempts) > 1 else None),
         )
         # The verification, when sampled, runs after the response is sent; the client never waits for it.
         task = verifier.maybe_schedule(record, chat, result) if verifier else None

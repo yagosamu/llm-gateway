@@ -18,7 +18,7 @@ import math
 import os
 import re
 import threading
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
@@ -122,6 +122,14 @@ class BreakerConfig:
 
 
 @dataclass(frozen=True)
+class FailoverConfig:
+    """For "auto" requests: the models to try, in order, after the tier's own model, and the total time
+    a request may spend across all its attempts."""
+    deadline_seconds: float = 90.0
+    fallbacks: dict[str, tuple[str, ...]] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
 class RoutingConfig:
     version: str
     policy_name: str
@@ -129,6 +137,29 @@ class RoutingConfig:
     policy: object  # FixedTier | FeatureTable | LogisticClassifier
     verifier: VerifierConfig = VerifierConfig()
     breaker: BreakerConfig = BreakerConfig()
+    failover: FailoverConfig = FailoverConfig()
+
+
+def _failover_config(data: dict, tier_map: dict[str, str], model_ids: set[str]) -> FailoverConfig:
+    section = data.get("failover") or {}
+    if not isinstance(section, dict):
+        raise RoutingConfigError("failover must be a mapping")
+    deadline = section.get("deadline_seconds", FailoverConfig.deadline_seconds)
+    if not isinstance(deadline, (int, float)) or deadline <= 0:
+        raise RoutingConfigError("failover.deadline_seconds must be a positive number")
+    fallbacks = {}
+    for tier, models in (section.get("fallbacks") or {}).items():
+        if tier not in TIERS:
+            raise RoutingConfigError(f"failover.fallbacks has an unknown tier {tier!r}")
+        if not isinstance(models, list) or not all(isinstance(m, str) for m in models):
+            raise RoutingConfigError(f"failover.fallbacks.{tier} must be a list of model ids")
+        unknown = sorted(m for m in models if m not in model_ids)
+        if unknown:
+            raise RoutingConfigError(f"failover.fallbacks.{tier} names models outside the registry: {unknown}")
+        if tier_map[tier] in models:
+            raise RoutingConfigError(f"failover.fallbacks.{tier} repeats the tier's own model")
+        fallbacks[tier] = tuple(models)
+    return FailoverConfig(float(deadline), fallbacks)
 
 
 def _breaker_config(data: dict) -> BreakerConfig:
@@ -190,7 +221,8 @@ def load_config(path: Path, model_ids: set[str]) -> RoutingConfig:
         section = estimates[policy_name]
         policy = FeatureTable(section, threshold) if policy_name == "feature_table" else LogisticClassifier(section, threshold)
     return RoutingConfig(version=str(data.get("version", "")), policy_name=policy_name, tier_map=dict(tier_map),
-                         policy=policy, verifier=_verifier_config(data), breaker=_breaker_config(data))
+                         policy=policy, verifier=_verifier_config(data), breaker=_breaker_config(data),
+                         failover=_failover_config(data, tier_map, model_ids))
 
 
 class Router:

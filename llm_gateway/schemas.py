@@ -56,6 +56,11 @@ class RoutingInfo(BaseModel):
     config_version: str
 
 
+class FailoverAttempt(BaseModel):
+    model: str
+    outcome: str  # "ok", an error kind, "circuit_open" or "deadline"
+
+
 class GatewayInfo(BaseModel):
     """Extra top-level field; OpenAI clients ignore keys they do not know."""
     request_id: str
@@ -65,6 +70,7 @@ class GatewayInfo(BaseModel):
     cost_usd: float
     latency_ms: float
     routing: RoutingInfo | None = None
+    attempts: list[FailoverAttempt] | None = None  # present only when more than one model was tried
 
 
 class ChatCompletionResponse(BaseModel):
