@@ -74,9 +74,10 @@ def build_results(runs: list[dict]) -> dict:
             "duration_s": prereg.DURATION, "scenarios": prereg.SCENARIOS, "results": table}
 
 
-def _cell(s: dict, scale=1.0, digits=1, unit="") -> str:
+def _cell(s: dict, scale=1.0, digits=1, unit="", absent="-") -> str:
+    """absent: what to print when no repetition has a value ("never" for circuit times, "-" otherwise)."""
     if s["median"] is None:
-        return "never" if s["missing"] else "-"
+        return absent
     text = f"{s['median'] * scale:.{digits}f}{unit}"
     if s["min"] != s["max"]:
         text += f" ({s['min'] * scale:.{digits}f} to {s['max'] * scale:.{digits}f})"
@@ -100,8 +101,9 @@ def render_markdown(r: dict) -> str:
         for config, m in by_config.items():
             lines.append(f"| {config} | {_cell(m['error_rate'], 100, 1, '%')} | {_cell(m['latency_p50_s'], 1, 1, ' s')} | "
                          f"{_cell(m['latency_p95_s'], 1, 1, ' s')} | {_cell(m['wasted_calls'], 1, 0)} | "
-                         f"{_cell(m['fallback_share'], 100, 0, '%')} | {_cell(m['time_to_open_s'], 1, 1, ' s')} | "
-                         f"{_cell(m['time_to_close_s'], 1, 1, ' s')} | {_cell(m['error_rate_after'], 100, 1, '%')} |")
+                         f"{_cell(m['fallback_share'], 100, 0, '%')} | "
+                         f"{_cell(m['time_to_open_s'], 1, 1, ' s', 'never')} | "
+                         f"{_cell(m['time_to_close_s'], 1, 1, ' s', 'never')} | {_cell(m['error_rate_after'], 100, 1, '%')} |")
         lines.append("")
     lines += ["Wasted calls: requests in the fault window that made a failing call to openai. Circuit times come from "
               f"openai's state polled every {prereg.TIMELINE_INTERVAL} s, so they carry that resolution. Configurations "

@@ -61,7 +61,8 @@ def start_instances() -> list[subprocess.Popen]:
 async def wait_ready(client: httpx2.AsyncClient) -> None:
     for _ in range(120):
         try:
-            if all((await client.get(f"http://127.0.0.1:{p}/v1/health")).status_code == 200 for p in prereg.PORTS):
+            statuses = [(await client.get(f"http://127.0.0.1:{p}/v1/health")).status_code for p in prereg.PORTS]
+            if all(s == 200 for s in statuses):
                 return
         except httpx2.HTTPError:
             pass
