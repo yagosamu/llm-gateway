@@ -76,5 +76,14 @@ def test_every_scenario_fault_is_valid():
 def test_the_committed_slice3_results_match_the_committed_runs():
     if not JSON_PATH.exists():
         pytest.skip("no chaos results committed yet")
-    fresh = json.loads(json.dumps(build_results(load_runs())))
+    from harness.chaos.analyze import load_notes
+    fresh = json.loads(json.dumps(build_results(load_runs(), load_notes())))
     assert fresh == json.loads(JSON_PATH.read_text(encoding="utf-8"))
+
+
+def test_a_circuit_that_opens_again_after_closing_is_counted():
+    timeline = [{"t": 30, "state": "open"}, {"t": 70, "state": "half_open"}, {"t": 72, "state": "closed"},
+                {"t": 78, "state": "open"}, {"t": 79, "state": "open"}, {"t": 93, "state": "half_open"},
+                {"t": 95, "state": "closed"}]
+    m = run_metrics([req(25, 26)], timeline)
+    assert (m["time_to_close_s"], m["reopens_after_close"]) == (12.0, 1)

@@ -1,0 +1,262 @@
+{
+ "design": "harness/chaos/prereg.py",
+ "rate_rps": 4.0,
+ "duration_s": 100.0,
+ "runs": [
+  {
+   "name": "outage__none__1",
+   "scenario": "outage",
+   "config": "none",
+   "rep": 1,
+   "started_at": "2026-10-09T18:37:31+00:00"
+  },
+  {
+   "name": "outage__failover__1",
+   "scenario": "outage",
+   "config": "failover",
+   "rep": 1,
+   "started_at": "2026-10-09T18:39:16+00:00"
+  },
+  {
+   "name": "outage__failover_breaker__1",
+   "scenario": "outage",
+   "config": "failover_breaker",
+   "rep": 1,
+   "started_at": "2026-10-09T18:41:01+00:00"
+  },
+  {
+   "name": "partial__none__1",
+   "scenario": "partial",
+   "config": "none",
+   "rep": 1,
+   "started_at": "2026-10-09T18:42:46+00:00"
+  },
+  {
+   "name": "partial__failover__1",
+   "scenario": "partial",
+   "config": "failover",
+   "rep": 1,
+   "started_at": "2026-10-09T18:44:31+00:00"
+  },
+  {
+   "name": "partial__failover_breaker__1",
+   "scenario": "partial",
+   "config": "failover_breaker",
+   "rep": 1,
+   "started_at": "2026-10-09T18:46:16+00:00"
+  },
+  {
+   "name": "timeouts__none__1",
+   "scenario": "timeouts",
+   "config": "none",
+   "rep": 1,
+   "started_at": "2026-10-09T18:48:01+00:00"
+  },
+  {
+   "name": "timeouts__failover__1",
+   "scenario": "timeouts",
+   "config": "failover",
+   "rep": 1,
+   "started_at": "2026-10-09T18:49:46+00:00"
+  },
+  {
+   "name": "timeouts__failover_breaker__1",
+   "scenario": "timeouts",
+   "config": "failover_breaker",
+   "rep": 1,
+   "started_at": "2026-10-09T18:51:31+00:00"
+  },
+  {
+   "name": "outage__none__2",
+   "scenario": "outage",
+   "config": "none",
+   "rep": 2,
+   "started_at": "2026-10-09T18:58:32+00:00"
+  },
+  {
+   "name": "outage__failover__2",
+   "scenario": "outage",
+   "config": "failover",
+   "rep": 2,
+   "started_at": "2026-10-09T19:00:17+00:00"
+  },
+  {
+   "name": "outage__failover_breaker__2",
+   "scenario": "outage",
+   "config": "failover_breaker",
+   "rep": 2,
+   "started_at": "2026-10-09T19:02:02+00:00"
+  },
+  {
+   "name": "partial__none__2",
+   "scenario": "partial",
+   "config": "none",
+   "rep": 2,
+   "started_at": "2026-10-09T19:03:47+00:00"
+  },
+  {
+   "name": "partial__failover__2",
+   "scenario": "partial",
+   "config": "failover",
+   "rep": 2,
+   "started_at": "2026-10-09T19:05:32+00:00"
+  },
+  {
+   "name": "partial__failover_breaker__2",
+   "scenario": "partial",
+   "config": "failover_breaker",
+   "rep": 2,
+   "started_at": "2026-10-09T19:07:18+00:00"
+  },
+  {
+   "name": "timeouts__none__2",
+   "scenario": "timeouts",
+   "config": "none",
+   "rep": 2,
+   "started_at": "2026-10-09T19:09:03+00:00"
+  },
+  {
+   "name": "timeouts__failover__2",
+   "scenario": "timeouts",
+   "config": "failover",
+   "rep": 2,
+   "started_at": "2026-10-09T19:10:48+00:00"
+  },
+  {
+   "name": "timeouts__failover_breaker__2",
+   "scenario": "timeouts",
+   "config": "failover_breaker",
+   "rep": 2,
+   "started_at": "2026-10-09T19:12:34+00:00"
+  },
+  {
+   "name": "outage__none__3",
+   "scenario": "outage",
+   "config": "none",
+   "rep": 3,
+   "started_at": "2026-10-09T19:19:35+00:00"
+  },
+  {
+   "name": "outage__failover__3",
+   "scenario": "outage",
+   "config": "failover",
+   "rep": 3,
+   "started_at": "2026-10-09T19:21:20+00:00"
+  },
+  {
+   "name": "outage__failover_breaker__3",
+   "scenario": "outage",
+   "config": "failover_breaker",
+   "rep": 3,
+   "started_at": "2026-10-09T19:23:05+00:00"
+  },
+  {
+   "name": "partial__none__3",
+   "scenario": "partial",
+   "config": "none",
+   "rep": 3,
+   "started_at": "2026-10-09T19:24:50+00:00"
+  },
+  {
+   "name": "partial__failover__3",
+   "scenario": "partial",
+   "config": "failover",
+   "rep": 3,
+   "started_at": "2026-10-09T19:26:36+00:00"
+  },
+  {
+   "name": "partial__failover_breaker__3",
+   "scenario": "partial",
+   "config": "failover_breaker",
+   "rep": 3,
+   "started_at": "2026-10-09T19:28:21+00:00"
+  },
+  {
+   "name": "timeouts__none__3",
+   "scenario": "timeouts",
+   "config": "none",
+   "rep": 3,
+   "started_at": "2026-10-09T19:30:05+00:00"
+  },
+  {
+   "name": "timeouts__failover__3",
+   "scenario": "timeouts",
+   "config": "failover",
+   "rep": 3,
+   "started_at": "2026-10-09T19:31:51+00:00"
+  },
+  {
+   "name": "timeouts__failover_breaker__3",
+   "scenario": "timeouts",
+   "config": "failover_breaker",
+   "rep": 3,
+   "started_at": "2026-10-09T19:33:36+00:00"
+  },
+  {
+   "name": "latency__none__1",
+   "scenario": "latency",
+   "config": "none",
+   "rep": 1,
+   "started_at": "2026-10-09T19:42:48+00:00"
+  },
+  {
+   "name": "latency__failover__1",
+   "scenario": "latency",
+   "config": "failover",
+   "rep": 1,
+   "started_at": "2026-10-09T19:44:33+00:00"
+  },
+  {
+   "name": "latency__failover_breaker__1",
+   "scenario": "latency",
+   "config": "failover_breaker",
+   "rep": 1,
+   "started_at": "2026-10-09T19:46:18+00:00"
+  },
+  {
+   "name": "latency__none__2",
+   "scenario": "latency",
+   "config": "none",
+   "rep": 2,
+   "started_at": "2026-10-09T19:48:03+00:00"
+  },
+  {
+   "name": "latency__failover__2",
+   "scenario": "latency",
+   "config": "failover",
+   "rep": 2,
+   "started_at": "2026-10-09T19:49:48+00:00"
+  },
+  {
+   "name": "latency__failover_breaker__2",
+   "scenario": "latency",
+   "config": "failover_breaker",
+   "rep": 2,
+   "started_at": "2026-10-09T19:51:33+00:00"
+  },
+  {
+   "name": "latency__none__3",
+   "scenario": "latency",
+   "config": "none",
+   "rep": 3,
+   "started_at": "2026-10-09T19:53:18+00:00"
+  },
+  {
+   "name": "latency__failover__3",
+   "scenario": "latency",
+   "config": "failover",
+   "rep": 3,
+   "started_at": "2026-10-09T19:55:03+00:00"
+  },
+  {
+   "name": "latency__failover_breaker__3",
+   "scenario": "latency",
+   "config": "failover_breaker",
+   "rep": 3,
+   "started_at": "2026-10-09T19:56:48+00:00"
+  }
+ ],
+ "notes": [
+  "The latency scenario was run a second time. In the first run the load generator's HTTP client kept its default pool of 100 connections, and with calls taking about 37 s up to 155 requests were in flight, so some waited in the client before reaching the gateway and the loop was no longer open. The pool limit was removed (harness/chaos/load.py) and only that scenario was repeated, with the same design. The other scenarios peaked at 61 requests in flight and were not affected."
+ ]
+}

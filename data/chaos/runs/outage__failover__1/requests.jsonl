@@ -1,0 +1,400 @@
+{"i": 0, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-00080", "sent": 0.001987399999052286, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 3.673844499979168}
+{"i": 1, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-01070", "sent": 0.26274770009331405, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 3.443100499920547}
+{"i": 2, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-01152", "sent": 0.49349509994499385, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 4.715224700048566}
+{"i": 3, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-03097", "sent": 0.7628566999919713, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 3.6928914999589324}
+{"i": 4, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-03107", "sent": 0.996442399919033, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 6.561139700002968}
+{"i": 5, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-03372", "sent": 1.24184409994632, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 3.442716100020334}
+{"i": 6, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-03892", "sent": 1.513091400032863, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 5.48386129993014}
+{"i": 7, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05322", "sent": 1.763792300131172, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 5.117785600014031}
+{"i": 8, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-05749", "sent": 1.997829700121656, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 6.521185599965975}
+{"i": 9, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05951", "sent": 2.260560299968347, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 6.812122799921781}
+{"i": 10, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06914", "sent": 2.497613500105217, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 7.6973880000878125}
+{"i": 11, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-07405", "sent": 2.756517300149426, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 6.736712499987334}
+{"i": 12, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08120", "sent": 3.004604500019923, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 8.046988500049338}
+{"i": 13, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08274", "sent": 3.254101400030777, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 11.937469700118527}
+{"i": 14, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08773", "sent": 3.5090048001147807, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 8.584499499993399}
+{"i": 15, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08996", "sent": 3.755765900015831, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 5.332935099955648}
+{"i": 16, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09510", "sent": 4.001189900096506, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 8.685105100041255}
+{"i": 17, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09575", "sent": 4.264461999991909, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 5.41140120010823}
+{"i": 18, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-10032", "sent": 4.495595799991861, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 6.366228300146759}
+{"i": 19, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-10466", "sent": 4.756977899931371, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 12.87306459993124}
+{"i": 20, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11406", "sent": 5.01207650010474, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 8.38039860012941}
+{"i": 21, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11573", "sent": 5.246303000021726, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 9.078402100130916}
+{"i": 22, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12051", "sent": 5.483932100003585, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 16.647492500022054}
+{"i": 23, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12245", "sent": 5.7706703001167625, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 7.1518669000361115}
+{"i": 24, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12252", "sent": 6.010066099930555, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 9.154441999970004}
+{"i": 25, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12579", "sent": 6.264536600094289, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 10.152220899937674}
+{"i": 26, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-13543", "sent": 6.494885700056329, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 18.01591289998032}
+{"i": 27, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-13576", "sent": 6.734960000030696, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 7.84179179999046}
+{"i": 28, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-13716", "sent": 7.013988299993798, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 10.476088600000367}
+{"i": 29, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14375", "sent": 7.261155500076711, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 10.081455300096422}
+{"i": 30, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-00130", "sent": 7.50820909999311, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 9.434246700024232}
+{"i": 31, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-00368", "sent": 7.755871800007299, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 12.514752099988982}
+{"i": 32, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-01172", "sent": 8.012356200022623, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 10.34346120012924}
+{"i": 33, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-01287", "sent": 8.241533700143918, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 10.345672799972817}
+{"i": 34, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-01686", "sent": 8.509256100049242, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 11.63942510006018}
+{"i": 35, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-01959", "sent": 8.768303400138393, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 17.983653800096363}
+{"i": 36, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02425", "sent": 9.00694840005599, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 11.814850900089368}
+{"i": 37, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-03663", "sent": 9.269602100132033, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 10.835094700101763}
+{"i": 38, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-04171", "sent": 9.506825200049207, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 12.085780899971724}
+{"i": 39, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-04317", "sent": 9.760513999965042, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 11.29487460013479}
+{"i": 40, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-04389", "sent": 10.00850969995372, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 11.294323700014502}
+{"i": 41, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06459", "sent": 10.263493000064045, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 13.32200470007956}
+{"i": 42, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06754", "sent": 10.486182700144127, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 11.687442900147289}
+{"i": 43, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06780", "sent": 10.75402590003796, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 12.176603000145406}
+{"i": 44, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-07746", "sent": 11.000521800015122, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 12.63822209998034}
+{"i": 45, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-07987", "sent": 11.273489400045946, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 12.318896600045264}
+{"i": 46, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08130", "sent": 11.508525700075552, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 12.730152999982238}
+{"i": 47, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08994", "sent": 11.745627800002694, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 13.210122799966484}
+{"i": 48, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09336", "sent": 12.008675300050527, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 13.698432100005448}
+{"i": 49, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09763", "sent": 12.252963399980217, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 14.333563700085506}
+{"i": 50, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11188", "sent": 12.512219900032505, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 13.653886999934912}
+{"i": 51, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11292", "sent": 12.755493399919942, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 14.932749500032514}
+{"i": 52, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11488", "sent": 13.014364100061357, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 14.668491800082847}
+{"i": 53, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12109", "sent": 13.244631600100547, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 14.365377299953252}
+{"i": 54, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12358", "sent": 13.510128200054169, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 18.976412300020456}
+{"i": 55, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12421", "sent": 13.760471899993718, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 16.788964899955317}
+{"i": 56, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12447", "sent": 14.013349900022149, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 15.36474770004861}
+{"i": 57, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12473", "sent": 14.255968400044367, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 16.792900000000373}
+{"i": 58, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12872", "sent": 14.51175870001316, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 15.83371330006048}
+{"i": 59, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14471", "sent": 14.7574058000464, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 16.282720300136134}
+{"i": 60, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-00317", "sent": 15.012758299941197, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 16.926144800148904}
+{"i": 61, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-01561", "sent": 15.255625900113955, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 16.788428300060332}
+{"i": 62, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-01682", "sent": 15.509831600124016, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 17.65068079996854}
+{"i": 63, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-02272", "sent": 15.7622088000644, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 17.019947899971157}
+{"i": 64, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02536", "sent": 16.00710489996709, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 17.26680410001427}
+{"i": 65, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-04197", "sent": 16.258998200064525, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 18.84361830004491}
+{"i": 66, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-04807", "sent": 16.505586700048298, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 18.161304200068116}
+{"i": 67, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05316", "sent": 16.759558600140736, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 18.945368400076404}
+{"i": 68, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-05419", "sent": 17.012864700052887, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 18.466056700097397}
+{"i": 69, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06025", "sent": 17.24614920001477, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 18.673952100099996}
+{"i": 70, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06274", "sent": 17.502045799978077, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 18.64919860009104}
+{"i": 71, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06797", "sent": 17.73652349994518, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 19.61512940004468}
+{"i": 72, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-07538", "sent": 18.014350600074977, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 19.19744349992834}
+{"i": 73, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08143", "sent": 18.241273200139403, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 20.23021459998563}
+{"i": 74, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08835", "sent": 18.508344599977136, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 19.80520260008052}
+{"i": 75, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09115", "sent": 18.75667400006205, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 20.525537099922076}
+{"i": 76, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09172", "sent": 19.01701460010372, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 21.13085089996457}
+{"i": 77, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-10158", "sent": 19.269656900083646, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 22.39914959995076}
+{"i": 78, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-10426", "sent": 19.50774380005896, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 20.812738799955696}
+{"i": 79, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-10481", "sent": 19.753968100063503, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 21.545367599930614}
+{"i": 80, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-10598", "sent": 20.003531099995598, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 23.412521600024775}
+{"i": 81, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11523", "sent": 20.264039499918, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 21.24782079993747}
+{"i": 82, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11661", "sent": 20.50458710012026, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 21.347241200041026}
+{"i": 83, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11943", "sent": 20.761565000051633, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 22.199548000004143}
+{"i": 84, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12179", "sent": 20.99683910002932, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 21.950766500085592}
+{"i": 85, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12678", "sent": 21.24459800007753, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 22.636055700015277}
+{"i": 86, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12750", "sent": 21.507229400100186, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 22.447052899980918}
+{"i": 87, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12771", "sent": 21.760126899927855, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 23.124796099960804}
+{"i": 88, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-13236", "sent": 22.01218880014494, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 24.685461200075224}
+{"i": 89, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14731", "sent": 22.26642489992082, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 23.76043440005742}
+{"i": 90, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-00423", "sent": 22.519925799919292, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 29.736831600079313}
+{"i": 91, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-00771", "sent": 22.75695910002105, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 26.26453629997559}
+{"i": 92, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-01323", "sent": 23.00826820009388, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 26.31406949996017}
+{"i": 93, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-01447", "sent": 23.26297720009461, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 27.753000000026077}
+{"i": 94, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02026", "sent": 23.50053930003196, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 26.41791810002178}
+{"i": 95, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-02520", "sent": 23.75471909996122, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 27.46342710009776}
+{"i": 96, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02945", "sent": 23.990845500025898, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 33.78931630006991}
+{"i": 97, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-04477", "sent": 24.256222400115803, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 29.155373400077224}
+{"i": 98, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-04825", "sent": 24.508240700000897, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 28.115929499967024}
+{"i": 99, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05529", "sent": 24.756934100063518, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 29.05760330008343}
+{"i": 100, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-05908", "sent": 24.990846700035036, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 28.912574799964204}
+{"i": 101, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05926", "sent": 25.26083100005053, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 29.05914969998412}
+{"i": 102, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06056", "sent": 25.508450800087303, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 33.05854899995029}
+{"i": 103, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06208", "sent": 25.76147529995069, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 31.13649920001626}
+{"i": 104, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06768", "sent": 26.007086500059813, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 29.7928508000914}
+{"i": 105, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-07168", "sent": 26.25889190007001, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 31.448636499932036}
+{"i": 106, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-07347", "sent": 26.512825099984184, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 30.065550700062886}
+{"i": 107, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-07355", "sent": 26.759749100077897, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 28.14160170010291}
+{"i": 108, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09010", "sent": 27.012803100049496, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 31.523461899952963}
+{"i": 109, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09635", "sent": 27.260209300089628, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 31.616356400074437}
+{"i": 110, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09725", "sent": 27.51128110010177, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 32.673339900095016}
+{"i": 111, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09835", "sent": 27.751286500133574, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 28.76173759996891}
+{"i": 112, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-10653", "sent": 28.005446000024676, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 32.64506050013006}
+{"i": 113, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11616", "sent": 28.260221699951217, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 32.26671100012027}
+{"i": 114, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11710", "sent": 28.513811700046062, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 33.058898499934}
+{"i": 115, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12037", "sent": 28.75303880008869, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 31.948626900091767}
+{"i": 116, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12793", "sent": 29.007530600065365, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 32.79591490002349}
+{"i": 117, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12971", "sent": 29.244479600107297, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 33.09979270002805}
+{"i": 118, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-13291", "sent": 29.50911059998907, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 33.48666650010273}
+{"i": 119, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-13852", "sent": 29.756816999986768, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 32.88334840000607}
+{"i": 120, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-00204", "sent": 30.012255700072274, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 33.491824300028384}
+{"i": 121, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-00477", "sent": 30.255836100084707, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 34.5359569999855}
+{"i": 122, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-00723", "sent": 30.517248900141567, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 33.99369370006025}
+{"i": 123, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-01543", "sent": 30.750718099996448, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 34.617641299963}
+{"i": 124, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02038", "sent": 31.011197000043467, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 35.37738540000282}
+{"i": 125, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-03070", "sent": 31.260980400023982, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 35.19144179997966}
+{"i": 126, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-03074", "sent": 31.509964500088245, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 34.8366907001473}
+{"i": 127, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-03375", "sent": 31.75928320013918, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 36.268983100075275}
+{"i": 128, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-03776", "sent": 32.007728500058874, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 35.30297449999489}
+{"i": 129, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05039", "sent": 32.251534400042146, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 36.76158019993454}
+{"i": 130, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-05225", "sent": 32.50875520007685, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 36.35100260004401}
+{"i": 131, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05914", "sent": 32.74894500011578, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 36.52639940008521}
+{"i": 132, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06069", "sent": 33.02127670007758, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 36.9777832000982}
+{"i": 133, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06611", "sent": 33.25741750001907, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 37.3847342999652}
+{"i": 134, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-07149", "sent": 33.486744299996644, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 37.25680169998668}
+{"i": 135, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-07631", "sent": 33.73448950005695, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 39.21627989993431}
+{"i": 136, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-07935", "sent": 33.992044100072235, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 38.130326400045305}
+{"i": 137, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08299", "sent": 34.245692800031975, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 36.01554469997063}
+{"i": 138, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08810", "sent": 34.50406210008077, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 35.718185200123116}
+{"i": 139, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09081", "sent": 34.771271700039506, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 36.52269560005516}
+{"i": 140, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09419", "sent": 35.01059930003248, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 38.43127930001356}
+{"i": 141, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09801", "sent": 35.24771820008755, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 38.27412900002673}
+{"i": 142, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-10761", "sent": 35.4927231001202, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 38.52688409993425}
+{"i": 143, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11922", "sent": 35.759392499923706, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 39.28119389992207}
+{"i": 144, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12653", "sent": 35.9938620000612, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 40.65710110007785}
+{"i": 145, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-13091", "sent": 36.24577739997767, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 39.68652160000056}
+{"i": 146, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-13131", "sent": 36.50023200013675, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 40.11143009993248}
+{"i": 147, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14215", "sent": 36.759529300034046, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 40.57681580004282}
+{"i": 148, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-14833", "sent": 37.00670969998464, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 41.5209659000393}
+{"i": 149, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14887", "sent": 37.254205000121146, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 41.04952979995869}
+{"i": 150, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-01606", "sent": 37.50760919996537, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 38.666724200127646}
+{"i": 151, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-02066", "sent": 37.762056899955496, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 38.52553110010922}
+{"i": 152, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02343", "sent": 38.01360130007379, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 41.77432730002329}
+{"i": 153, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-02502", "sent": 38.24946580012329, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 40.25286080013029}
+{"i": 154, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02552", "sent": 38.51792050013319, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 39.64196419995278}
+{"i": 155, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-02799", "sent": 38.771217100089416, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 39.844133200123906}
+{"i": 156, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-03027", "sent": 39.00619480013847, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 39.642382899997756}
+{"i": 157, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-04479", "sent": 39.27156240004115, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 40.97867839992978}
+{"i": 158, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-04805", "sent": 39.49147820007056, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 41.94652330013923}
+{"i": 159, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05064", "sent": 39.74360799998976, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 40.97595360013656}
+{"i": 160, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-07604", "sent": 39.99424359994009, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 40.84562349994667}
+{"i": 161, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-07865", "sent": 40.25140479998663, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 41.75763579993509}
+{"i": 162, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08083", "sent": 40.50325180008076, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 44.133198000025004}
+{"i": 163, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08088", "sent": 40.77710880013183, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 42.481703400146216}
+{"i": 164, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08426", "sent": 41.0127745999489, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 42.53018330014311}
+{"i": 165, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08961", "sent": 41.24335890007205, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 42.026668899925426}
+{"i": 166, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09184", "sent": 41.51413829997182, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 43.09231809992343}
+{"i": 167, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-10018", "sent": 41.75151240010746, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 42.89271409995854}
+{"i": 168, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-10037", "sent": 42.0193103000056, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 43.468716100091115}
+{"i": 169, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-10095", "sent": 42.25465020001866, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 44.074422399979085}
+{"i": 170, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-10344", "sent": 42.52202060003765, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 45.21378000010736}
+{"i": 171, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-10767", "sent": 42.759707200108096, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 44.95861790003255}
+{"i": 172, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11010", "sent": 42.99810070008971, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 44.5086169000715}
+{"i": 173, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11207", "sent": 43.25772040011361, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 45.33118800004013}
+{"i": 174, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11596", "sent": 43.49517050012946, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 44.35459290002473}
+{"i": 175, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-13380", "sent": 43.76478420011699, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 44.50080360006541}
+{"i": 176, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-13481", "sent": 44.01715760002844, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 45.00679300003685}
+{"i": 177, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14261", "sent": 44.253921000054106, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 44.95829440001398}
+{"i": 178, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-14283", "sent": 44.499287500046194, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 45.47964060003869}
+{"i": 179, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14449", "sent": 44.743433400057256, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 45.668209300143644}
+{"i": 180, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-00248", "sent": 44.997484100051224, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 46.12853190000169}
+{"i": 181, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-00680", "sent": 45.25040340004489, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 47.43339359993115}
+{"i": 182, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-01221", "sent": 45.5204795000609, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 47.23305199993774}
+{"i": 183, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-01679", "sent": 45.742478400003165, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 49.531980799976736}
+{"i": 184, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02049", "sent": 46.01015050010756, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 47.43268369999714}
+{"i": 185, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-02231", "sent": 46.247662000125274, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 48.75042019993998}
+{"i": 186, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02820", "sent": 46.501003300072625, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 47.68003699998371}
+{"i": 187, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-03676", "sent": 46.75435260008089, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 51.0270152001176}
+{"i": 188, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-03977", "sent": 47.00888370000757, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 48.75757999997586}
+{"i": 189, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-04869", "sent": 47.27092029992491, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 51.78300689999014}
+{"i": 190, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-05744", "sent": 47.50850800005719, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 51.82356940000318}
+{"i": 191, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-07417", "sent": 47.75486849993467, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 49.75802389997989}
+{"i": 192, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08268", "sent": 48.004500600043684, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 49.54623320000246}
+{"i": 193, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08448", "sent": 48.26119689992629, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 49.82396940002218}
+{"i": 194, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08465", "sent": 48.508770199958235, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 52.37450910010375}
+{"i": 195, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08686", "sent": 48.74813920003362, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 52.7182499000337}
+{"i": 196, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09577", "sent": 49.0101372001227, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 50.008061999920756}
+{"i": 197, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-10440", "sent": 49.2462420000229, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 52.864393500145525}
+{"i": 198, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11599", "sent": 49.50952900014818, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 52.842865200014785}
+{"i": 199, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11764", "sent": 49.74913090001792, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 54.509991500061005}
+{"i": 200, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11831", "sent": 50.00636440003291, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 52.844025400001556}
+{"i": 201, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11974", "sent": 50.266074900049716, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 52.139098200015724}
+{"i": 202, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12009", "sent": 50.51758090010844, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 51.6959693999961}
+{"i": 203, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12195", "sent": 50.756875599967316, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 53.60776009992696}
+{"i": 204, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12478", "sent": 51.003797200042754, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 52.217802400002256}
+{"i": 205, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12583", "sent": 51.26196669996716, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 52.22462290013209}
+{"i": 206, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-13511", "sent": 51.48403719998896, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 52.1384640999604}
+{"i": 207, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-13633", "sent": 51.76912149996497, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 52.532558999955654}
+{"i": 208, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-13712", "sent": 52.007372700143605, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 53.22705500014126}
+{"i": 209, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14995", "sent": 52.25789769995026, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 55.51936160004698}
+{"i": 210, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-00811", "sent": 52.49363090004772, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 55.50663059996441}
+{"i": 211, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-01137", "sent": 52.76110280002467, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 54.42604329995811}
+{"i": 212, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-01984", "sent": 52.99865410011262, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 64.17249889997765}
+{"i": 213, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-02903", "sent": 53.25413809996098, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 56.8518572000321}
+{"i": 214, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-03212", "sent": 53.50744710001163, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 54.62900030007586}
+{"i": 215, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-03477", "sent": 53.759230399969965, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 56.85156229999848}
+{"i": 216, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-03994", "sent": 54.01099630002864, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 55.55155019997619}
+{"i": 217, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-04876", "sent": 54.261711300117895, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 57.123229100136086}
+{"i": 218, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06004", "sent": 54.50084779993631, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 57.55998050002381}
+{"i": 219, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06005", "sent": 54.7519692000933, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 58.673859500093386}
+{"i": 220, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06138", "sent": 55.00537639996037, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 56.89780759997666}
+{"i": 221, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06182", "sent": 55.258703799918294, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 58.21221340005286}
+{"i": 222, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06207", "sent": 55.50496069993824, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 56.29569329996593}
+{"i": 223, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06395", "sent": 55.752559799933806, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 57.04689220013097}
+{"i": 224, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-07796", "sent": 56.00494150002487, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 56.943419200135395}
+{"i": 225, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-07904", "sent": 56.26447720010765, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 60.420042500132695}
+{"i": 226, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08202", "sent": 56.49961700011045, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 59.96402220008895}
+{"i": 227, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08748", "sent": 56.7618599999696, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 60.79516460001469}
+{"i": 228, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09329", "sent": 57.00877270009369, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 57.86540640005842}
+{"i": 229, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09552", "sent": 57.24607750005089, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 59.02928650006652}
+{"i": 230, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09570", "sent": 57.50568800000474, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 58.762484800070524}
+{"i": 231, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09860", "sent": 57.774649700149894, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 59.25979340006597}
+{"i": 232, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-10900", "sent": 57.999815300107, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 58.9399719000794}
+{"i": 233, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11417", "sent": 58.2638600000646, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 59.173379299929366}
+{"i": 234, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11437", "sent": 58.5107778001111, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 61.24050229997374}
+{"i": 235, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12062", "sent": 58.75596219999716, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 60.850627900101244}
+{"i": 236, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12999", "sent": 59.01304080011323, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 60.80188639997505}
+{"i": 237, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14350", "sent": 59.24515810003504, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 63.15224700002}
+{"i": 238, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-14382", "sent": 59.51067560003139, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 62.90481849992648}
+{"i": 239, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14421", "sent": 59.763604999985546, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 61.52975700004026}
+{"i": 240, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-00080", "sent": 60.00569800008088, "status": 200, "model": "claude-haiku-4-5", "attempts": ["server_error", "ok"], "done": 64.0823711999692}
+{"i": 241, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-01070", "sent": 60.25472670001909, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 63.430270300013945}
+{"i": 242, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-01152", "sent": 60.51285369996913, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 64.72531759995036}
+{"i": 243, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-03097", "sent": 60.740848399931565, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 63.665787500096485}
+{"i": 244, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-03107", "sent": 61.00458439998329, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 66.53668459993787}
+{"i": 245, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-03372", "sent": 61.23918089992367, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 63.39887850009836}
+{"i": 246, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-03892", "sent": 61.507497099926695, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 65.45566039998084}
+{"i": 247, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05322", "sent": 61.75916970008984, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 65.10778099996969}
+{"i": 248, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-05749", "sent": 61.98794040014036, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 66.5325404999312}
+{"i": 249, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05951", "sent": 62.26231010002084, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 66.81612580013461}
+{"i": 250, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06914", "sent": 62.510021999944, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 67.70901739993133}
+{"i": 251, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-07405", "sent": 62.762327699922025, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 66.76932450011373}
+{"i": 252, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08120", "sent": 63.0135300999973, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 68.08971330011263}
+{"i": 253, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08274", "sent": 63.249857699964195, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 71.9496402000077}
+{"i": 254, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08773", "sent": 63.51910910010338, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 68.59790230006911}
+{"i": 255, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08996", "sent": 63.77241780003533, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 65.34388409997337}
+{"i": 256, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09510", "sent": 64.00934939994477, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 68.69546049996279}
+{"i": 257, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09575", "sent": 64.2448158999905, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 65.40779189998284}
+{"i": 258, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-10032", "sent": 64.51470710011199, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 66.38973559997976}
+{"i": 259, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-10466", "sent": 64.76741460012272, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 72.88334590010345}
+{"i": 260, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11406", "sent": 65.00816940004006, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 68.40762059995905}
+{"i": 261, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11573", "sent": 65.25862290011719, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 69.08856509998441}
+{"i": 262, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12051", "sent": 65.49618429993279, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 76.68221480003558}
+{"i": 263, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12245", "sent": 65.76418319996446, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 67.14904260006733}
+{"i": 264, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12252", "sent": 65.98647200013511, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 69.11646210006438}
+{"i": 265, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12579", "sent": 66.27134219999425, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 70.16577770002186}
+{"i": 266, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-13543", "sent": 66.51006740005687, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 78.02469380013645}
+{"i": 267, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-13576", "sent": 66.76355589996092, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 67.85907969996333}
+{"i": 268, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-13716", "sent": 67.00106170005165, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 70.4490793000441}
+{"i": 269, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14375", "sent": 67.23727679997683, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 70.05580219998956}
+{"i": 270, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-00130", "sent": 67.51050500012934, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 69.4313100001309}
+{"i": 271, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-00368", "sent": 67.7508459999226, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 72.5206133001484}
+{"i": 272, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-01172", "sent": 68.00380960013717, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 70.30644130008295}
+{"i": 273, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-01287", "sent": 68.27520010014996, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 70.37107559992}
+{"i": 274, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-01686", "sent": 68.51299490011297, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 71.65181290009059}
+{"i": 275, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-01959", "sent": 68.74930420005694, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 77.9625345999375}
+{"i": 276, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02425", "sent": 69.02950430009514, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 71.82965630013496}
+{"i": 277, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-03663", "sent": 69.25093990005553, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 70.8245824999176}
+{"i": 278, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-04171", "sent": 69.51891109999269, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 72.09528640005738}
+{"i": 279, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-04317", "sent": 69.7543721999973, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 71.27657480002381}
+{"i": 280, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-04389", "sent": 70.01814820012078, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 71.27477989997715}
+{"i": 281, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06459", "sent": 70.26890949998051, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 73.32831729995087}
+{"i": 282, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06754", "sent": 70.52213430008851, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 71.71652509993874}
+{"i": 283, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06780", "sent": 70.751069100108, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 72.17443750007078}
+{"i": 284, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-07746", "sent": 71.00260529993102, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 72.66278939996846}
+{"i": 285, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-07987", "sent": 71.26701040007174, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 72.30377240013331}
+{"i": 286, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08130", "sent": 71.50325980014168, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 72.74143259995617}
+{"i": 287, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08994", "sent": 71.77289970009588, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 73.23207819997333}
+{"i": 288, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09336", "sent": 72.00942240003496, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 73.67842740006745}
+{"i": 289, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09763", "sent": 72.24572180001996, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 74.32571210013703}
+{"i": 290, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11188", "sent": 72.51352529996075, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 73.64789830008522}
+{"i": 291, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11292", "sent": 72.73929110006429, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 74.90976559999399}
+{"i": 292, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11488", "sent": 72.98669570009224, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 74.65629590000026}
+{"i": 293, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12109", "sent": 73.27490420010872, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 74.41961800004356}
+{"i": 294, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12358", "sent": 73.49845509999432, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 78.95741469995119}
+{"i": 295, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12421", "sent": 73.7512604999356, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 76.7656576000154}
+{"i": 296, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12447", "sent": 74.00443139998242, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 75.33748159999959}
+{"i": 297, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12473", "sent": 74.2558131001424, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 76.7948819999583}
+{"i": 298, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12872", "sent": 74.5252376999706, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 75.82853220007382}
+{"i": 299, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14471", "sent": 74.7450564999599, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 76.28741819993593}
+{"i": 300, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-00317", "sent": 74.99891069997102, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 76.91471199993975}
+{"i": 301, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-01561", "sent": 75.26744610001333, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 76.79446330014616}
+{"i": 302, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-01682", "sent": 75.52141789998859, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 77.65053390013054}
+{"i": 303, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-02272", "sent": 75.75970780011266, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 77.01425689994358}
+{"i": 304, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02536", "sent": 75.99736190005206, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 77.28651100001298}
+{"i": 305, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-04197", "sent": 76.26520860008895, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 78.86202040011995}
+{"i": 306, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-04807", "sent": 76.50285020004958, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 78.16688079992309}
+{"i": 307, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05316", "sent": 76.75472939992324, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 78.94034420000389}
+{"i": 308, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-05419", "sent": 77.00829320005141, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 78.45094679994509}
+{"i": 309, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06025", "sent": 77.263739899965, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 78.68852590001188}
+{"i": 310, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06274", "sent": 77.50057139992714, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 78.65610329993069}
+{"i": 311, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06797", "sent": 77.76903979992494, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 79.65932890004478}
+{"i": 312, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-07538", "sent": 78.01798969996162, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 79.21873440011404}
+{"i": 313, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08143", "sent": 78.23784650000744, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 80.20987450005487}
+{"i": 314, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08835", "sent": 78.52314559998922, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 79.82882990012877}
+{"i": 315, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09115", "sent": 78.76031400007196, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 80.54060559999198}
+{"i": 316, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09172", "sent": 78.99669930012897, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 81.11536599998362}
+{"i": 317, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-10158", "sent": 79.26170039991848, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 82.37174590001814}
+{"i": 318, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-10426", "sent": 79.51498170010746, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 80.83337210002355}
+{"i": 319, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-10481", "sent": 79.73583850008436, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 81.52512899995781}
+{"i": 320, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-10598", "sent": 80.00294880010188, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 82.07325730007142}
+{"i": 321, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11523", "sent": 80.25156580004841, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 81.37807000009343}
+{"i": 322, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11661", "sent": 80.5017957999371, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 81.6962592001073}
+{"i": 323, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11943", "sent": 80.76521480013616, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 82.30062650004402}
+{"i": 324, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12179", "sent": 81.01555959996767, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 82.19632220012136}
+{"i": 325, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12678", "sent": 81.26389400009066, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 86.25862490013242}
+{"i": 326, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12750", "sent": 81.50062189996243, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 84.08136270008981}
+{"i": 327, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12771", "sent": 81.75328020006418, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 83.13038520002738}
+{"i": 328, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-13236", "sent": 82.00417650002055, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 83.79654349992052}
+{"i": 329, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14731", "sent": 82.25658160005696, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 83.44819670007564}
+{"i": 330, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-00423", "sent": 82.50864499993622, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 86.536890800111}
+{"i": 331, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-00771", "sent": 82.76112010003999, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 86.74617290007882}
+{"i": 332, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-01323", "sent": 83.0147715001367, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 85.99575190013275}
+{"i": 333, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-01447", "sent": 83.2534179999493, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 87.02982120006345}
+{"i": 334, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02026", "sent": 83.52247860003263, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 85.74696539994329}
+{"i": 335, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-02520", "sent": 83.76128560001962, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 87.22507419995964}
+{"i": 336, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02945", "sent": 84.01267650001682, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 93.4640107001178}
+{"i": 337, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-04477", "sent": 84.25140639999881, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 89.33708010008559}
+{"i": 338, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-04825", "sent": 84.51508609997109, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 87.88396409992129}
+{"i": 339, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05529", "sent": 84.7547188999597, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 87.64185709995218}
+{"i": 340, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-05908", "sent": 84.9968926999718, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 87.4792327999603}
+{"i": 341, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05926", "sent": 85.27248269994743, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 90.23222479992546}
+{"i": 342, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06056", "sent": 85.51545100007206, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 94.48973289993592}
+{"i": 343, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06208", "sent": 85.74396450002678, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 98.6283605999779}
+{"i": 344, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06768", "sent": 85.98539529996924, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 93.46229370008223}
+{"i": 345, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-07168", "sent": 86.25676660006866, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 89.02268479997292}
+{"i": 346, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-07347", "sent": 86.51595439994708, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 90.68605200015008}
+{"i": 347, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-07355", "sent": 86.76345690013841, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 88.03648400004022}
+{"i": 348, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09010", "sent": 87.00565370009281, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 91.99865940003656}
+{"i": 349, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09635", "sent": 87.26340789999813, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 88.97565590008162}
+{"i": 350, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09725", "sent": 87.50542460009456, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 91.215816100128}
+{"i": 351, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09835", "sent": 87.75634570000693, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 89.11283680004999}
+{"i": 352, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-10653", "sent": 88.00517329992726, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 93.00612129992805}
+{"i": 353, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11616", "sent": 88.26216539996676, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 92.20564780011773}
+{"i": 354, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-11710", "sent": 88.5056052999571, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 90.49624270014465}
+{"i": 355, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12037", "sent": 88.7531521001365, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 91.44539580005221}
+{"i": 356, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12793", "sent": 89.0158752000425, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 94.49018399999477}
+{"i": 357, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-12971", "sent": 89.26920550013892, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 90.94179900013842}
+{"i": 358, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-13291", "sent": 89.50343680009246, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 92.28441360010765}
+{"i": 359, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-13852", "sent": 89.74817300005816, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 94.14770029997453}
+{"i": 360, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-00204", "sent": 89.98890489991754, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 92.41804170003161}
+{"i": 361, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-00477", "sent": 90.26897420012392, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 95.8234272999689}
+{"i": 362, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-00723", "sent": 90.49466480012052, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 95.56503179995343}
+{"i": 363, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-01543", "sent": 90.7391951000318, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 94.0793465001043}
+{"i": 364, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02038", "sent": 91.00607450003736, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 95.9595955000259}
+{"i": 365, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-03070", "sent": 91.26273089996539, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 95.35621790005825}
+{"i": 366, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-03074", "sent": 91.50605900003575, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 96.58966429997236}
+{"i": 367, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-03375", "sent": 91.7613951000385, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 98.02812179992907}
+{"i": 368, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-03776", "sent": 91.99716729996726, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 94.39432490011677}
+{"i": 369, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05039", "sent": 92.24532030010596, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 96.06078770011663}
+{"i": 370, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-05225", "sent": 92.50910779996775, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 98.63196590007283}
+{"i": 371, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05914", "sent": 92.7516960001085, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 95.35076300008222}
+{"i": 372, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-06069", "sent": 93.00473579997197, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 98.50466990005225}
+{"i": 373, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-06611", "sent": 93.26081870007329, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 96.969727500109}
+{"i": 374, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-07149", "sent": 93.51309529994614, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 97.31207920005545}
+{"i": 375, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-07631", "sent": 93.74560669995844, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 99.77244920004159}
+{"i": 376, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-07935", "sent": 94.00507900002412, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 97.3117492001038}
+{"i": 377, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-08299", "sent": 94.26636580005288, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 102.70035300008021}
+{"i": 378, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-08810", "sent": 94.4876161001157, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 96.72458190005273}
+{"i": 379, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09081", "sent": 94.75968859996647, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 96.1248161001131}
+{"i": 380, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-09419", "sent": 95.00457520014606, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 98.47130919992924}
+{"i": 381, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-09801", "sent": 95.26615089992993, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 97.67476600012742}
+{"i": 382, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-10761", "sent": 95.49931999994442, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 97.6755747999996}
+{"i": 383, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-11922", "sent": 95.76472360012121, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 98.02390650007874}
+{"i": 384, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-12653", "sent": 96.01399950007908, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 101.13771750009619}
+{"i": 385, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-13091", "sent": 96.25173219991848, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 98.69207220012322}
+{"i": 386, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-13131", "sent": 96.49595419992693, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 99.49150100001134}
+{"i": 387, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14215", "sent": 96.74971759994514, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 101.41668640007265}
+{"i": 388, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-14833", "sent": 97.00323739997111, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 100.24133029999211}
+{"i": 389, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-14887", "sent": 97.26469029998407, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 100.48980300012045}
+{"i": 390, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-01606", "sent": 97.51882360014133, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 100.42517960001715}
+{"i": 391, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-02066", "sent": 97.76341359992512, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 98.73788959998637}
+{"i": 392, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02343", "sent": 98.01666929991916, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 100.71157609997317}
+{"i": 393, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-02502", "sent": 98.26782940002158, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 99.39095610007644}
+{"i": 394, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-02552", "sent": 98.50219399994239, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 99.95860569993965}
+{"i": 395, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-02799", "sent": 98.735743700061, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 100.04976620012894}
+{"i": 396, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-03027", "sent": 99.00680610002019, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 99.82333460007794}
+{"i": 397, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-04479", "sent": 99.2650117999874, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 101.24703440000303}
+{"i": 398, "instance": "http://127.0.0.1:8000", "prompt_id": "dolly-04805", "sent": 99.51746549992822, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 104.79914489993826}
+{"i": 399, "instance": "http://127.0.0.1:8001", "prompt_id": "dolly-05064", "sent": 99.76468110014684, "status": 200, "model": "gpt-6-luna", "attempts": ["ok"], "done": 101.51202189992182}

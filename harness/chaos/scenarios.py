@@ -138,11 +138,14 @@ def main() -> None:
     args = parser.parse_args()
     scenarios = [args.only] if args.only else list(prereg.SCENARIOS)
     entries = asyncio.run(run_all(args.reps, scenarios))
+    # New runs replace earlier ones of the same name; the others, and any notes, are kept.
+    manifest = (json.loads(MANIFEST_PATH.read_text(encoding="utf-8")) if MANIFEST_PATH.exists()
+                else {"design": "harness/chaos/prereg.py", "rate_rps": prereg.RATE, "duration_s": prereg.DURATION})
+    fresh = {e["name"] for e in entries}
+    manifest["runs"] = [e for e in manifest.get("runs", []) if e["name"] not in fresh] + entries
     MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
-    MANIFEST_PATH.write_text(json.dumps({"design": "harness/chaos/prereg.py", "rate_rps": prereg.RATE,
-                                         "duration_s": prereg.DURATION, "runs": entries}, indent=1) + "\n",
-                             encoding="utf-8", newline="\n")
-    print(f"{len(entries)} runs -> {MANIFEST_PATH}")
+    MANIFEST_PATH.write_text(json.dumps(manifest, indent=1) + "\n", encoding="utf-8", newline="\n")
+    print(f"{len(entries)} runs -> {MANIFEST_PATH} ({len(manifest['runs'])} in total)")
 
 
 if __name__ == "__main__":

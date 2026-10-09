@@ -46,7 +46,10 @@ async def generate(bases: list[str], rate: float, duration: float, rows: list[di
     rows = rows or load_rows()
     total = int(rate * duration)
     started = time.perf_counter()
-    async with httpx2.AsyncClient(timeout=120, transport=transport) as client:
+    # No connection limit: the client's default pool (100 connections) would hold requests back once
+    # that many are in flight, which turns the open loop into a closed one under a latency fault.
+    limits = httpx2.Limits(max_connections=None, max_keepalive_connections=None)
+    async with httpx2.AsyncClient(timeout=120, transport=transport, limits=limits) as client:
         tasks = []
         for i, (row, base) in enumerate(zip(itertools.cycle(rows), itertools.cycle(bases))):
             if i >= total:

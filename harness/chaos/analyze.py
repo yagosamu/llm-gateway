@@ -20,7 +20,7 @@ JSON_PATH = Path("results/slice3.json")
 MD_PATH = Path("results/slice3.md")
 FAILED_ATTEMPTS = ("rate_limit", "timeout", "connection", "server_error", "auth", "bad_request")
 METRICS = ("error_rate", "latency_p50_s", "latency_p95_s", "wasted_calls", "fallback_share",
-           "time_to_open_s", "time_to_close_s", "error_rate_after")
+           "time_to_open_s", "time_to_close_s", "error_rate_after", "reopens_after_close")
 
 
 def _wasted(r: dict) -> bool:
@@ -48,7 +48,15 @@ def run_metrics(requests: list[dict], timeline: list[dict]) -> dict:
         "time_to_open_s": rnd(opened[0] - prereg.FAULT_START) if opened else None,
         "time_to_close_s": rnd(closed[0] - prereg.FAULT_END) if closed else None,
         "error_rate_after": rnd(1 - sum(r["status"] == 200 for r in after) / len(after)) if after else None,
+        # Added after the runs, not pre-registered: time_to_close_s hides a circuit that closes and then
+        # opens again, which the latency runs showed.
+        "reopens_after_close": _reopens(timeline, closed[0]) if closed else None,
     }
+
+
+def _reopens(timeline: list[dict], first_close: float) -> int:
+    later = [p["state"] for p in timeline if p["t"] > first_close]
+    return sum(1 for prev, cur in zip(["closed"] + later, later) if cur == "open" and prev != "open")
 
 
 def summarize(values: list) -> dict:
@@ -59,7 +67,7 @@ def summarize(values: list) -> dict:
             "missing": len(values) - len(present)}
 
 
-def build_results(runs: list[dict]) -> dict:
+def build_results(runs: list[dict], notes: list[str] | None = None) -> dict:
     """runs: [{"scenario", "config", "rep", "metrics"}] -> per scenario and config, each metric's
     median, min and max over the repetitions."""
     table = {}
@@ -71,7 +79,8 @@ def build_results(runs: list[dict]) -> dict:
             table.setdefault(scenario, {})[config] = {"reps": len(reps)} | {m: summarize([x[m] for x in reps])
                                                                             for m in METRICS}
     return {"rate_rps": prereg.RATE, "fault_window_s": [prereg.FAULT_START, prereg.FAULT_END],
-            "duration_s": prereg.DURATION, "scenarios": prereg.SCENARIOS, "results": table}
+            "duration_s": prereg.DURATION, "scenarios": prereg.SCENARIOS, "results": table,
+            "notes": list(notes or [])}
 
 
 def _cell(s: dict, scale=1.0, digits=1, unit="", absent="-") -> str:
@@ -96,19 +105,27 @@ def render_markdown(r: dict) -> str:
     for scenario, by_config in r["results"].items():
         lines += [f"## {scenario}: {json.dumps(r['scenarios'][scenario])}", "",
                   "| configuration | client errors | p50 latency | p95 latency | wasted calls | served by fallback | "
-                  "circuit opened after | closed after recovery | errors after recovery |",
-                  "|---|---|---|---|---|---|---|---|---|"]
+                  "circuit opened after | closed after recovery | reopened after closing | errors after recovery |",
+                  "|---|---|---|---|---|---|---|---|---|---|"]
         for config, m in by_config.items():
             lines.append(f"| {config} | {_cell(m['error_rate'], 100, 1, '%')} | {_cell(m['latency_p50_s'], 1, 1, ' s')} | "
                          f"{_cell(m['latency_p95_s'], 1, 1, ' s')} | {_cell(m['wasted_calls'], 1, 0)} | "
                          f"{_cell(m['fallback_share'], 100, 0, '%')} | "
                          f"{_cell(m['time_to_open_s'], 1, 1, ' s', 'never')} | "
-                         f"{_cell(m['time_to_close_s'], 1, 1, ' s', 'never')} | {_cell(m['error_rate_after'], 100, 1, '%')} |")
+                         f"{_cell(m['time_to_close_s'], 1, 1, ' s', 'never')} | "
+                         f"{_cell(m['reopens_after_close'], 1, 0)} | {_cell(m['error_rate_after'], 100, 1, '%')} |")
         lines.append("")
     lines += ["Wasted calls: requests in the fault window that made a failing call to openai. Circuit times come from "
               f"openai's state polled every {prereg.TIMELINE_INTERVAL} s, so they carry that resolution. Configurations "
-              "without a breaker never open a circuit.", ""]
+              "without a breaker never open a circuit. \"Reopened after closing\" was added after the runs and is not "
+              "part of the pre-registered metrics.", ""]
+    if r.get("notes"):
+        lines += ["## Measurement notes", ""] + [f"- {n}" for n in r["notes"]] + [""]
     return "\n".join(lines)
+
+
+def load_notes(manifest_path: Path = MANIFEST_PATH) -> list[str]:
+    return json.loads(manifest_path.read_text(encoding="utf-8")).get("notes", [])
 
 
 def load_runs(manifest_path: Path = MANIFEST_PATH, runs_dir: Path = RUNS_DIR) -> list[dict]:
@@ -123,7 +140,7 @@ def load_runs(manifest_path: Path = MANIFEST_PATH, runs_dir: Path = RUNS_DIR) ->
 
 def main() -> None:
     sys.stdout.reconfigure(encoding="utf-8")
-    results = build_results(load_runs())
+    results = build_results(load_runs(), load_notes())
     JSON_PATH.write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8", newline="\n")
     text = render_markdown(results)
     MD_PATH.write_text(text, encoding="utf-8", newline="\n")
