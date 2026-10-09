@@ -87,3 +87,11 @@ def test_a_circuit_that_opens_again_after_closing_is_counted():
                 {"t": 95, "state": "closed"}]
     m = run_metrics([req(25, 26)], timeline)
     assert (m["time_to_close_s"], m["reopens_after_close"]) == (12.0, 1)
+
+
+def test_the_served_breaker_is_v2_and_the_slice3_study_still_pins_v1():
+    from llm_gateway.routing import DEFAULT_CONFIG_PATH, load_config
+    breaker = load_config(DEFAULT_CONFIG_PATH, set(load_registry())).breaker
+    assert (breaker.mode, breaker.window_calls, breaker.slow_call_seconds) == ("count_window", 20, 30.0)
+    assert routing_for("failover_breaker")["breaker"]["mode"] == "time_window"
+    assert routing_for("breaker_v2")["breaker"]["mode"] == "count_window"

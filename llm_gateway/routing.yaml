@@ -10,7 +10,7 @@
 # watches that choice in production: it re-asks a sample of routed requests to the high tier, has a
 # judge compare the answers, and records every verdict, within a daily spending cap.
 
-version: "2026-10-09.1"
+version: "2026-10-09.2"
 policy: always_low
 decision_threshold: 0.95
 estimates: routing_estimates.json
@@ -34,14 +34,23 @@ failover:
     low: [claude-haiku-4-5]
     medium: [gpt-oss-120b]
     high: [claude-sonnet-5-5]
-# Per-provider circuit breaker. A circuit opens when, over the shared 60 s window and at least
-# min_calls calls, the share of failed calls (rate limit, timeout, connection, server error, auth)
-# reaches error_rate_threshold, or the p95 latency of successful calls passes p95_budget_ms. It stays
-# open open_seconds, then lets one probe through; the probe closes it or opens it again. The p95
-# budget sits above the slowest recorded p95 (gpt-6.1-sol, 16.5 s), so normal traffic never trips it.
+# Per-provider circuit breaker, v2 (mode count_window). A circuit opens when, among the last
+# window_calls calls admitted since it last moved (at least min_calls of them), failed calls (rate
+# limit, timeout, connection, server error, auth) or calls that ran past slow_call_seconds reach
+# error_rate_threshold. Calls admitted before the circuit last moved never count, and a call is
+# listed as slow while it runs. It stays open open_seconds, then lets one probe through; the probe
+# closes it or opens it again. 30 s sits above the slowest recorded p95 (gpt-6.1-sol, 16.5 s).
+# v2 replaced v1 (mode time_window, the shared 60 s health window) after a pre-registered study
+# (results/slice3_breaker_v2.md): it detects an outage in 2.7 s instead of 20.2 s, opens at 50% errors,
+# never reopens after recovery, never tripped with no fault or 10% errors, and worsened no client
+# metric. Its known cost: a 20-call window can trip under a steady 20 to 30% error rate, sending
+# traffic to the pricier fallback for the open period.
 breaker:
+  mode: count_window
+  window_calls: 20
   error_rate_threshold: 0.5
   min_calls: 10
-  p95_budget_ms: 30000
+  slow_call_seconds: 30
+  p95_budget_ms: 30000  # used by v1 only
   open_seconds: 15
   probe_lease_seconds: 70

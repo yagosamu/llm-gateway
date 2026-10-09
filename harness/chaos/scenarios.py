@@ -62,7 +62,8 @@ def routing_for(config: str) -> dict:
     if config in prereg_v2.MODES:
         breaker |= {"enabled": True, "mode": prereg_v2.MODES[config]}
     else:
-        breaker |= {"enabled": config == "failover_breaker"}
+        # The slice 3 study measured v1; pin it, so the study still measures v1 after the default moved to v2.
+        breaker |= {"enabled": config == "failover_breaker", "mode": "time_window"}
     data["breaker"] = breaker
     if config == "none":
         data["failover"] = dict(data.get("failover") or {}) | {"fallbacks": {}}
