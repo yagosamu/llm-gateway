@@ -46,3 +46,15 @@ def test_the_committed_deferrable_results_match_the_committed_runs():
     if not deferrable.JSON_PATH.exists():
         pytest.skip("no deferrable study committed yet")
     assert json.loads(json.dumps(deferrable.analyze())) == json.loads(deferrable.JSON_PATH.read_text(encoding="utf-8"))
+
+
+def test_a_queue_that_did_not_empty_has_no_drain_time(tmp_path):
+    wall = 1_000.0
+    write(tmp_path, "events", [{"t": 0.0, "event": "start", "wall": wall}, {"t": 60.0, "event": "fault off"}])
+    write(tmp_path, "submissions", [{"i": 0, "copy": 0, "sent": 1.0, "status": 202, "job": "a", "deduplicated": False}])
+    write(tmp_path, "interactive", [{"i": 0, "sent": 25.0, "status": 502}])
+    write(tmp_path, "jobs", [{"id": "a", "status": "done", "attempts": 1, "created_at": wall, "updated_at": wall + 70},
+                             {"id": "b", "status": "queued", "attempts": 3, "created_at": wall, "updated_at": wall + 50}])
+    write(tmp_path, "executions", [{"job": "a", "outcome": "ok"}])
+    m = deferrable.rep_metrics(tmp_path)
+    assert m["unfinished"] == 1 and m["drained_after_fault_s"] is None

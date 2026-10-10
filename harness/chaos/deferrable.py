@@ -164,7 +164,7 @@ def executions(job_ids: set[str]) -> list[dict]:
     return out
 
 
-async def run_all() -> None:
+async def run_all(run_name: str) -> None:
     store = redis.Redis.from_url(REDIS_URL)
     write_routing("served")
     procs = start_instances()
@@ -175,7 +175,7 @@ async def run_all() -> None:
             for rep in range(1, REPS + 1):
                 result = await run_once(rep, client, store)
                 result["executions"] = executions({j["id"] for j in result["jobs"]})
-                folder = DATA_DIR / f"rep{rep}"
+                folder = DATA_DIR / run_name / f"rep{rep}"
                 folder.mkdir(parents=True, exist_ok=True)
                 for name in ("submissions", "interactive", "events", "jobs", "executions"):
                     (folder / f"{name}.jsonl").write_text("".join(json.dumps(r) + "\n" for r in result[name]),
@@ -202,25 +202,38 @@ def rep_metrics(folder: Path) -> dict:
     in_fault = [x for x in live if FAULT_START <= x["sent"] < FAULT_END]
     run_start = next(e["wall"] for e in events if e["event"] == "start")
     finished_at = [j["updated_at"] - run_start for j in jobs if j["status"] in ("done", "failed")]
+    unfinished = sum(j["status"] not in ("done", "failed") for j in jobs)
     return {
         "submissions": len(subs), "accepted": sum(s["status"] == 202 for s in subs),
         "deduplicated": sum(bool(s.get("deduplicated")) for s in subs),
         "jobs": len(jobs), "done": len(done), "failed": sum(j["status"] == "failed" for j in jobs),
-        "unfinished": sum(j["status"] not in ("done", "failed") for j in jobs),
+        "unfinished": unfinished,
         "jobs_answered_more_than_once": sum(1 for j in done if ok_calls.get(j["id"], 0) > 1),
         "jobs_done_without_a_logged_answer": sum(1 for j in done if ok_calls.get(j["id"], 0) == 0),
         "attempts_median": statistics.median(j["attempts"] for j in jobs),
         "attempts_max": max(j["attempts"] for j in jobs),
-        "drained_after_fault_s": round(max(finished_at) - fault_off, 3) if finished_at else None,
+        # Only a queue that emptied has a drain time; with jobs left over, the last finish says nothing.
+        "drained_after_fault_s": round(max(finished_at) - fault_off, 3) if finished_at and not unfinished else None,
         "interactive_error_rate_in_fault": round(1 - sum(x["status"] == 200 for x in in_fault) / len(in_fault), 4),
         "worker_killed_at_s": next((e["t"] for e in events if e["event"] == "worker-1 killed"), None),
     }
 
 
+# What changed between runs of this study; each run's folder name is its key.
+RUN_NOTES = {
+    "run1_sequential_worker": "Pre-registered run. Workers processed one job at a time, about 0.4 jobs per second "
+                              "each against 2 arriving per second, so the stream backed up and jobs were still "
+                              "unread when the run stopped at 300 s; the queue lost nothing but had no throughput.",
+}
+
+
 def analyze() -> dict:
-    reps = {f.name: rep_metrics(f) for f in sorted(DATA_DIR.glob("rep*"))}
+    runs = {}
+    for run_dir in sorted(p for p in DATA_DIR.iterdir() if p.is_dir()):
+        runs[run_dir.name] = {"note": RUN_NOTES.get(run_dir.name, ""),
+                              "reps": {f.name: rep_metrics(f) for f in sorted(run_dir.glob("rep*"))}}
     return {"design": "harness/chaos/deferrable.py", "fault_window_s": [FAULT_START, FAULT_END],
-            "faulted_providers": list(FAULTED_PROVIDERS), "reps": reps}
+            "faulted_providers": list(FAULTED_PROVIDERS), "runs": runs}
 
 
 def render(r: dict) -> str:
@@ -230,20 +243,26 @@ def render(r: dict) -> str:
              f"openai and anthropic both fail every call from {r['fault_window_s'][0]:.0f} s to {r['fault_window_s'][1]:.0f} s, "
              "so the low tier and its fallback are down together. Deferrable jobs arrive at 2 per second for 80 s, each "
              "submitted twice with the same Idempotency-Key; one of the two workers is killed at 65 s. Design: "
-             "harness/chaos/deferrable.py.", "",
-             "| run | " + " | ".join(c.replace("_", " ") for c in cols) + " |", "|---|" + "---|" * len(cols)]
-    for name, m in r["reps"].items():
-        lines.append(f"| {name} | " + " | ".join(str(m[c]) for c in cols) + " |")
-    lines += ["", "Jobs answered more than once count jobs whose request id shows two or more successful model calls in "
+             "harness/chaos/deferrable.py.", ""]
+    for run, data in r["runs"].items():
+        lines += [f"## {run}", ""] + ([data["note"], ""] if data["note"] else [])
+        lines += ["| rep | " + " | ".join(c.replace("_", " ") for c in cols) + " |", "|---|" + "---|" * len(cols)]
+        for name, m in data["reps"].items():
+            lines.append(f"| {name} | " + " | ".join("-" if m[c] is None else str(m[c]) for c in cols) + " |")
+        lines.append("")
+    lines += ["Jobs answered more than once count jobs whose request id shows two or more successful model calls in "
               "the gateway's request log, the at-least-once duplicate window. Drained after fault: seconds from the "
-              "fault ending to the last job finishing.", ""]
+              "fault ending to the last job finishing, reported only when no job was left unfinished.", ""]
     return "\n".join(lines)
 
 
 def main() -> None:
     sys.stdout.reconfigure(encoding="utf-8")
-    if (sys.argv[1:] or ["analyze"])[0] == "run":
-        asyncio.run(run_all())
+    args = sys.argv[1:] or ["analyze"]
+    if args[0] == "run":
+        if len(args) < 2:
+            sys.exit("usage: python -m harness.chaos.deferrable run <run name>")
+        asyncio.run(run_all(args[1]))
     result = analyze()
     JSON_PATH.write_text(json.dumps(result, indent=1) + "\n", encoding="utf-8", newline="\n")
     text = render(result)

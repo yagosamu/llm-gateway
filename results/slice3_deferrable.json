@@ -1,0 +1,66 @@
+{
+ "design": "harness/chaos/deferrable.py",
+ "fault_window_s": [
+  20.0,
+  60.0
+ ],
+ "faulted_providers": [
+  "openai",
+  "anthropic"
+ ],
+ "runs": {
+  "run1_sequential_worker": {
+   "note": "Pre-registered run. Workers processed one job at a time, about 0.4 jobs per second each against 2 arriving per second, so the stream backed up and jobs were still unread when the run stopped at 300 s; the queue lost nothing but had no throughput.",
+   "reps": {
+    "rep1": {
+     "submissions": 320,
+     "accepted": 320,
+     "deduplicated": 160,
+     "jobs": 160,
+     "done": 79,
+     "failed": 23,
+     "unfinished": 58,
+     "jobs_answered_more_than_once": 0,
+     "jobs_done_without_a_logged_answer": 0,
+     "attempts_median": 6.0,
+     "attempts_max": 8,
+     "drained_after_fault_s": null,
+     "interactive_error_rate_in_fault": 1.0,
+     "worker_killed_at_s": 65.059
+    },
+    "rep2": {
+     "submissions": 320,
+     "accepted": 320,
+     "deduplicated": 160,
+     "jobs": 160,
+     "done": 80,
+     "failed": 26,
+     "unfinished": 54,
+     "jobs_answered_more_than_once": 0,
+     "jobs_done_without_a_logged_answer": 0,
+     "attempts_median": 6.0,
+     "attempts_max": 8,
+     "drained_after_fault_s": null,
+     "interactive_error_rate_in_fault": 1.0,
+     "worker_killed_at_s": 65.0
+    },
+    "rep3": {
+     "submissions": 320,
+     "accepted": 320,
+     "deduplicated": 160,
+     "jobs": 160,
+     "done": 74,
+     "failed": 16,
+     "unfinished": 70,
+     "jobs_answered_more_than_once": 0,
+     "jobs_done_without_a_logged_answer": 0,
+     "attempts_median": 6.0,
+     "attempts_max": 8,
+     "drained_after_fault_s": null,
+     "interactive_error_rate_in_fault": 1.0,
+     "worker_killed_at_s": 65.01
+    }
+   }
+  }
+ }
+}

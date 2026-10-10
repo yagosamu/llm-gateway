@@ -316,3 +316,37 @@ def test_queue_depth_is_exposed():
     client = api()
     defer(client)
     assert 'llm_gateway_jobs{state="stream"} 1.0' in client.get("/metrics").text
+
+
+class SlowProvider:
+    async def complete(self, model, request):
+        await asyncio.sleep(0.2)
+        return ProviderResult("The Nile.", 10, 5, "stop")
+
+
+def test_a_running_worker_keeps_several_jobs_in_flight():
+    """Eight 0.2 s jobs: one at a time would take 1.6 s; with concurrency 8 they overlap."""
+    import time
+    world = World(SlowProvider())
+
+    async def scenario():
+        async with client_for(world.app) as client:
+            await world.queue.ensure_group()
+            ids = [(await world.submit(client, key=f"k{i}"))["id"] for i in range(8)]
+            worker = world.worker(client)
+            worker.concurrency = 8
+            started = time.perf_counter()
+            runner = asyncio.create_task(worker.run())
+            while time.perf_counter() - started < 3:
+                statuses = [(await world.queue.get(i))["status"] for i in ids]
+                if all(s == "done" for s in statuses):
+                    break
+                await asyncio.sleep(0.05)
+            elapsed = time.perf_counter() - started
+            worker.stopped = True
+            await asyncio.wait_for(runner, 5)
+            return statuses, elapsed
+
+    statuses, elapsed = run(scenario())
+    assert all(s == "done" for s in statuses)
+    assert elapsed < 1.0  # well under the 1.6 s a one-at-a-time worker needs
