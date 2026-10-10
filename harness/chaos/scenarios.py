@@ -88,7 +88,20 @@ def start_instances() -> list[subprocess.Popen]:
     return procs
 
 
+async def require_redis() -> None:
+    """Fail at once, and say why, when Redis is down: the instances would start but answer 503."""
+    store = redis.Redis.from_url(REDIS_URL)
+    try:
+        await store.ping()
+    except (OSError, redis.ConnectionError) as exc:
+        raise RuntimeError(f"Redis at {REDIS_URL} is unreachable ({exc}); start Docker Desktop and run "
+                           "`docker compose up -d` in the project folder") from exc
+    finally:
+        await store.aclose()
+
+
 async def wait_ready(client: httpx2.AsyncClient) -> None:
+    await require_redis()
     for _ in range(120):
         try:
             statuses = [(await client.get(f"http://127.0.0.1:{p}/v1/health")).status_code for p in prereg.PORTS]
