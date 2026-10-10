@@ -25,6 +25,7 @@ from llm_gateway.breaker import STATES as BREAKER_STATES
 from llm_gateway.breaker import CircuitBreaker
 from llm_gateway.chaos import ChaosConfigError, ChaosControl
 from llm_gateway.health import HealthTracker
+from llm_gateway.jobs import IdempotencyConflict, JobQueue
 from llm_gateway.metrics import GatewayMetrics
 from llm_gateway.providers.base import Provider, ProviderError
 from llm_gateway.registry import ModelConfig, cost_usd
@@ -54,6 +55,7 @@ MIN_ATTEMPT_SECONDS = 0.5
 REQUIRED_HEADERS = {"X-Tenant-Id": "tenant", "X-Feature": "feature", "X-Request-Id": "request_id"}
 # Tenant and feature are metric labels, so they are kept short and free of separators.
 IDENTIFIER = re.compile(r"^[A-Za-z0-9._:-]{1,64}$")
+IDEMPOTENCY_KEY = re.compile(r"^[A-Za-z0-9._:-]{1,128}$")
 # How a provider failure reaches the client. The provider's own message is not forwarded: it can
 # name the gateway's account or key, which the client has no business seeing.
 UPSTREAM_STATUS = {
@@ -83,7 +85,7 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                router: Router | None = None, verifier_judge: Judge | None = None,
                verifier_rng: random.Random | None = None, health: HealthTracker | None = None,
                breaker: CircuitBreaker | None = None, chaos: ChaosControl | None = None,
-               admin_token: str | None = None) -> FastAPI:
+               admin_token: str | None = None, jobs: JobQueue | None = None) -> FastAPI:
     request_log = request_log or RequestLog(":memory:")
     metrics = metrics or GatewayMetrics()
     verifier = (Verifier(router, registry, providers, verifier_judge, request_log, metrics, verifier_rng)
@@ -98,6 +100,12 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
     app.state.health = health
 
     async def refresh_health_gauges() -> None:
+        if jobs is not None:
+            try:
+                for state, count in (await jobs.depth()).items():
+                    metrics.jobs.labels(state).set(count)
+            except (RedisError, OSError):
+                pass
         if health is None:
             return
         try:
@@ -142,6 +150,19 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
             return denied
         await chaos.clear()
         return {p: None for p in provider_names}
+
+    @app.get("/v1/jobs/{job_id}")
+    async def job_status(job_id: str, request: Request):
+        """A deferred job, to the tenant that submitted it. Any other tenant gets the same 404 as for a
+        job that does not exist, so job ids cannot be probed across tenants."""
+        if jobs is None:
+            return error(404, "not_found", "No such endpoint.")
+        tenant = request.headers.get("X-Tenant-Id", "")
+        job = await jobs.get(job_id) if IDENTIFIER.match(job_id) else None
+        if job is None or not hmac.compare_digest(job["tenant"].encode(), tenant.encode()):
+            return error(404, "job_not_found", f"No job {job_id!r} for this tenant.")
+        return {"id": job_id, "object": "gateway.job", "status": job["status"], "attempts": job["attempts"],
+                "last_error": job.get("last_error") or None, "result": job["result"]}
 
     @app.get("/v1/health")
     async def provider_health():
@@ -228,6 +249,26 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
             return reject(400, "stream_not_supported", "This gateway does not stream; send stream=false.", "stream")
         if chat.tools:
             return reject(400, "tools_not_supported", "This gateway does not forward tools.", "tools")
+
+        # Deferrable work is validated like any request, then queued for a worker instead of answered.
+        if request.headers.get("X-Deferrable", "").lower() in ("true", "1", "yes"):
+            if jobs is None:
+                return reject(400, "deferral_disabled", "This gateway has no job queue; send the request without "
+                                                        "X-Deferrable.", "X-Deferrable")
+            key = request.headers.get("Idempotency-Key")
+            if key is not None and not IDEMPOTENCY_KEY.match(key):
+                return reject(400, "invalid_idempotency_key", "Idempotency-Key must be 1 to 128 characters from "
+                                                              "A-Z, a-z, 0-9, '.', '_', ':' or '-'.", "Idempotency-Key")
+            try:
+                job_id, created = await jobs.submit(body, record.tenant, record.feature, record.request_id, key)
+            except IdempotencyConflict as exc:
+                return reject(422, "idempotency_key_reused", str(exc), "Idempotency-Key")
+            record.outcome = "queued"
+            # The route is chosen when the worker runs the job; counting it here too would count it twice.
+            record.routed_tier = record.routing_policy = record.routing_version = None
+            return JSONResponse(status_code=202, content={
+                "id": job_id, "object": "gateway.job", "status": "queued", "status_url": f"/v1/jobs/{job_id}",
+                "deduplicated": not created})
 
         # The tier's model first, then its fallbacks: only for "auto" requests, where the gateway chose
         # the model in the first place.

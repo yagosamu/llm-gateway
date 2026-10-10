@@ -49,6 +49,8 @@ class GatewayMetrics:
         # 0 closed, 1 half-open, 2 open: one series per provider makes a readable state timeline.
         self.breaker_state = Gauge("llm_gateway_breaker_state", "Circuit state: 0 closed, 1 half-open, 2 open.",
                                    ["provider"], registry=self.registry)
+        self.jobs = Gauge("llm_gateway_jobs", "Deferred jobs: in the stream, waiting for a retry, or dead.",
+                          ["state"], registry=self.registry)
         self.failovers = Counter("llm_gateway_failovers", "Requests served by a fallback model.",
                                  ["from_model", "to_model", "reason"], registry=self.registry)
         self.breaker_transitions = Counter("llm_gateway_breaker_transitions",

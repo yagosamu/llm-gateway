@@ -19,6 +19,7 @@ from llm_gateway.api import create_app
 from llm_gateway.breaker import CircuitBreaker
 from llm_gateway.chaos import ChaosControl, ChaosProvider
 from llm_gateway.health import HealthTracker
+from llm_gateway.jobs import JobQueue
 from llm_gateway.registry import load_registry
 from llm_gateway.request_log import RequestLog
 from llm_gateway.routing import DEFAULT_CONFIG_PATH, Router
@@ -36,4 +37,4 @@ app = create_app(
     {p: ChaosProvider(simulated, p, control) for p in sorted({m.provider for m in registry.values()})},
     RequestLog(Path(os.environ.get("CHAOS_LOG", "var/chaos_requests.sqlite3"))),
     router=router, health=health, breaker=CircuitBreaker(store, health, config=lambda: router.config.breaker),
-    chaos=control, admin_token=ADMIN_TOKEN)
+    chaos=control, admin_token=ADMIN_TOKEN, jobs=JobQueue(store))

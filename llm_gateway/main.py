@@ -12,6 +12,7 @@ from harness.routing.judge import VerifierJudge
 from llm_gateway.api import create_app
 from llm_gateway.breaker import CircuitBreaker
 from llm_gateway.health import HealthTracker
+from llm_gateway.jobs import JobQueue
 from llm_gateway.providers.factory import build_providers
 from llm_gateway.registry import load_registry
 from llm_gateway.request_log import RequestLog
@@ -20,11 +21,12 @@ from llm_gateway.routing import DEFAULT_CONFIG_PATH, Router
 registry = load_registry()
 router = Router(Path(os.environ.get("LLM_GATEWAY_ROUTING", DEFAULT_CONFIG_PATH)), set(registry))
 redis_url = os.environ.get("LLM_GATEWAY_REDIS_URL")
-health = breaker = None
+health = breaker = jobs = None
 if redis_url:
     store = redis.Redis.from_url(redis_url)
     health = HealthTracker(store)
     breaker = CircuitBreaker(store, health, config=lambda: router.config.breaker)
+    jobs = JobQueue(store)
 app = create_app(registry, build_providers({m.provider for m in registry.values()}),
                  RequestLog(Path(os.environ.get("LLM_GATEWAY_LOG", "var/requests.sqlite3"))),
-                 router=router, verifier_judge=VerifierJudge(), health=health, breaker=breaker)
+                 router=router, verifier_judge=VerifierJudge(), health=health, breaker=breaker, jobs=jobs)

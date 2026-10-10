@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS requests (
     failover_from TEXT,
     attempts INTEGER
 )"""
-OUTCOMES = ("ok", "rejected", "upstream_error")
+OUTCOMES = ("ok", "rejected", "upstream_error", "queued")
 # One row per sampled verification. Rows with acceptable = 0 are the routing failures; they keep the
 # prompt's routing features (never its text), which is what retraining the classifier needs.
 VERIFICATION_SCHEMA = """
