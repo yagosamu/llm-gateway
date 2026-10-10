@@ -58,6 +58,8 @@ def routing_for(config: str) -> dict:
     count_window; nothing else differs between them."""
     data = yaml.safe_load(DEFAULT_CONFIG_PATH.read_text(encoding="utf-8"))
     data["version"] = f"chaos-{config}"
+    if config == "served":  # the committed config exactly as the gateway serves it
+        return data
     breaker = dict(data.get("breaker") or {})
     if config in prereg_v2.MODES:
         breaker |= {"enabled": True, "mode": prereg_v2.MODES[config]}
