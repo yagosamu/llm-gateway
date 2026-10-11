@@ -47,13 +47,19 @@ def stratified_sample(records: list[dict], per_category: int, seed: int) -> list
     return sorted(sample, key=lambda r: (r["category"], r["index"]))
 
 
+def user_message(instruction: str, context: str) -> str:
+    """The instruction, then the context, when present, under a "Context:" label."""
+    user = instruction.strip()
+    if context.strip():
+        user += "\n\nContext:\n" + context.strip()
+    return user
+
+
 def build_row(record: dict, revision: str) -> dict:
     """One traffic row: a stable id from the Dolly line index, provenance, the request class
     (Dolly's category), a fictional tenant, the chat messages and Dolly's human response kept as a
     reference. The context, when present, follows the instruction under a "Context:" label."""
-    user = record["instruction"].strip()
-    if record["context"].strip():
-        user += "\n\nContext:\n" + record["context"].strip()
+    user = user_message(record["instruction"], record["context"])
     return {
         "id": f"dolly-{record['index']:05d}",
         "source": {"dataset": DATASET, "revision": revision, "index": record["index"]},
