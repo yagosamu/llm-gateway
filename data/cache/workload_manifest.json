@@ -1,0 +1,32 @@
+{
+  "prereg": "harness/cache/prereg.py",
+  "seed": 20261011,
+  "queries": 1000,
+  "by_kind": {
+    "hard_negative": 320,
+    "head": 600,
+    "tail": 80
+  },
+  "by_half": {
+    "test": 525,
+    "tune": 475
+  },
+  "by_tenant": {
+    "tenant-a": 321,
+    "tenant-b": 356,
+    "tenant-c": 323
+  },
+  "distinct_texts": 1200,
+  "distinct_texts_in_workload": 668,
+  "intents": 160,
+  "intents_in_workload": 121,
+  "paraphrases_kept": 640,
+  "paraphrase_rows_with_error": 0,
+  "head_occurrences_of_top_intent": 92,
+  "hard_negative_similarity": {
+    "min": 0.2952,
+    "median": 0.555,
+    "max": 0.9842
+  },
+  "embedding_model": "text-embedding-3-small"
+}
