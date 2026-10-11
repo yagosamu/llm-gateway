@@ -926,10 +926,14 @@
         "displayMode": "basic",
         "showUnfilled": true,
         "valueMode": "text",
-        "namePlacement": "left",
+        "namePlacement": "top",
         "sizing": "auto",
-        "minVizHeight": 10,
-        "maxVizHeight": 24,
+        "minVizHeight": 16,
+        "maxVizHeight": 36,
+        "text": {
+          "titleSize": 14,
+          "valueSize": 14
+        },
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
