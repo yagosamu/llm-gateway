@@ -1,0 +1,45 @@
+{
+  "design": {
+    "rate": 1.0,
+    "duration_s": 90.0,
+    "max_tokens": 256,
+    "fault_start_s": 20.0,
+    "fault_end_s": 60.0,
+    "fault": {
+      "error_rate": 1.0,
+      "kind": "server_error"
+    },
+    "cap_usd": 0.25
+  },
+  "requests": 90,
+  "answered": 90,
+  "errors": {},
+  "failovers": 42,
+  "truncated": 15,
+  "by_window": {
+    "before": {
+      "requests": 20,
+      "answered": 20,
+      "answered_by": {
+        "gpt-6-luna": 20
+      }
+    },
+    "fault": {
+      "requests": 41,
+      "answered": 41,
+      "answered_by": {
+        "gpt-6-luna": 1,
+        "claude-haiku-4-5": 40
+      }
+    },
+    "after": {
+      "requests": 29,
+      "answered": 29,
+      "answered_by": {
+        "gpt-6-luna": 27,
+        "claude-haiku-4-5": 2
+      }
+    }
+  },
+  "cost_usd": 0.030547
+}
