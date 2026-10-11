@@ -140,6 +140,18 @@ class FailoverConfig:
 
 
 @dataclass(frozen=True)
+class CacheConfig:
+    """The response cache (llm_gateway.cache). features lists the X-Feature values whose requests may
+    be answered from it; "*" means every feature."""
+    enabled: bool = False
+    ttl_seconds: int = 86_400
+    features: tuple[str, ...] = ("*",)
+
+    def applies_to(self, feature: str) -> bool:
+        return self.enabled and ("*" in self.features or feature in self.features)
+
+
+@dataclass(frozen=True)
 class RoutingConfig:
     version: str
     policy_name: str
@@ -148,6 +160,26 @@ class RoutingConfig:
     verifier: VerifierConfig = VerifierConfig()
     breaker: BreakerConfig = BreakerConfig()
     failover: FailoverConfig = FailoverConfig()
+    cache: CacheConfig = CacheConfig()
+
+
+def _cache_config(data: dict) -> CacheConfig:
+    section = data.get("cache") or {}
+    if not isinstance(section, dict):
+        raise RoutingConfigError("cache must be a mapping")
+    unknown = sorted(set(section) - set(CacheConfig.__dataclass_fields__))
+    if unknown:
+        raise RoutingConfigError(f"cache has unknown keys {unknown}")
+    enabled = section.get("enabled", CacheConfig.enabled)
+    ttl = section.get("ttl_seconds", CacheConfig.ttl_seconds)
+    features = section.get("features", list(CacheConfig.features))
+    if not isinstance(enabled, bool):
+        raise RoutingConfigError("cache.enabled must be true or false")
+    if isinstance(ttl, bool) or not isinstance(ttl, int) or ttl <= 0:
+        raise RoutingConfigError("cache.ttl_seconds must be a positive whole number")
+    if not isinstance(features, list) or not features or not all(isinstance(f, str) and f for f in features):
+        raise RoutingConfigError('cache.features must be a non-empty list of feature names, or ["*"]')
+    return CacheConfig(enabled, ttl, tuple(features))
 
 
 def _failover_config(data: dict, tier_map: dict[str, str], model_ids: set[str]) -> FailoverConfig:
@@ -249,7 +281,7 @@ def load_config(path: Path, model_ids: set[str]) -> RoutingConfig:
         policy = FeatureTable(section, threshold) if policy_name == "feature_table" else LogisticClassifier(section, threshold)
     return RoutingConfig(version=str(data.get("version", "")), policy_name=policy_name, tier_map=dict(tier_map),
                          policy=policy, verifier=_verifier_config(data), breaker=_breaker_config(data),
-                         failover=_failover_config(data, tier_map, model_ids))
+                         failover=_failover_config(data, tier_map, model_ids), cache=_cache_config(data))
 
 
 class Router:

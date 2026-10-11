@@ -54,3 +54,10 @@ breaker:
   p95_budget_ms: 30000  # used by v1 only
   open_seconds: 15
   probe_lease_seconds: 70
+# Response cache (llm_gateway.cache), exact layer: the same request from the same tenant, under the
+# same system prompt, X-Prompt-Version, model and parameters, gets the stored answer. Off until the
+# slice 4 evaluation (harness/cache/prereg.py) has measured it.
+cache:
+  enabled: false
+  ttl_seconds: 86400
+  features: ["*"]

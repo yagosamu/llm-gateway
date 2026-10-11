@@ -61,6 +61,13 @@ class FailoverAttempt(BaseModel):
     outcome: str  # "ok", an error kind, "circuit_open" or "deadline"
 
 
+class CacheInfo(BaseModel):
+    """Present when the answer came from the response cache."""
+    layer: Literal["exact"]
+    age_seconds: float
+    saved_usd: float  # what the original call cost
+
+
 class GatewayInfo(BaseModel):
     """Extra top-level field; OpenAI clients ignore keys they do not know."""
     request_id: str
@@ -71,6 +78,7 @@ class GatewayInfo(BaseModel):
     latency_ms: float
     routing: RoutingInfo | None = None
     attempts: list[FailoverAttempt] | None = None  # present only when more than one model was tried
+    cache: CacheInfo | None = None
 
 
 class ChatCompletionResponse(BaseModel):

@@ -58,6 +58,12 @@ class GatewayMetrics:
         self.provider_attempts = Counter("llm_gateway_provider_attempts",
                                          "Provider attempts by outcome (ok, an error kind, or circuit_open).",
                                          ["provider", "outcome"], registry=self.registry)
+        self.cache_lookups = Counter("llm_gateway_cache_lookups", "Cache lookups by layer and result.",
+                                     ["layer", "result"], registry=self.registry)
+        self.cache_saved = Counter("llm_gateway_cache_saved_usd", "What answers served from the cache cost originally.",
+                                   ["tenant", "feature"], registry=self.registry)
+        self.cache_errors = Counter("llm_gateway_cache_errors", "Cache operations lost because Redis was unreachable.",
+                                    ["operation"], registry=self.registry)
         self.breaker_transitions = Counter("llm_gateway_breaker_transitions",
                                            "Circuit transitions made by this instance.",
                                            ["provider", "from_state", "to_state"], registry=self.registry)
@@ -81,8 +87,8 @@ class GatewayMetrics:
         self.requests.labels(tenant, feature, model, record.outcome, record.error_code or "none").inc()
         if record.routed_tier:
             self.routed.labels(feature, record.routed_tier, record.routing_policy).inc()
-        if record.outcome != "ok":
-            return
+        if record.outcome != "ok" or record.cache not in (None, "miss"):
+            return  # a cache hit made no provider call, so it has no provider latency, tokens or cost
         self.latency.labels(record.provider, model).observe(record.latency_ms / 1000)
         self.tokens.labels(tenant, feature, model, "input").inc(record.input_tokens)
         self.tokens.labels(tenant, feature, model, "output").inc(record.output_tokens)

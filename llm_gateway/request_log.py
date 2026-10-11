@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS requests (
     routing_policy TEXT,
     routing_version TEXT,
     failover_from TEXT,
-    attempts INTEGER
+    attempts INTEGER,
+    cache TEXT
 )"""
 OUTCOMES = ("ok", "rejected", "upstream_error", "queued")
 # One row per sampled verification. Rows with acceptable = 0 are the routing failures; they keep the
@@ -101,6 +102,7 @@ class RequestRecord:
     routing_version: str | None = None
     failover_from: str | None = None  # the tier's model when another one served the request
     attempts: int | None = None  # models tried, including turned-away open circuits
+    cache: str | None = None  # None when the cache was not consulted; "miss" or the layer that answered
 
 
 def now_utc() -> str:

@@ -21,6 +21,7 @@ from fastapi.responses import JSONResponse, Response
 from pydantic import ValidationError
 from redis.exceptions import RedisError
 
+from llm_gateway import cache as response_cache
 from llm_gateway.breaker import STATES as BREAKER_STATES
 from llm_gateway.breaker import CircuitBreaker
 from llm_gateway.chaos import ChaosConfigError, ChaosControl
@@ -30,10 +31,11 @@ from llm_gateway.metrics import GatewayMetrics
 from llm_gateway.providers.base import Provider, ProviderError
 from llm_gateway.registry import ModelConfig, cost_usd
 from llm_gateway.request_log import RequestLog, RequestRecord, now_utc, prompt_sha256
-from llm_gateway.routing import Router
+from llm_gateway.routing import CacheConfig, Router
 from llm_gateway.verifier import Judge, Verifier
 from llm_gateway.schemas import (
     AssistantMessage,
+    CacheInfo,
     ChatCompletionRequest,
     ChatCompletionResponse,
     Choice,
@@ -85,9 +87,12 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                router: Router | None = None, verifier_judge: Judge | None = None,
                verifier_rng: random.Random | None = None, health: HealthTracker | None = None,
                breaker: CircuitBreaker | None = None, chaos: ChaosControl | None = None,
-               admin_token: str | None = None, jobs: JobQueue | None = None) -> FastAPI:
+               admin_token: str | None = None, jobs: JobQueue | None = None,
+               cache: response_cache.ResponseCache | None = None) -> FastAPI:
     request_log = request_log or RequestLog(":memory:")
     metrics = metrics or GatewayMetrics()
+    if cache is not None and cache.metrics is None:
+        cache.metrics = metrics
     verifier = (Verifier(router, registry, providers, verifier_judge, request_log, metrics, verifier_rng)
                 if router is not None and verifier_judge is not None else None)
     if health is not None and health.metrics is None:
@@ -117,15 +122,26 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
         except (RedisError, OSError):
             pass  # the scrape still returns the local metrics; the shared view is just stale
 
-    def admin_denied(request: Request) -> JSONResponse | None:
-        """Chaos endpoints exist only in an app built with chaos and an admin token; otherwise 404,
-        so the served gateway never exposes them."""
-        if chaos is None or not admin_token:
+    def admin_denied(request: Request, feature: object = None) -> JSONResponse | None:
+        """Admin endpoints exist only with an admin token and the part they act on (chaos by default);
+        otherwise 404, so a gateway without them never exposes them."""
+        if (feature if feature is not None else chaos) is None or not admin_token:
             return error(404, "not_found", "No such endpoint.")
         given = request.headers.get("X-Admin-Token", "")
         if not hmac.compare_digest(given.encode(), admin_token.encode()):
             return error(403, "forbidden", "A valid X-Admin-Token header is required.")
         return None
+
+    @app.delete("/admin/cache")
+    async def cache_invalidate(request: Request, tenant: str | None = None, feature: str | None = None):
+        """Explicit invalidation (a reindex, a policy change): every cached answer of a tenant, a
+        feature, both, or, with neither, all of them."""
+        if (denied := admin_denied(request, cache)) is not None:
+            return denied
+        for name, value in (("tenant", tenant), ("feature", feature)):
+            if value is not None and not IDENTIFIER.match(value):
+                return error(400, "invalid_parameter", f"{name} must be an identifier.", name)
+        return {"deleted": await cache.invalidate(tenant, feature), "tenant": tenant, "feature": feature}
 
     @app.get("/admin/chaos")
     async def chaos_list(request: Request):
@@ -270,6 +286,37 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                 "id": job_id, "object": "gateway.job", "status": "queued", "status_url": f"/v1/jobs/{job_id}",
                 "deduplicated": not created})
 
+        # The response cache, before any provider call: keyed on the model the request is meant for.
+        prompt_version = request.headers.get("X-Prompt-Version")
+        if prompt_version is not None and not IDENTIFIER.match(prompt_version):
+            return reject(400, "invalid_prompt_version", "X-Prompt-Version must be an identifier.", "X-Prompt-Version")
+        cache_config = router.config.cache if router is not None else CacheConfig()
+        cache_key = None
+        if cache is not None and cache_config.applies_to(record.feature):
+            space = response_cache.namespace(record.tenant, record.feature, model.id, chat.temperature,
+                                             chat.output_limit(), messages, prompt_version)
+            cache_key = response_cache.exact_key(space, messages)
+            started = time.perf_counter()
+            hit = await cache.get(record.tenant, record.feature, cache_key)
+            metrics.cache_lookups.labels("exact", "hit" if hit else "miss").inc()
+            if hit is not None:
+                record.latency_ms = (time.perf_counter() - started) * 1000
+                record.cache, record.outcome, record.finish_reason = "exact", "ok", hit.finish_reason
+                record.input_tokens = record.output_tokens = 0
+                record.cost_usd = 0.0
+                metrics.cache_saved.labels(record.tenant, record.feature).inc(hit.cost_usd)
+                cached = ChatCompletionResponse(
+                    id=f"chatcmpl-{record.request_id}", created=int(time.time()), model=hit.model,
+                    choices=[Choice(message=AssistantMessage(content=hit.text), finish_reason=hit.finish_reason)],
+                    usage=Usage(prompt_tokens=hit.input_tokens, completion_tokens=hit.output_tokens,
+                                total_tokens=hit.input_tokens + hit.output_tokens),
+                    gateway=GatewayInfo(request_id=record.request_id, tenant=record.tenant, feature=record.feature,
+                                        provider=model.provider, cost_usd=0.0, latency_ms=record.latency_ms,
+                                        routing=routing, cache=CacheInfo(layer="exact", saved_usd=hit.cost_usd,
+                                                                         age_seconds=round(time.time() - hit.created_at, 3))))
+                return JSONResponse(cached.model_dump(), headers={"X-Request-Id": record.request_id})
+            record.cache = "miss"
+
         # The tier's model first, then its fallbacks: only for "auto" requests, where the gateway chose
         # the model in the first place.
         candidates = [model]
@@ -336,6 +383,12 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
         record.outcome, record.finish_reason = "ok", result.finish_reason
         record.input_tokens, record.output_tokens = result.input_tokens, result.output_tokens
         record.cost_usd = cost_usd(model, result.input_tokens, result.output_tokens)
+        if (cache_key is not None and model.id == candidates[0].id
+                and response_cache.storable(result.text, result.finish_reason)):
+            await cache.put(record.tenant, record.feature, cache_key, space, response_cache.CachedAnswer(
+                text=result.text, finish_reason=result.finish_reason, model=model.id,
+                input_tokens=result.input_tokens, output_tokens=result.output_tokens, cost_usd=record.cost_usd,
+                created_at=time.time(), tenant=record.tenant), cache_config.ttl_seconds)
 
         response = ChatCompletionResponse(
             id=f"chatcmpl-{record.request_id}",
