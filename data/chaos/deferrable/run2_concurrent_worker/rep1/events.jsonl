@@ -1,0 +1,5 @@
+{"t": 0.0, "event": "start", "wall": 1791712880.2514958}
+{"t": 20.045, "event": "fault on"}
+{"t": 60.057, "event": "fault off"}
+{"t": 65.01, "event": "worker-1 killed"}
+{"t": 115.649, "event": "drained"}
