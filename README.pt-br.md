@@ -1,12 +1,48 @@
 # llm-gateway
 
-Um gateway compatível com a API da OpenAI, na frente de OpenAI, Anthropic e Groq, que roteia cada requisição pelo custo e a atribui a um tenant e a uma feature. Em 238 prompts reproduzidos, **mandar toda requisição para o modelo mais barato manteve 95,8% das respostas aceitáveis para dois juízes, com 95,6% menos custo que o modelo de referência**, passando numa barra de qualidade pré-registrada; o classificador aprendido que o plano pedia também passou, mas economizou só 61,6%. As chamadas ao vivo do projeto custaram US$ 3,78 no total.
+Um gateway compatível com a API da OpenAI, na frente de OpenAI, Anthropic e Groq, que roteia cada requisição pelo custo, a atribui a um tenant e a uma feature, e continua respondendo quando um provedor falha. Em 238 prompts reproduzidos, **mandar toda requisição para o modelo mais barato manteve 95,8% das respostas aceitáveis para dois juízes, com 95,6% menos custo que o modelo de referência**, passando numa barra de qualidade pré-registrada; o classificador aprendido que o plano pedia também passou, mas economizou só 61,6%. **Quando o provedor desse modelo falhou em todas as chamadas, o failover manteve os erros do cliente em 0%**, em quedas simuladas e numa execução ao vivo com 90 requisições reais, e um circuit breaker redesenhado sob um estudo pré-registrado parou de chamar o provedor caído depois de 2,7 s, em vez de 20,2 s. As chamadas ao vivo do projeto custaram US$ 3,91 no total.
 
 [English version](README.md)
 
 ## Resultado
 
-Duas das quatro fatias estão prontas. Todos os números abaixo são recalculados offline a partir de gravações commitadas, e o CI falha se um número publicado ficar desatualizado.
+Três das quatro fatias estão prontas. Todos os números abaixo são recalculados offline a partir de gravações e execuções commitadas, e o CI falha se um número publicado ficar desatualizado.
+
+### Fatia 3: confiabilidade sob falhas de provedor
+
+Duas instâncias do gateway compartilham a saúde de cada provedor, o estado dos circuitos e uma fila de tarefas no Redis. Os testes de falha rodam sobre provedores simulados que reproduzem as respostas gravadas com a latência gravada, então não custam nada e podem ser repetidos: tráfego em malha aberta a 4 requisições por segundo, uma falha no openai (o provedor da faixa low) dos 20 s aos 60 s de uma execução de 100 s, 3 repetições por célula. O desenho e os critérios de aprovação de cada estudo foram commitados antes das execuções ([prereg.py](harness/chaos/prereg.py), [prereg_v2.py](harness/chaos/prereg_v2.py), [deferrable.py](harness/chaos/deferrable.py)).
+
+| falha no openai | erros do cliente, sem failover | erros do cliente, com failover | breaker v1 abriu após | breaker v2 abriu após | chamadas desperdiçadas, v1 / v2 |
+|---|---|---|---|---|---|
+| queda (toda chamada falha) | 100,0% | 0,0% | 20,2 s | 2,7 s | 81 / 11 |
+| parcial (50% das chamadas falham) | 48,8% | 0,0% | nunca | 5,2 s | 84 / 15 |
+| timeouts (toda chamada trava 10 s) | 100,0% | 0,0% | 30,2 s | 12,5 s | 120 / 51 |
+| latência (35 s a mais) | 0,0% | 0,0% | 37,5 s | 32,5 s | 0 / 0 |
+
+Medianas de 3 repetições. Chamadas desperdiçadas são requisições na janela da falha que fizeram uma chamada ao openai que falhou. Com breaker, os erros do cliente ficam em 0,0% em todos os cenários.
+
+- **É o failover que mantém os clientes respondidos; o breaker economiza chamadas desperdiçadas e tempo.** Requisições enviadas com `"model": "auto"` passam para o fallback da faixa diante de um erro que admite nova tentativa. Sob timeouts, a latência p50 foi de 12,9 s só com failover, 11,7 s com o breaker v1 e 3,5 s com o v2, porque um circuito aberto pula a espera de 10 s.
+- **A v2 substituiu a v1 depois de uma comparação pré-registrada.** A v1 contava a janela de saúde compartilhada de 60 s, então numa queda total ela precisava esperar as falhas superarem as chamadas saudáveis que ainda estavam na janela (20,2 s), e no cenário de latência chamadas lentas que terminaram depois do circuito fechar o reabriram. A v2 conta as últimas 20 chamadas admitidas desde a última mudança do circuito, ignora as admitidas antes disso e marca uma chamada como lenta enquanto ela ainda está rodando. As duas versões rodaram de novo, intercaladas, na mesma sessão. Todos os critérios se mantiveram: abertura mais rápida nos três cenários de detecção, abertura com 50% de erros, nenhuma reabertura depois da recuperação, nenhum disparo sem falha ou com 10% de erros, e nenhuma métrica do cliente pior que na v1 ([results/slice3_breaker_v2.md](results/slice3_breaker_v2.md)). A v2 foi desenhada depois de ver os resultados da v1; os critérios foram fixados antes das execuções da v2, não antes das da v1.
+- **A v2 tem custos que os critérios não cobriram.** Uma janela de 20 chamadas é uma amostra pequena: sob uma taxa de erro constante bem abaixo do limiar de 50%, ela ainda pode ver metade das chamadas falhar. A probabilidade binomial exata de uma avaliação disparar é 0,26% com 20% de erros e 4,8% com 30% de erros (calculada, não medida). Com 50% de erros a v2 manda 91% do tráfego para o fallback, contra 52% na v1, e o fallback custa cerca de doze vezes mais. O tempo para fechar depois da recuperação depende de onde está o ciclo de abertura e sonda: sob timeouts foi de 15,0 s na v2 e 8,7 s na v1.
+- **Nenhum dos breakers resolve latência adicionada.** Com 35 s a mais em toda chamada ao openai, o p95 foi de 41,0 s em todas as configurações; o breaker só abre quando as chamadas já passaram de 30 s.
+- **A faixa low faz failover para o claude-haiku-4-5, não para o gpt-oss-20b.** Com um juiz (gpt-4.1-mini), o Haiku foi aceitável em 97,1% dos 238 prompts, o mesmo que o gpt-6-luna, enquanto o gpt-oss-20b caiu para 85,3% (11,8 pontos a menos, IC 95% [7,6; 16,4]). O Haiku custa cerca de doze vezes o luna enquanto dura o failover. A qualidade igual depende do juiz: sob o consenso mais rigoroso dos dois juízes da fatia 2, o Haiku foi aceito em 85,7%, contra 95,8% do luna ([results/slice3_fallback_quality.md](results/slice3_fallback_quality.md)).
+
+**Trabalho adiável.** Quando o provedor da faixa low e o provedor do fallback dela falham juntos, uma requisição interativa não tem para onde ir: neste teste, todas as requisições interativas durante a queda dupla falharam. Uma requisição enviada com `X-Deferrable: true` vai para uma fila (202 e um id de tarefa), e um worker a manda pelo gateway mais tarde, com backoff. Teste: openai e anthropic falham juntos dos 20 s aos 60 s, 160 tarefas chegam a 2 por segundo, cada uma enviada duas vezes com a mesma `Idempotency-Key`, e um dos dois workers é morto aos 65 s. A execução 1 expôs dois defeitos; a execução 2 é o mesmo teste depois de corrigi-los ([results/slice3_deferrable.md](results/slice3_deferrable.md)).
+
+| execução | tarefas concluídas | tarefas mortas | não terminadas aos 300 s | tarefas respondidas duas vezes | envios duplicados absorvidos | fila vazia após o fim da falha |
+|---|---|---|---|---|---|---|
+| 1: uma tarefa por vez, 8 tentativas | 74 a 80 de 160 | 16 a 26 | 54 a 70 | 0 | 160 de 160 | nunca |
+| 2: 8 tarefas em paralelo, orçamento de 15 minutos de idade | 160 de 160 | 0 | 0 | 0 | 160 de 160 | 55 a 58 s |
+
+Faixas sobre 3 repetições. O tempo para esvaziar a fila na execução 2 inclui os 20 s em que tarefas ainda chegavam. A entrega é pelo menos uma vez: uma tarefa cujo worker morre depois que o modelo respondeu e antes de o resultado ser gravado é respondida de novo. Nenhuma execução caiu nessa janela, então 0 duplicatas é o que foi observado, não uma garantia.
+
+**Execução ao vivo.** A mesma queda, com modelos reais: duas instâncias, 90 requisições do Dolly a 1 por segundo, respostas limitadas a 256 tokens, o openai falhando em toda chamada dos 20 s aos 60 s (a falha é injetada no gateway, então as chamadas que falham não custam nada). As 90 requisições foram respondidas: 20 pelo gpt-6-luna antes da falha, 40 das 41 durante a falha pelo claude-haiku-4-5, e 27 das 29 depois dela pelo luna de novo. O circuito abriu depois de 10 falhas nas últimas 20 chamadas, uma sonda falhou enquanto a falha durava, e a seguinte o fechou. 15 das 90 respostas foram cortadas em 256 tokens, o limite que manteve o pior caso da execução em US$ 0,22; ela custou US$ 0,031 ([resumo](data/chaos/live/slice3_live_video/summary.json)).
+
+https://github.com/user-attachments/assets/44096512-893a-4faf-9360-3e24214e68e7
+
+![Painel do Grafana durante a execução ao vivo](docs/slice3_dashboard_live.png)
+
+O vídeo é o painel durante essa execução, em velocidade 2x. O Prometheus coleta a cada 2 s, então um estado half-open mais curto que isso pode faltar na linha do tempo do circuito: a sonda que falhou não aparece.
 
 ### Fatia 2: roteamento por custo, verificado por juízes
 
@@ -64,8 +100,8 @@ Detalhes: [results/slice1.md](results/slice1.md). A latência é o que uma máqu
 |---|---|---|
 | 1 | espinha: API, registro, metadados, log, métricas, gravação e replay | pronta |
 | 2 | roteamento por custo: mapa de faixas em YAML, qualidade julgada, comparação pré-registrada de políticas, verificador por amostragem | pronta |
-| 3 | confiabilidade: saúde por provedor, circuit breaker, failover, fila com retry, teste de caos | próxima |
-| 4 | cache: exato e semântico, chave versionada, taxa de resposta errada abaixo de 1% | planejada |
+| 3 | confiabilidade: saúde por provedor, circuit breaker, failover, fila com retry, teste de caos, painel | pronta |
+| 4 | cache: exato e semântico, chave versionada, taxa de resposta errada abaixo de 1% | próxima |
 
 Nenhum sistema em produção manda tráfego para este gateway. O tráfego é um dataset público, reproduzido.
 
@@ -81,7 +117,10 @@ flowchart LR
     G --> L[("log de requisições e<br/>verificações, SQLite")]
     G -. "por amostragem, depois da resposta" .-> V["verificador<br/>faixa high + juiz"]
     V --> L
-    G --> M["/metrics<br/>Prometheus"]
+    G --> M["/metrics<br/>Prometheus, Grafana"]
+    G <--> RD[("Redis<br/>saúde, circuitos, fila")]
+    RD --> WK["worker<br/>tarefas adiadas"]
+    WK --> G
     R --> X[("data/recordings/matrix.jsonl")]
     X --> J["harness.routing.judge<br/>dois juízes, uma vez"]
     J --> VD[("data/judgments/verdicts.jsonl")]
@@ -90,7 +129,7 @@ flowchart LR
     VD --> EV["harness.routing.evaluate<br/>results/slice2.json"]
 ```
 
-As chamadas ao vivo acontecem uma vez: a gravação e depois os juízes. Tudo o que vem depois, incluindo os números publicados e as checagens do CI, lê as gravações commitadas.
+As chamadas ao vivo acontecem uma vez: a gravação e depois os juízes. Tudo o que vem depois, incluindo os números publicados e as checagens do CI, lê as gravações commitadas. Os testes de falha da fatia 3 rodam o código real do gateway contra provedores simulados, montados a partir das mesmas gravações; só a execução ao vivo chama modelos reais.
 
 ## Decisões de design
 
@@ -102,7 +141,21 @@ As chamadas ao vivo acontecem uma vez: a gravação e depois os juízes. Tudo o 
 
 **Um orçamento que o código impõe.** O projeto inteiro tem US$ 10. Antes de uma execução paga começar, o total do registro de gastos mais o pior caso da execução precisa ficar abaixo disso; o verificador do gateway aplica a mesma regra ao teto diário. O pior caso é limitado pelo teto de saída e pelos bytes UTF-8 do prompt (o dobro para a Anthropic, que não documenta seu tokenizador). Do que abri mão: o limite é folgado, quatro vezes o custo real da gravação, então os dois juízes não puderam rodar de uma vez e rodaram um depois do outro.
 
+**Testes de falha com provedores simulados, uma execução ao vivo.** Os testes de falha usam o gateway, o Redis e o breaker reais, e trocam só a chamada ao provedor por uma reprodução da resposta gravada com a latência gravada, com as falhas injetadas na frente dela. Isso tornou as 78 execuções commitadas (36 da v1, 36 da comparação com a v2, 6 da fila) repetíveis e gratuitas. Do que abri mão: modos de falha reais (headers de rate limit, respostas parciais, um provedor lento só para alguns modelos) não são exercitados; a execução ao vivo mostra o mecanismo com modelos reais, mas é uma execução só.
+
+**Estado compartilhado no Redis, que falha aberto.** As janelas de saúde, o estado dos circuitos e a fila de tarefas ficam no Redis, então duas instâncias concordam sobre qual provedor caiu. As mudanças de circuito usam WATCH/MULTI, e um circuito half-open admite uma sonda por meio de uma concessão (SET NX com expiração), para que duas instâncias não sondem ao mesmo tempo. Se o Redis estiver fora do ar, o breaker deixa as chamadas passarem e as escritas de saúde são contadas como perdidas. Do que abri mão: o Redis passou a ser uma dependência, e sem ele o gateway serve sem breaker.
+
+**Failover só quando o gateway escolheu o modelo.** Uma requisição com `"model": "auto"` pode ser respondida pelo fallback da faixa; uma requisição que nomeia um modelo recebe esse modelo ou um erro. A resposta lista cada tentativa, e o log de requisições registra qual modelo deveria ter respondido. Do que abri mão: um cliente que nomeia um modelo não tem proteção contra uma queda.
+
+**Pelo menos uma vez, com chaves de idempotência.** Uma tarefa adiada é gravada, confirmada e concluída em transações do Redis, e a mesma `Idempotency-Key` do mesmo tenant nunca cria uma segunda tarefa. Exatamente uma vez de ponta a ponta exigiria a cooperação do provedor: um worker pode morrer depois que o modelo respondeu e antes de o resultado ser gravado. Do que abri mão: nessa janela a tarefa é respondida duas vezes; os testes contam isso e viram 0, sem uma execução que caísse na janela.
+
 ## O que não funcionou
+
+- **O breaker v1.** Ele levou 20,2 s para abrir numa queda total, porque a janela de 60 s ainda guardava as chamadas saudáveis de antes da falha, e no cenário de latência chamadas lentas que terminaram depois do circuito fechar o reabriram. A v2 o substituiu.
+- **O primeiro teste de latência.** O cliente HTTP do gerador de carga manteve o pool padrão de 100 conexões, então, com chamadas levando 37 s, requisições ficaram na fila do próprio cliente e a carga deixou de ser em malha aberta. O limite foi removido e só esse cenário rodou de novo; a nota dos resultados registra isso.
+- **A primeira execução da fila.** O worker processava uma tarefa por vez, cerca de 0,4 por segundo contra 2 chegando, e 54 a 70 tarefas ainda não tinham sido lidas quando a execução terminou. O orçamento de novas tentativas contava tentativas, e um circuito aberto falha uma tentativa na hora, então 16 a 26 tarefas gastaram as 8 tentativas dentro de uma queda de 40 s. A execução 2 mantém 8 tarefas em paralelo e limita as novas tentativas pela idade da tarefa.
+- **Requisições interativas numa queda dupla.** Quando o provedor da faixa low e o do fallback dela falham juntos, toda requisição interativa falha; só as requisições adiáveis passam.
+- **Falhas de latência.** Nenhum dos breakers encurta uma falha que só acrescenta latência: o p95 ficou em 41,0 s em todas as configurações.
 
 - **O roteador aprendido.** O classificador pré-registrado passou na barra de qualidade e ainda assim foi a escolha errada: o always_low igualou o aceite dele por cerca de um nono do custo. As características baratas do prompt que ele usou não previram onde o gpt-6-luna falha.
 - **A faixa medium.** O claude-haiku-4-5 deveria ficar entre o modelo barato e o caro; custou doze vezes o barato e foi aceito menos vezes.
@@ -132,6 +185,18 @@ curl http://localhost:8000/v1/chat/completions \
   -d '{"model": "auto", "messages": [{"role": "user", "content": "Name a river."}]}'
 uv run --env-file .env python -m harness.record --dry-run   # plano e custo no pior caso, sem chamadas
 ```
+
+A fatia 3 precisa do Docker para o Redis, o Prometheus e o Grafana (todos presos a 127.0.0.1). Os testes de falha não precisam de chave de API.
+
+```bash
+docker compose up -d                                  # painel do Grafana em http://127.0.0.1:3000/d/llm-gateway
+uv run python -m harness.chaos.scenarios --study v2   # a comparação dos breakers, cerca de 1 hora, provedores simulados
+uv run python -m harness.chaos.compare_v2             # results/slice3_breaker_v2.md a partir das execuções commitadas
+uv run python -m harness.chaos.deferrable             # results/slice3_deferrable.md a partir das execuções commitadas
+uv run python -m harness.chaos.live --ceiling                  # pior caso da execução ao vivo, sem chamadas
+```
+
+Com `LLM_GATEWAY_REDIS_URL` definida, o gateway servido compartilha a saúde e os circuitos pelo Redis e aceita `X-Deferrable: true`; rode `uv run python -m llm_gateway.worker` para esvaziar a fila e use `GET /v1/jobs/<id>` para pegar o resultado.
 
 Uma requisição sem os três headers é recusada com 400. `"model": "auto"` roteia pelo `routing.yaml`, e o `gateway.routing` da resposta diz qual faixa foi escolhida e por quê; um modelo nomeado ignora o roteador. `GET /v1/models` lista o registro com os preços, e `GET /metrics` serve as métricas do Prometheus.
 

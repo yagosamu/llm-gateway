@@ -1,12 +1,48 @@
 # llm-gateway
 
-An OpenAI-compatible gateway in front of OpenAI, Anthropic and Groq that routes each request by cost and attributes it to a tenant and a feature. On 238 replayed prompts, **sending every request to the cheapest model kept 95.8% of answers acceptable to two judges at 95.6% less cost than the reference model**, passing a pre-registered quality bar; the learned classifier the plan called for passed too, but saved only 61.6%. The project's live calls cost US$ 3.78 in total.
+An OpenAI-compatible gateway in front of OpenAI, Anthropic and Groq that routes each request by cost, attributes it to a tenant and a feature, and keeps answering when a provider fails. On 238 replayed prompts, **sending every request to the cheapest model kept 95.8% of answers acceptable to two judges at 95.6% less cost than the reference model**, passing a pre-registered quality bar; the learned classifier the plan called for passed too, but saved only 61.6%. **When that model's provider failed every call, failover kept client errors at 0%**, in simulated outages and in a live run of 90 real requests, and a circuit breaker redesigned under a pre-registered study stopped calling the failed provider after 2.7 s instead of 20.2 s. The project's live calls cost US$ 3.91 in total.
 
 [Versão em português](README.pt-br.md)
 
 ## Result
 
-Two slices of four are done. Every number below is recomputed offline from committed recordings, and CI fails if a published number goes stale.
+Three slices of four are done. Every number below is recomputed offline from committed recordings and runs, and CI fails if a published number goes stale.
+
+### Slice 3: reliability under provider faults
+
+Two gateway instances share per-provider health, circuit state and a job queue in Redis. The fault tests run over simulated providers that replay the recorded answers at the recorded latency, so they cost nothing and can be repeated: open-loop traffic at 4 requests per second, a fault on openai (the low tier's provider) from 20 s to 60 s of a 100 s run, 3 repetitions per cell. Each study's design and pass criteria were committed before its runs ([prereg.py](harness/chaos/prereg.py), [prereg_v2.py](harness/chaos/prereg_v2.py), [deferrable.py](harness/chaos/deferrable.py)).
+
+| fault on openai | client errors, no failover | client errors, failover | breaker v1 opened after | breaker v2 opened after | wasted calls, v1 / v2 |
+|---|---|---|---|---|---|
+| outage (every call fails) | 100.0% | 0.0% | 20.2 s | 2.7 s | 81 / 11 |
+| partial (50% of calls fail) | 48.8% | 0.0% | never | 5.2 s | 84 / 15 |
+| timeouts (every call hangs 10 s) | 100.0% | 0.0% | 30.2 s | 12.5 s | 120 / 51 |
+| latency (35 s added) | 0.0% | 0.0% | 37.5 s | 32.5 s | 0 / 0 |
+
+Medians of 3 repetitions. Wasted calls are requests in the fault window that made a failing call to openai. With a breaker, client errors stay at 0.0% in every scenario.
+
+- **Failover is what keeps clients answered; the breaker saves wasted calls and time.** Requests sent with `"model": "auto"` move to the tier's fallback on a retryable error. Under timeouts the p50 latency was 12.9 s with failover alone, 11.7 s with breaker v1 and 3.5 s with v2, because an open circuit skips the 10 s wait.
+- **v2 replaced v1 after a pre-registered comparison.** v1 counted the shared 60 s health window, so under a total outage it had to wait for failures to outnumber the healthy calls still in the window (20.2 s), and in the latency scenario slow calls that finished after the circuit closed reopened it. v2 counts the last 20 calls admitted since the circuit last moved, ignores calls admitted before that, and lists a call as slow while it is still running. Both versions were run again, interleaved, in the same session. Every criterion held: faster opening in the three detection scenarios, opening at 50% errors, no reopening after recovery, no trip with no fault or with 10% errors, and no client metric worse than v1 ([results/slice3_breaker_v2.md](results/slice3_breaker_v2.md)). v2 was designed after seeing v1's results; the criteria were fixed before v2's runs, not before v1's.
+- **v2 has costs the criteria did not cover.** A 20-call window is a small sample: under a steady error rate well below the 50% threshold it can still see half its calls fail. The exact binomial probability that one evaluation trips is 0.26% at 20% errors and 4.8% at 30% errors (computed, not measured). At 50% errors v2 sends 91% of traffic to the fallback, against 52% for v1, and the fallback costs about twelve times more. Time to close after recovery depends on where the open and probe cycle is: under timeouts it was 15.0 s for v2 and 8.7 s for v1.
+- **Neither breaker fixes added latency.** With 35 s added to every openai call, p95 was 41.0 s in every configuration; the breaker opens only once calls have run past 30 s.
+- **The low tier fails over to claude-haiku-4-5, not to gpt-oss-20b.** Under one judge (gpt-4.1-mini), Haiku was acceptable on 97.1% of the 238 prompts, the same as gpt-6-luna, while gpt-oss-20b dropped to 85.3% (11.8 points lower, 95% CI [7.6, 16.4]). Haiku costs about twelve times luna while a failover lasts. The equal quality depends on the judge: under the stricter two-judge consensus of slice 2, Haiku was accepted on 85.7% against luna's 95.8% ([results/slice3_fallback_quality.md](results/slice3_fallback_quality.md)).
+
+**Deferrable work.** When both the low tier's provider and its fallback's provider fail, an interactive request has nowhere to go: in this test every interactive request during the double outage failed. A request sent with `X-Deferrable: true` is queued instead (202 and a job id) and a worker sends it through the gateway later, with backoff. Test: openai and anthropic both fail from 20 s to 60 s, 160 jobs arrive at 2 per second, each submitted twice with the same `Idempotency-Key`, and one of the two workers is killed at 65 s. Run 1 exposed two defects; run 2 is the same test after fixing them ([results/slice3_deferrable.md](results/slice3_deferrable.md)).
+
+| run | jobs done | jobs failed | unfinished at 300 s | jobs answered twice | duplicate submissions absorbed | queue empty after the fault ended |
+|---|---|---|---|---|---|---|
+| 1: one job at a time, 8 attempts | 74 to 80 of 160 | 16 to 26 | 54 to 70 | 0 | 160 of 160 | never |
+| 2: 8 jobs in flight, 15-minute age budget | 160 of 160 | 0 | 0 | 0 | 160 of 160 | 55 to 58 s |
+
+Ranges over 3 repetitions. Run 2's drain time includes the 20 s during which jobs were still arriving. Delivery is at least once: a job whose worker dies after the model answered but before the result is stored is answered again. No run hit that window, so 0 duplicates is what was observed, not a guarantee.
+
+**Live run.** The same outage, with real models: two instances, 90 Dolly requests at 1 per second, answers capped at 256 tokens, openai failing every call from 20 s to 60 s (the fault is injected in the gateway, so failed calls cost nothing). All 90 requests were answered: 20 by gpt-6-luna before the fault, 40 of the 41 during it by claude-haiku-4-5, and 27 of the 29 after it by luna again. The circuit opened after 10 of the last 20 calls failed, one probe failed while the fault lasted, and the next one closed it. 15 of the 90 answers were cut at 256 tokens, the limit that kept the run's worst case at US$ 0.22; it cost US$ 0.031 ([summary](data/chaos/live/slice3_live_video/summary.json)).
+
+https://github.com/user-attachments/assets/44096512-893a-4faf-9360-3e24214e68e7
+
+![Grafana dashboard during the live run](docs/slice3_dashboard_live.png)
+
+The video is the dashboard during that run, at twice the speed. Prometheus scrapes every 2 s, so a half-open state shorter than that can be missing from the circuit timeline: the failed probe does not appear.
 
 ### Slice 2: routing by cost, verified by judges
 
@@ -64,8 +100,8 @@ Details: [results/slice1.md](results/slice1.md). Latency is what one machine saw
 |---|---|---|
 | 1 | spine: API, registry, metadata, log, metrics, record and replay | done |
 | 2 | cost routing: tier map in YAML, judged quality, pre-registered policy comparison, sampled verifier | done |
-| 3 | reliability: per-provider health, circuit breaker, failover, retry queue, chaos test | next |
-| 4 | cache: exact and semantic, versioned key, wrong-answer rate under 1% | planned |
+| 3 | reliability: per-provider health, circuit breaker, failover, retry queue, chaos test, dashboard | done |
+| 4 | cache: exact and semantic, versioned key, wrong-answer rate under 1% | next |
 
 No production system sends traffic to this gateway. The traffic is a public dataset, replayed.
 
@@ -81,7 +117,10 @@ flowchart LR
     G --> L[("request log and<br/>verifications, SQLite")]
     G -. "sampled, after the response" .-> V["verifier<br/>high tier + judge"]
     V --> L
-    G --> M["/metrics<br/>Prometheus"]
+    G --> M["/metrics<br/>Prometheus, Grafana"]
+    G <--> RD[("Redis<br/>health, circuits, job queue")]
+    RD --> WK["worker<br/>deferred jobs"]
+    WK --> G
     R --> X[("data/recordings/matrix.jsonl")]
     X --> J["harness.routing.judge<br/>two judges, once"]
     J --> VD[("data/judgments/verdicts.jsonl")]
@@ -90,7 +129,7 @@ flowchart LR
     VD --> EV["harness.routing.evaluate<br/>results/slice2.json"]
 ```
 
-Live model calls happen once: the recording, then the judges. Everything after that, including the published numbers and the CI checks, reads the committed recordings.
+Live model calls happen once: the recording, then the judges. Everything after that, including the published numbers and the CI checks, reads the committed recordings. The slice 3 fault tests run the real gateway code against simulated providers built from the same recordings; only the live run calls real models.
 
 ## Design decisions
 
@@ -102,7 +141,21 @@ Live model calls happen once: the recording, then the judges. Everything after t
 
 **A budget the code enforces.** The whole project has US$ 10. Before a paid run starts, the ledger total plus the run's worst case must stay under it; the gateway's verifier applies the same rule to its daily cap. The worst case is bounded by the output limit and the prompt's UTF-8 bytes (doubled for Anthropic, whose tokenizer is not documented). What I gave up: the bound is loose, four times the actual cost of the recording, so both judges could not run in one go and ran one after the other.
 
+**Fault tests on simulated providers, one live run.** The fault tests use the real gateway, Redis and breaker, and replace only the provider call with a replay of the recorded answer at its recorded latency, with faults injected in front of it. That made the 78 committed runs (36 for v1, 36 for the v2 comparison, 6 for the queue) repeatable and free. What I gave up: real failure modes (rate-limit headers, partial responses, a provider slow only for some models) are not exercised; the live run shows the mechanism with real models but is a single run.
+
+**Shared state in Redis, failing open.** Health windows, circuit state and the job queue live in Redis, so two instances agree on which provider is down. Circuit moves use WATCH/MULTI, and a half-open circuit admits one probe through a lease (SET NX with an expiry), so two instances do not both probe. If Redis is unreachable, the breaker lets calls through and health writes are counted as lost. What I gave up: Redis is now a dependency, and without it the gateway serves with no breaker.
+
+**Failover only when the gateway chose the model.** A request with `"model": "auto"` can be answered by the tier's fallback; a request that names a model gets that model or an error. The response lists every attempt, and the request log records which model should have answered. What I gave up: a client that names a model gets no protection from an outage.
+
+**At least once, with idempotency keys.** A deferred job is stored, acknowledged and finished in Redis transactions, and the same `Idempotency-Key` from the same tenant never creates a second job. Exactly once end to end would need the provider's cooperation: a worker can die after the model answered and before the result is stored. What I gave up: in that window a job is answered twice; the tests count it and saw 0, without a run that hit the window.
+
 ## What did not work
+
+- **Breaker v1.** It took 20.2 s to open under a total outage, because the 60 s window still held the healthy calls from before the fault, and in the latency scenario slow calls finishing after the circuit closed reopened it. v2 replaced it.
+- **The first latency test.** The load generator's HTTP client kept its default pool of 100 connections, so with calls taking 37 s requests queued in the client and the load was no longer open loop. The limit was removed and only that scenario was run again; the results note says so.
+- **The first queue run.** The worker processed one job at a time, about 0.4 jobs per second against 2 arriving, and 54 to 70 jobs were still unread when the run ended. The retry budget counted attempts, and an open circuit fails an attempt at once, so 16 to 26 jobs spent their 8 attempts inside a 40 s outage. Run 2 keeps 8 jobs in flight and budgets retries by the job's age.
+- **Interactive requests in a double outage.** When the low tier's provider and its fallback's provider both fail, every interactive request fails; only deferrable requests come through.
+- **Latency faults.** Neither breaker shortens a fault that only adds latency: p95 stayed at 41.0 s in every configuration.
 
 - **The learned router.** The pre-registered classifier met the quality bar and was still the wrong choice: always_low matched its acceptance at about a ninth of its cost. The cheap prompt features it used did not predict where gpt-6-luna fails.
 - **The medium tier.** claude-haiku-4-5 was supposed to sit between the cheap and the expensive model; it cost twelve times the cheap one and was accepted less often.
@@ -132,6 +185,18 @@ curl http://localhost:8000/v1/chat/completions \
   -d '{"model": "auto", "messages": [{"role": "user", "content": "Name a river."}]}'
 uv run --env-file .env python -m harness.record --dry-run   # plan and worst-case cost, no calls
 ```
+
+Slice 3 needs Docker for Redis, Prometheus and Grafana (all bound to 127.0.0.1). The fault tests need no API key.
+
+```bash
+docker compose up -d                                  # Grafana dashboard at http://127.0.0.1:3000/d/llm-gateway
+uv run python -m harness.chaos.scenarios --study v2   # the breaker comparison, about 1 hour, simulated providers
+uv run python -m harness.chaos.compare_v2             # results/slice3_breaker_v2.md from the committed runs
+uv run python -m harness.chaos.deferrable             # results/slice3_deferrable.md from the committed runs
+uv run python -m harness.chaos.live --ceiling                  # the live run's worst case, no calls
+```
+
+With `LLM_GATEWAY_REDIS_URL` set, the served gateway shares health and circuits through Redis and accepts `X-Deferrable: true`; run `uv run python -m llm_gateway.worker` to drain the queue and `GET /v1/jobs/<id>` for the result.
 
 A request without the three headers is refused with 400. `"model": "auto"` routes by `routing.yaml` and the response's `gateway.routing` says which tier and why; a named model bypasses the router. `GET /v1/models` lists the registry with prices, and `GET /metrics` serves Prometheus metrics.
 
