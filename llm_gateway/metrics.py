@@ -53,6 +53,11 @@ class GatewayMetrics:
                           ["state"], registry=self.registry)
         self.failovers = Counter("llm_gateway_failovers", "Requests served by a fallback model.",
                                  ["from_model", "to_model", "reason"], registry=self.registry)
+        # Per attempt, not per request: a failover makes two, and an attempt refused by an open circuit
+        # counts as circuit_open with no call made, which is how the dashboard shows the breaker at work.
+        self.provider_attempts = Counter("llm_gateway_provider_attempts",
+                                         "Provider attempts by outcome (ok, an error kind, or circuit_open).",
+                                         ["provider", "outcome"], registry=self.registry)
         self.breaker_transitions = Counter("llm_gateway_breaker_transitions",
                                            "Circuit transitions made by this instance.",
                                            ["provider", "from_state", "to_state"], registry=self.registry)

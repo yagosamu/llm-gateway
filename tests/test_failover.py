@@ -120,6 +120,16 @@ def test_an_open_circuit_is_skipped_without_a_call(tmp_path):
     assert data["gateway"]["attempts"][0] == {"model": "gpt-6-luna", "outcome": "circuit_open"}
 
 
+def test_attempts_are_counted_per_provider_including_those_refused_by_a_circuit(tmp_path):
+    client, _, _ = gateway(tmp_path, {"openai": "server_error"}, breaker=True)
+    for i in range(3):
+        ask(client, i=i)  # two openai failures open its circuit; the third request skips it
+    text = client.get("/metrics").text
+    assert 'llm_gateway_provider_attempts_total{outcome="server_error",provider="openai"} 2.0' in text
+    assert 'llm_gateway_provider_attempts_total{outcome="circuit_open",provider="openai"} 1.0' in text
+    assert 'llm_gateway_provider_attempts_total{outcome="ok",provider="groq"} 3.0' in text
+
+
 def test_every_circuit_open_is_a_503_without_any_call(tmp_path):
     client, providers, _ = gateway(tmp_path, {"openai": "server_error", "groq": "server_error"}, breaker=True)
     for i in range(2):

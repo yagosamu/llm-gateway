@@ -285,6 +285,7 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                 break
             admission = await breaker.allow(candidate.provider) if breaker is not None else None
             if admission is not None and not admission.allowed:
+                metrics.provider_attempts.labels(candidate.provider, "circuit_open").inc()
                 attempts.append(FailoverAttempt(model=candidate.id, outcome="circuit_open"))
                 continue
             started = time.perf_counter()
@@ -294,6 +295,7 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                 result = await (asyncio.wait_for(call, remaining) if math.isfinite(remaining) else call)
             except (ProviderError, asyncio.TimeoutError) as exc:
                 kind = exc.kind if isinstance(exc, ProviderError) else "timeout"
+                metrics.provider_attempts.labels(candidate.provider, kind).inc()
                 if health is not None:
                     await health.record(candidate.provider, kind)
                 if admission is not None:
@@ -307,6 +309,7 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                 if watch is not None and watch.task is not None:
                     watch.task.cancel()  # a call that raised anything else must not be listed as slow later
             record.latency_ms = (time.perf_counter() - started) * 1000
+            metrics.provider_attempts.labels(candidate.provider, "ok").inc()
             if health is not None:
                 await health.record(candidate.provider, "ok", record.latency_ms / 1000)
             if admission is not None:
