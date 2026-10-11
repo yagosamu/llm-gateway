@@ -20,13 +20,15 @@ import httpx2
 from harness.record import load_rows
 
 
-async def one(client: httpx2.AsyncClient, base: str, row: dict, i: int, started: float) -> dict:
+async def one(client: httpx2.AsyncClient, base: str, row: dict, i: int, started: float,
+              max_tokens: int | None = None) -> dict:
     sent = time.perf_counter() - started
     result = {"i": i, "instance": base, "prompt_id": row["id"], "sent": sent}
+    body = {"model": "auto", "messages": row["messages"]} | ({"max_tokens": max_tokens} if max_tokens else {})
     try:
         response = await client.post(f"{base}/v1/chat/completions", headers={
             "X-Tenant-Id": row["tenant"], "X-Feature": row["category"], "X-Request-Id": f"load-{i}-{row['id']}",
-        }, json={"model": "auto", "messages": row["messages"]})
+        }, json=body)
         body = response.json()
         result |= {"status": response.status_code}
         if response.status_code == 200:
@@ -41,8 +43,9 @@ async def one(client: httpx2.AsyncClient, base: str, row: dict, i: int, started:
 
 
 async def generate(bases: list[str], rate: float, duration: float, rows: list[dict] | None = None,
-                   transport=None, on_result=None) -> list[dict]:
-    """Send rate * duration requests at fixed intervals and return their results in send order."""
+                   transport=None, on_result=None, max_tokens: int | None = None) -> list[dict]:
+    """Send rate * duration requests at fixed intervals and return their results in send order.
+    max_tokens, when set, caps each answer (the paid live run uses it to bound its cost)."""
     rows = rows or load_rows()
     total = int(rate * duration)
     started = time.perf_counter()
@@ -57,7 +60,7 @@ async def generate(bases: list[str], rate: float, duration: float, rows: list[di
             delay = started + i / rate - time.perf_counter()
             if delay > 0:
                 await asyncio.sleep(delay)
-            task = asyncio.create_task(one(client, base, row, i, started))
+            task = asyncio.create_task(one(client, base, row, i, started, max_tokens))
             if on_result:
                 task.add_done_callback(lambda t: on_result(t.result()))
             tasks.append(task)
