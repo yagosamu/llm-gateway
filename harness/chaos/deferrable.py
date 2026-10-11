@@ -10,7 +10,8 @@ Design, fixed before any run:
   requests arrive at INTERACTIVE_RATE per second over the same span, for comparison.
 - At KILL_AT one worker process is killed outright; workers reclaim entries idle for RECLAIM_IDLE
   seconds (shortened from the 120 s default so the reclaim happens inside the run).
-- Workers use the committed Backoff (base 1 s, cap 30 s, 8 attempts), not a budget sized for this test.
+- Workers use the committed Backoff, not a budget sized for this test. Run 1 used base 1 s, cap 30 s and
+  8 attempts; run 2 uses the budget that replaced it, retries while the job is under 15 minutes old.
 - The run ends when every job is done or failed, or at DRAIN_LIMIT seconds.
 - REPS repetitions.
 
@@ -223,7 +224,11 @@ def rep_metrics(folder: Path) -> dict:
 RUN_NOTES = {
     "run1_sequential_worker": "Pre-registered run. Workers processed one job at a time, about 0.4 jobs per second "
                               "each against 2 arriving per second, so the stream backed up and jobs were still "
-                              "unread when the run stopped at 300 s; the queue lost nothing but had no throughput.",
+                              "unread when the run stopped at 300 s; the queue lost nothing but had no throughput. "
+                              "Jobs also died after 8 attempts inside the outage, because an open circuit fails an "
+                              "attempt at once.",
+    "run2_concurrent_worker": "Same design, after two changes made because of run 1: workers keep up to 8 jobs in "
+                              "flight, and the retry budget is the job's age (15 minutes) instead of 8 attempts.",
 }
 
 

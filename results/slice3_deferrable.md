@@ -4,7 +4,7 @@ openai and anthropic both fail every call from 20 s to 60 s, so the low tier and
 
 ## run1_sequential_worker
 
-Pre-registered run. Workers processed one job at a time, about 0.4 jobs per second each against 2 arriving per second, so the stream backed up and jobs were still unread when the run stopped at 300 s; the queue lost nothing but had no throughput.
+Pre-registered run. Workers processed one job at a time, about 0.4 jobs per second each against 2 arriving per second, so the stream backed up and jobs were still unread when the run stopped at 300 s; the queue lost nothing but had no throughput. Jobs also died after 8 attempts inside the outage, because an open circuit fails an attempt at once.
 
 | rep | submissions | deduplicated | jobs | done | failed | unfinished | jobs answered more than once | attempts median | attempts max | drained after fault s | interactive error rate in fault |
 |---|---|---|---|---|---|---|---|---|---|---|---|

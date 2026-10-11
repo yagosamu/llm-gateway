@@ -115,13 +115,13 @@ class Provider:
 class World:
     """A gateway app and workers sharing one fake Redis; workers reach the app in process."""
 
-    def __init__(self, provider, max_attempts=4):
+    def __init__(self, provider, max_attempts=50, max_age_seconds=900.0):
         self.server, self.clock = fakeredis.FakeServer(), Clock()
         self.provider, self.log = provider, RequestLog(":memory:")
         self.queue = JobQueue(fakeredis.FakeAsyncRedis(server=self.server), self.clock)
         self.app = create_app(REGISTRY, {p: provider for p in ("openai", "anthropic", "groq")}, self.log,
                               jobs=JobQueue(fakeredis.FakeAsyncRedis(server=self.server), self.clock))
-        self.backoff = Backoff(base_seconds=1, cap_seconds=4, max_attempts=max_attempts)
+        self.backoff = Backoff(base_seconds=1, cap_seconds=4, max_attempts=max_attempts, max_age_seconds=max_age_seconds)
 
     def worker(self, client, name="w1"):
         return Worker(self.queue, client, name, self.backoff, random.Random(0))
@@ -187,7 +187,7 @@ def test_a_job_that_keeps_failing_ends_dead_after_the_attempt_budget():
             return await world.queue.get(job_id), await world.queue.redis.lrange(DEAD, 0, -1)
 
     job, dead = run(scenario())
-    assert (job["status"], job["attempts"], job["last_error"]) == ("failed", 3, "upstream_server_error")
+    assert (job["status"], job["attempts"], job["last_error"]) == ("failed", 3, "retry budget spent: upstream_server_error")
     assert dead == [job["id"].encode()]
 
 
@@ -350,3 +350,41 @@ def test_a_running_worker_keeps_several_jobs_in_flight():
     statuses, elapsed = run(scenario())
     assert all(s == "done" for s in statuses)
     assert elapsed < 1.0  # well under the 1.6 s a one-at-a-time worker needs
+
+
+def test_within_its_age_budget_a_job_keeps_retrying_past_eight_attempts():
+    """The first queue measurement: 8 attempts ran out inside a 40 s outage. With an age budget, a job
+    that fails 11 times quickly (each drain pass is 10 s here) still gets its answer."""
+    world = World(Provider(fail_times=11))
+
+    async def scenario():
+        async with client_for(world.app) as client:
+            await world.queue.ensure_group()
+            job_id = (await world.submit(client))["id"]
+            await world.drain(world.worker(client), passes=30)
+            return await world.queue.get(job_id)
+
+    job = run(scenario())
+    assert (job["status"], job["attempts"]) == ("done", 12)
+
+
+def test_a_job_older_than_its_age_budget_fails_with_attempts_to_spare():
+    world = World(Provider(fail_times=99), max_attempts=50, max_age_seconds=25.0)
+
+    async def scenario():
+        async with client_for(world.app) as client:
+            await world.queue.ensure_group()
+            job_id = (await world.submit(client))["id"]
+            await world.drain(world.worker(client), passes=10)
+            return await world.queue.get(job_id)
+
+    job = run(scenario())
+    assert job["status"] == "failed" and job["attempts"] < 50
+    assert job["last_error"] == "retry budget spent: upstream_server_error"
+
+
+def test_the_age_budget_counts_the_wait_before_the_next_attempt():
+    backoff = Backoff(max_age_seconds=60.0, max_attempts=50)
+    assert backoff.allows_retry(attempts_made=20, age_seconds=50.0, delay_seconds=10.0)
+    assert not backoff.allows_retry(attempts_made=20, age_seconds=50.0, delay_seconds=10.5)
+    assert not backoff.allows_retry(attempts_made=50, age_seconds=0.0, delay_seconds=0.0)

@@ -46,13 +46,23 @@ class IdempotencyConflict(ValueError):
 
 @dataclass(frozen=True)
 class Backoff:
-    """Exponential backoff with full jitter: attempt n waits uniform(0, min(cap, base * 2 ** (n - 1)))."""
+    """Exponential backoff with full jitter: attempt n waits uniform(0, min(cap, base * 2 ** (n - 1))).
+
+    The retry budget is the job's age, not a count of attempts: a job is retried while its next attempt
+    would still start within max_age_seconds of its creation, so a deferrable job survives an outage of
+    up to about that long. Counting attempts measured the wrong thing: an open circuit fails an attempt
+    at once, without calling a model, so in the first queue measurement jobs spent their 8 attempts
+    inside a 40 s outage. max_attempts remains only as a guard against a runaway loop."""
     base_seconds: float = 1.0
     cap_seconds: float = 30.0
-    max_attempts: int = 8
+    max_age_seconds: float = 900.0
+    max_attempts: int = 50
 
     def delay(self, attempt: int, rng: random.Random) -> float:
         return rng.uniform(0, min(self.cap_seconds, self.base_seconds * 2 ** (attempt - 1)))
+
+    def allows_retry(self, attempts_made: int, age_seconds: float, delay_seconds: float) -> bool:
+        return attempts_made < self.max_attempts and age_seconds + delay_seconds <= self.max_age_seconds
 
 
 def fingerprint(body: dict, feature: str) -> str:

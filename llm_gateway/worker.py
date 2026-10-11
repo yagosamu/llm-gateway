@@ -3,10 +3,10 @@
 It is a client of the gateway: each job's request goes through POST /v1/chat/completions like any
 other, so routing, failover, the breaker, the request log and the metrics apply to deferred work
 unchanged. A 200 stores the answer. A retryable failure (429, 502, 503, 504, or the gateway not
-answering) schedules the next attempt after an exponential backoff with full jitter, until
-Backoff.max_attempts; anything else, or running out of attempts, fails the job for good and lists it
-as dead. Each attempt carries X-Request-Id job:<id>:<attempt>, so the request log shows every call a
-job caused, including any duplicate.
+answering) schedules the next attempt after an exponential backoff with full jitter, while the next
+attempt still falls within the job's age budget (Backoff.max_age_seconds, 15 minutes); anything else,
+or a spent budget, fails the job for good and lists it as dead. Each attempt carries X-Request-Id
+job:<id>:<attempt>, so the request log shows every call a job caused, including any duplicate.
 
 Usage: uv run python -m llm_gateway.worker --gateway http://127.0.0.1:8000 --name worker-1"""
 import argparse
@@ -55,9 +55,13 @@ class Worker:
             await self.queue.finish(job_id, message_id, "done", result=body)
             return "done"
         error = (body.get("error") or {}).get("code", f"http_{status}")
-        if (status is None or status in RETRYABLE_STATUS) and attempt < self.backoff.max_attempts:
-            await self.queue.retry_later(job_id, message_id, self.backoff.delay(attempt, self.rng), error)
-            return "retrying"
+        if status is None or status in RETRYABLE_STATUS:
+            delay = self.backoff.delay(attempt, self.rng)
+            age = self.queue.clock() - float(job["created_at"])
+            if self.backoff.allows_retry(attempt, age, delay):
+                await self.queue.retry_later(job_id, message_id, delay, error)
+                return "retrying"
+            error = f"retry budget spent: {error}"
         await self.queue.finish(job_id, message_id, "failed", error=error)
         return "failed"
 
