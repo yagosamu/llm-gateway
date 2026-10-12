@@ -42,6 +42,15 @@ def test_zipf_head_favours_the_first_ranks():
     assert len(draws) == 600 and counts[0][1] > 60 and len(counts) < 160
 
 
+def test_the_recorder_splits_off_the_context_the_way_slice_1_joined_it():
+    from harness.cache.record import as_rows, instruction_only
+    from harness.traffic.sample import user_message
+    assert instruction_only(user_message("Summarize this", "A long paragraph.")) == "Summarize this"
+    assert instruction_only(user_message("Name a river", "")) is None
+    [row] = as_rows([{"text_id": "dolly-00001-p2", "category": "open_qa", "text": "Name a river"}])
+    assert row["id"] == "dolly-00001-p2" and row["messages"][1] == {"role": "user", "content": "Name a river"}
+
+
 def test_the_workload_has_the_preregistered_shape():
     intents = workload.select_intents(records())
     texts = {}
