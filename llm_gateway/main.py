@@ -12,7 +12,8 @@ import redis.asyncio as redis
 from harness.routing.judge import VerifierJudge
 from llm_gateway.api import create_app
 from llm_gateway.breaker import CircuitBreaker
-from llm_gateway.cache import ResponseCache
+from llm_gateway import embeddings
+from llm_gateway.cache import RedisVectorIndex, ResponseCache
 from llm_gateway.health import HealthTracker
 from llm_gateway.jobs import JobQueue
 from llm_gateway.providers.factory import build_providers
@@ -29,8 +30,10 @@ if redis_url:
     health = HealthTracker(store)
     breaker = CircuitBreaker(store, health, config=lambda: router.config.breaker)
     jobs = JobQueue(store)
-    cache = ResponseCache(store)  # used only when routing.yaml enables it
+    # Used only when routing.yaml enables it; the semantic layer also needs cache.semantic_threshold.
+    cache = ResponseCache(store, index=RedisVectorIndex(store, embeddings.DIMENSIONS))
 app = create_app(registry, build_providers({m.provider for m in registry.values()}),
                  RequestLog(Path(os.environ.get("LLM_GATEWAY_LOG", "var/requests.sqlite3"))),
                  router=router, verifier_judge=VerifierJudge(), health=health, breaker=breaker, jobs=jobs,
-                 cache=cache, admin_token=os.environ.get("LLM_GATEWAY_ADMIN_TOKEN"))
+                 cache=cache, embedder=embeddings.OpenAIEmbedder() if cache else None,
+                 admin_token=os.environ.get("LLM_GATEWAY_ADMIN_TOKEN"))

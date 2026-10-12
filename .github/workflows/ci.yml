@@ -12,6 +12,15 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # The same Redis as compose.yaml, for the tests that need the real Query Engine (vector search);
+    # locally they are skipped when no Redis answers.
+    services:
+      redis:
+        image: redis:8.10.2
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 3s --health-retries 5
     steps:
       - uses: actions/checkout@v7
       # setup-uv publishes full version tags only; there is no moving v10 tag.

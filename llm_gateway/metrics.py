@@ -62,6 +62,8 @@ class GatewayMetrics:
                                      ["layer", "result"], registry=self.registry)
         self.cache_saved = Counter("llm_gateway_cache_saved_usd", "What answers served from the cache cost originally.",
                                    ["tenant", "feature"], registry=self.registry)
+        self.embedding_cost = Counter("llm_gateway_embedding_cost_usd", "Spent embedding requests for the semantic cache.",
+                                      ["tenant", "feature"], registry=self.registry)
         self.cache_errors = Counter("llm_gateway_cache_errors", "Cache operations lost because Redis was unreachable.",
                                     ["operation"], registry=self.registry)
         self.breaker_transitions = Counter("llm_gateway_breaker_transitions",

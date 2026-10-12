@@ -22,6 +22,7 @@ from pydantic import ValidationError
 from redis.exceptions import RedisError
 
 from llm_gateway import cache as response_cache
+from llm_gateway import embeddings
 from llm_gateway.breaker import STATES as BREAKER_STATES
 from llm_gateway.breaker import CircuitBreaker
 from llm_gateway.chaos import ChaosConfigError, ChaosControl
@@ -88,7 +89,7 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                verifier_rng: random.Random | None = None, health: HealthTracker | None = None,
                breaker: CircuitBreaker | None = None, chaos: ChaosControl | None = None,
                admin_token: str | None = None, jobs: JobQueue | None = None,
-               cache: response_cache.ResponseCache | None = None) -> FastAPI:
+               cache: response_cache.ResponseCache | None = None, embedder=None) -> FastAPI:
     request_log = request_log or RequestLog(":memory:")
     metrics = metrics or GatewayMetrics()
     if cache is not None and cache.metrics is None:
@@ -291,17 +292,16 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
         if prompt_version is not None and not IDENTIFIER.match(prompt_version):
             return reject(400, "invalid_prompt_version", "X-Prompt-Version must be an identifier.", "X-Prompt-Version")
         cache_config = router.config.cache if router is not None else CacheConfig()
-        cache_key = None
+        cache_key = vector = None
         if cache is not None and cache_config.applies_to(record.feature):
             space = response_cache.namespace(record.tenant, record.feature, model.id, chat.temperature,
                                              chat.output_limit(), messages, prompt_version)
             cache_key = response_cache.exact_key(space, messages)
             started = time.perf_counter()
-            hit = await cache.get(record.tenant, record.feature, cache_key)
-            metrics.cache_lookups.labels("exact", "hit" if hit else "miss").inc()
-            if hit is not None:
+
+            def served_from_cache(hit, layer: str, similarity: float | None = None) -> JSONResponse:
                 record.latency_ms = (time.perf_counter() - started) * 1000
-                record.cache, record.outcome, record.finish_reason = "exact", "ok", hit.finish_reason
+                record.cache, record.outcome, record.finish_reason = layer, "ok", hit.finish_reason
                 record.input_tokens = record.output_tokens = 0
                 record.cost_usd = 0.0
                 metrics.cache_saved.labels(record.tenant, record.feature).inc(hit.cost_usd)
@@ -311,11 +311,35 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
                     usage=Usage(prompt_tokens=hit.input_tokens, completion_tokens=hit.output_tokens,
                                 total_tokens=hit.input_tokens + hit.output_tokens),
                     gateway=GatewayInfo(request_id=record.request_id, tenant=record.tenant, feature=record.feature,
-                                        provider=model.provider, cost_usd=0.0, latency_ms=record.latency_ms,
-                                        routing=routing, cache=CacheInfo(layer="exact", saved_usd=hit.cost_usd,
-                                                                         age_seconds=round(time.time() - hit.created_at, 3))))
+                                        provider=model.provider, cost_usd=record.embedding_cost_usd or 0.0,
+                                        latency_ms=record.latency_ms, routing=routing,
+                                        cache=CacheInfo(layer=layer, saved_usd=hit.cost_usd, similarity=similarity,
+                                                        age_seconds=round(time.time() - hit.created_at, 3))))
                 return JSONResponse(cached.model_dump(), headers={"X-Request-Id": record.request_id})
+
+            hit = await cache.get(record.tenant, record.feature, cache_key)
+            metrics.cache_lookups.labels("exact", "hit" if hit else "miss").inc()
+            if hit is not None:
+                return served_from_cache(hit, "exact")
             record.cache = "miss"
+            # Semantic layer: single-turn requests only, compared within this namespace only.
+            text = response_cache.single_turn_text(messages)
+            if (cache_config.semantic_threshold is not None and embedder is not None and cache.index is not None
+                    and text is not None):
+                try:
+                    embedded = await embedder.embed([text])
+                except Exception as exc:  # any embedding failure is a miss, never a failed request
+                    cache._error("embed", exc)
+                else:
+                    vector = embedded.vectors[0]
+                    record.embedding_cost_usd = embeddings.cost_usd(embedded.tokens)
+                    metrics.embedding_cost.labels(record.tenant, record.feature).inc(record.embedding_cost_usd)
+                    near, similarity = await cache.search(record.tenant, space, vector)
+                    record.cache_similarity = similarity
+                    if near is not None and similarity >= cache_config.semantic_threshold:
+                        metrics.cache_lookups.labels("semantic", "hit").inc()
+                        return served_from_cache(near, "semantic", round(similarity, 6))
+                    metrics.cache_lookups.labels("semantic", "miss").inc()
 
         # The tier's model first, then its fallbacks: only for "auto" requests, where the gateway chose
         # the model in the first place.
@@ -388,7 +412,7 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
             await cache.put(record.tenant, record.feature, cache_key, space, response_cache.CachedAnswer(
                 text=result.text, finish_reason=result.finish_reason, model=model.id,
                 input_tokens=result.input_tokens, output_tokens=result.output_tokens, cost_usd=record.cost_usd,
-                created_at=time.time(), tenant=record.tenant), cache_config.ttl_seconds)
+                created_at=time.time(), tenant=record.tenant), cache_config.ttl_seconds, vector)
 
         response = ChatCompletionResponse(
             id=f"chatcmpl-{record.request_id}",
@@ -398,7 +422,8 @@ def create_app(registry: dict[str, ModelConfig], providers: dict[str, Provider],
             usage=Usage(prompt_tokens=result.input_tokens, completion_tokens=result.output_tokens,
                         total_tokens=result.input_tokens + result.output_tokens),
             gateway=GatewayInfo(request_id=record.request_id, tenant=record.tenant, feature=record.feature,
-                                provider=model.provider, cost_usd=record.cost_usd, latency_ms=record.latency_ms,
+                                provider=model.provider, cost_usd=record.cost_usd + (record.embedding_cost_usd or 0.0),
+                                latency_ms=record.latency_ms,
                                 routing=routing, attempts=attempts if len(attempts) > 1 else None),
         )
         # The verification, when sampled, runs after the response is sent; the client never waits for it.

@@ -38,7 +38,9 @@ CREATE TABLE IF NOT EXISTS requests (
     routing_version TEXT,
     failover_from TEXT,
     attempts INTEGER,
-    cache TEXT
+    cache TEXT,
+    cache_similarity REAL,
+    embedding_cost_usd REAL
 )"""
 OUTCOMES = ("ok", "rejected", "upstream_error", "queued")
 # One row per sampled verification. Rows with acceptable = 0 are the routing failures; they keep the
@@ -103,6 +105,8 @@ class RequestRecord:
     failover_from: str | None = None  # the tier's model when another one served the request
     attempts: int | None = None  # models tried, including turned-away open circuits
     cache: str | None = None  # None when the cache was not consulted; "miss" or the layer that answered
+    cache_similarity: float | None = None  # nearest stored request in the namespace, when the semantic layer ran
+    embedding_cost_usd: float | None = None  # the semantic lookup's embedding call; not part of cost_usd
 
 
 def now_utc() -> str:

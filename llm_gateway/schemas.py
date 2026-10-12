@@ -63,9 +63,10 @@ class FailoverAttempt(BaseModel):
 
 class CacheInfo(BaseModel):
     """Present when the answer came from the response cache."""
-    layer: Literal["exact"]
+    layer: Literal["exact", "semantic"]
     age_seconds: float
     saved_usd: float  # what the original call cost
+    similarity: float | None = None  # cosine similarity to the stored request, semantic hits only
 
 
 class GatewayInfo(BaseModel):

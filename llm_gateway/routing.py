@@ -142,10 +142,12 @@ class FailoverConfig:
 @dataclass(frozen=True)
 class CacheConfig:
     """The response cache (llm_gateway.cache). features lists the X-Feature values whose requests may
-    be answered from it; "*" means every feature."""
+    be answered from it; "*" means every feature. semantic_threshold is the cosine similarity floor of
+    the semantic layer; absent, only the exact layer runs."""
     enabled: bool = False
     ttl_seconds: int = 86_400
     features: tuple[str, ...] = ("*",)
+    semantic_threshold: float | None = None
 
     def applies_to(self, feature: str) -> bool:
         return self.enabled and ("*" in self.features or feature in self.features)
@@ -179,7 +181,11 @@ def _cache_config(data: dict) -> CacheConfig:
         raise RoutingConfigError("cache.ttl_seconds must be a positive whole number")
     if not isinstance(features, list) or not features or not all(isinstance(f, str) and f for f in features):
         raise RoutingConfigError('cache.features must be a non-empty list of feature names, or ["*"]')
-    return CacheConfig(enabled, ttl, tuple(features))
+    threshold = section.get("semantic_threshold")
+    if threshold is not None and (isinstance(threshold, bool) or not isinstance(threshold, (int, float))
+                                  or not 0 < threshold <= 1):
+        raise RoutingConfigError("cache.semantic_threshold must be a number in (0, 1], or absent")
+    return CacheConfig(enabled, ttl, tuple(features), None if threshold is None else float(threshold))
 
 
 def _failover_config(data: dict, tier_map: dict[str, str], model_ids: set[str]) -> FailoverConfig:
