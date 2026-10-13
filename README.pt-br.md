@@ -141,27 +141,10 @@ Nenhum sistema em produção manda tráfego para este gateway. O tráfego é um 
 
 ## Caminho dos dados
 
-```mermaid
-flowchart LR
-    T["data/traffic.jsonl<br/>240 prompts do Dolly"] --> R["harness.record<br/>uma vez, ao vivo"]
-    R -- "X-Tenant-Id, X-Feature,<br/>X-Request-Id" --> G["gateway<br/>/v1/chat/completions"]
-    G --> RT["roteador<br/>routing.yaml"]
-    G --> AD["adaptadores<br/>OpenAI, Anthropic, Groq"]
-    AD --> P[("provedores")]
-    G --> L[("log de requisições e<br/>verificações, SQLite")]
-    G -. "por amostragem, depois da resposta" .-> V["verificador<br/>faixa high + juiz"]
-    V --> L
-    G --> M["/metrics<br/>Prometheus, Grafana"]
-    G <--> RD[("Redis<br/>saúde, circuitos, fila,<br/>cache de respostas")]
-    RD --> WK["worker<br/>tarefas adiadas"]
-    WK --> G
-    R --> X[("data/recordings/matrix.jsonl")]
-    X --> J["harness.routing.judge<br/>dois juízes, uma vez"]
-    J --> VD[("data/judgments/verdicts.jsonl")]
-    X --> RP["ReplayProvider<br/>offline, no CI"]
-    RP --> G
-    VD --> EV["harness.routing.evaluate<br/>results/slice2.json"]
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/data-path-dark.png">
+  <img src="docs/diagrams/data-path.png" alt="Caminho dos dados: os prompts do Dolly são gravados uma vez pelo gateway e julgados uma vez; o gateway roteia, chama os provedores, registra, verifica uma amostra e compartilha saúde, circuitos, tarefas e respostas em cache no Redis; o CI reproduz as gravações offline para recalcular os resultados.">
+</picture>
 
 As chamadas ao vivo acontecem uma vez: a gravação e depois os juízes. Tudo o que vem depois, incluindo os números publicados e as checagens do CI, lê as gravações commitadas. Os testes de falha da fatia 3 rodam o código real do gateway contra provedores simulados, montados a partir das mesmas gravações; só a execução ao vivo chama modelos reais.
 

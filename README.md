@@ -141,27 +141,10 @@ No production system sends traffic to this gateway. The traffic is a public data
 
 ## Data path
 
-```mermaid
-flowchart LR
-    T["data/traffic.jsonl<br/>240 Dolly prompts"] --> R["harness.record<br/>once, live"]
-    R -- "X-Tenant-Id, X-Feature,<br/>X-Request-Id" --> G["gateway<br/>/v1/chat/completions"]
-    G --> RT["router<br/>routing.yaml"]
-    G --> AD["adapters<br/>OpenAI, Anthropic, Groq"]
-    AD --> P[("providers")]
-    G --> L[("request log and<br/>verifications, SQLite")]
-    G -. "sampled, after the response" .-> V["verifier<br/>high tier + judge"]
-    V --> L
-    G --> M["/metrics<br/>Prometheus, Grafana"]
-    G <--> RD[("Redis<br/>health, circuits, job queue,<br/>response cache")]
-    RD --> WK["worker<br/>deferred jobs"]
-    WK --> G
-    R --> X[("data/recordings/matrix.jsonl")]
-    X --> J["harness.routing.judge<br/>two judges, once"]
-    J --> VD[("data/judgments/verdicts.jsonl")]
-    X --> RP["ReplayProvider<br/>offline, in CI"]
-    RP --> G
-    VD --> EV["harness.routing.evaluate<br/>results/slice2.json"]
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/data-path-dark.png">
+  <img src="docs/diagrams/data-path.png" alt="Data path: Dolly prompts are recorded once through the gateway and judged once; the gateway routes, calls providers, logs, verifies a sample and shares health, circuits, jobs and cached answers in Redis; CI replays the recordings offline to recompute the results.">
+</picture>
 
 Live model calls happen once: the recording, then the judges. Everything after that, including the published numbers and the CI checks, reads the committed recordings. The slice 3 fault tests run the real gateway code against simulated providers built from the same recordings; only the live run calls real models.
 
