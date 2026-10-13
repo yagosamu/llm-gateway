@@ -4,6 +4,15 @@ An OpenAI-compatible gateway in front of OpenAI, Anthropic and Groq that routes 
 
 [Versão em português](README.pt-br.md)
 
+## Data path
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/data-path-dark.png">
+  <img src="docs/diagrams/data-path.png" alt="Data path: Dolly prompts are recorded once through the gateway and judged once; the gateway routes, calls providers, logs, verifies a sample and shares health, circuits, jobs and cached answers in Redis; CI replays the recordings offline to recompute the results.">
+</picture>
+
+Live model calls happen once: the recording, then the judges. Everything after that, including the published numbers and the CI checks, reads the committed recordings. The slice 3 fault tests run the real gateway code against simulated providers built from the same recordings; only the live run calls real models.
+
 ## Result
 
 All four slices are done. Every number below is recomputed offline from committed recordings and runs, and CI fails if a published number goes stale.
@@ -138,15 +147,6 @@ Details: [results/slice1.md](results/slice1.md). Latency is what one machine saw
 | 4 | cache: exact and semantic layers, versioned tenant-scoped key, judged false hits, precision curve | done |
 
 No production system sends traffic to this gateway. The traffic is a public dataset, replayed.
-
-## Data path
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/data-path-dark.png">
-  <img src="docs/diagrams/data-path.png" alt="Data path: Dolly prompts are recorded once through the gateway and judged once; the gateway routes, calls providers, logs, verifies a sample and shares health, circuits, jobs and cached answers in Redis; CI replays the recordings offline to recompute the results.">
-</picture>
-
-Live model calls happen once: the recording, then the judges. Everything after that, including the published numbers and the CI checks, reads the committed recordings. The slice 3 fault tests run the real gateway code against simulated providers built from the same recordings; only the live run calls real models.
 
 ## Design decisions
 

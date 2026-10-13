@@ -4,6 +4,15 @@ Um gateway compatível com a API da OpenAI, na frente de OpenAI, Anthropic e Gro
 
 [English version](README.md)
 
+## Caminho dos dados
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/data-path-dark.png">
+  <img src="docs/diagrams/data-path.png" alt="Caminho dos dados: os prompts do Dolly são gravados uma vez pelo gateway e julgados uma vez; o gateway roteia, chama os provedores, registra, verifica uma amostra e compartilha saúde, circuitos, tarefas e respostas em cache no Redis; o CI reproduz as gravações offline para recalcular os resultados.">
+</picture>
+
+As chamadas ao vivo acontecem uma vez: a gravação e depois os juízes. Tudo o que vem depois, incluindo os números publicados e as checagens do CI, lê as gravações commitadas. Os testes de falha da fatia 3 rodam o código real do gateway contra provedores simulados, montados a partir das mesmas gravações; só a execução ao vivo chama modelos reais.
+
 ## Resultado
 
 As quatro fatias estão prontas. Todos os números abaixo são recalculados offline a partir de gravações e execuções commitadas, e o CI falha se um número publicado ficar desatualizado.
@@ -138,15 +147,6 @@ Detalhes: [results/slice1.md](results/slice1.md). A latência é o que uma máqu
 | 4 | cache: camadas exata e semântica, chave versionada por tenant, acertos errados julgados, curva de precisão | pronta |
 
 Nenhum sistema em produção manda tráfego para este gateway. O tráfego é um dataset público, reproduzido.
-
-## Caminho dos dados
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/data-path-dark.png">
-  <img src="docs/diagrams/data-path.png" alt="Caminho dos dados: os prompts do Dolly são gravados uma vez pelo gateway e julgados uma vez; o gateway roteia, chama os provedores, registra, verifica uma amostra e compartilha saúde, circuitos, tarefas e respostas em cache no Redis; o CI reproduz as gravações offline para recalcular os resultados.">
-</picture>
-
-As chamadas ao vivo acontecem uma vez: a gravação e depois os juízes. Tudo o que vem depois, incluindo os números publicados e as checagens do CI, lê as gravações commitadas. Os testes de falha da fatia 3 rodam o código real do gateway contra provedores simulados, montados a partir das mesmas gravações; só a execução ao vivo chama modelos reais.
 
 ## Decisões de design
 
