@@ -1,0 +1,90 @@
+{
+ "1": {
+  "pair_id": "dolly-07277-p4<-dolly-07277-p3",
+  "similarity": 0.916859
+ },
+ "2": {
+  "pair_id": "dolly-02116-p3<-dolly-02116",
+  "similarity": 0.969006
+ },
+ "3": {
+  "pair_id": "dolly-12219-p3<-dolly-12219-p4",
+  "similarity": 0.892283
+ },
+ "4": {
+  "pair_id": "dolly-02116-p2<-dolly-02116-p3",
+  "similarity": 0.958215
+ },
+ "5": {
+  "pair_id": "dolly-02735<-dolly-02735-p1",
+  "similarity": 0.916929
+ },
+ "6": {
+  "pair_id": "dolly-06107<-dolly-06107-p2",
+  "similarity": 0.903136
+ },
+ "7": {
+  "pair_id": "dolly-03628-p4<-dolly-03628",
+  "similarity": 0.975007
+ },
+ "8": {
+  "pair_id": "dolly-00286<-dolly-06472",
+  "similarity": 0.959385
+ },
+ "9": {
+  "pair_id": "dolly-04426<-dolly-00445",
+  "similarity": 0.854574
+ },
+ "10": {
+  "pair_id": "dolly-11313-p2<-dolly-11313-p1",
+  "similarity": 0.839245
+ },
+ "11": {
+  "pair_id": "dolly-00905<-dolly-10012",
+  "similarity": 0.905489
+ },
+ "12": {
+  "pair_id": "dolly-07507-p1<-dolly-07507-p3",
+  "similarity": 0.890703
+ },
+ "13": {
+  "pair_id": "dolly-14646<-dolly-01077",
+  "similarity": 0.801457
+ },
+ "14": {
+  "pair_id": "dolly-10012<-dolly-00905",
+  "similarity": 0.905489
+ },
+ "15": {
+  "pair_id": "dolly-03414-p4<-dolly-03414",
+  "similarity": 0.974908
+ },
+ "16": {
+  "pair_id": "dolly-05918-p4<-dolly-05918-p3",
+  "similarity": 0.904859
+ },
+ "17": {
+  "pair_id": "dolly-03628-p3<-dolly-03628",
+  "similarity": 0.980719
+ },
+ "18": {
+  "pair_id": "dolly-10012-p1<-dolly-10012",
+  "similarity": 0.878992
+ },
+ "19": {
+  "pair_id": "dolly-08185-p1<-dolly-08185",
+  "similarity": 0.873831
+ },
+ "20": {
+  "pair_id": "dolly-10012-p3<-dolly-00905",
+  "similarity": 0.875852
+ },
+ "21": {
+  "pair_id": "dolly-04685-p3<-dolly-04685-p2",
+  "similarity": 0.862159
+ },
+ "22": {
+  "pair_id": "dolly-14058-p4<-dolly-14058-p2",
+  "similarity": 0.86433
+ }
+}

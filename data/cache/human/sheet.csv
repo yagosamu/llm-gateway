@@ -1,0 +1,268 @@
+﻿item,request,reference_answer,candidate_answer,acceptable,note
+1,"Can you tell me which usual side dishes are traditionally served with Peking duck?
+
+Context:
+Peking duck is a dish from Beijing (Peking) that has been prepared since the Imperial era. The meat is characterized by its thin, crispy skin, with authentic versions of the dish serving mostly the skin and little meat, sliced in front of the diners by the cook. Ducks bred especially for the dish are slaughtered after 65 days and seasoned before being roasted in a closed or hung oven. The meat is often eaten with spring onion, cucumber and sweet bean sauce with pancakes rolled around the fillings. Sometimes pickled radish is also inside. Crispy aromatic duck is a similar dish to Peking duck and is popular in the United Kingdom.","Peking duck is traditionally served with thin pancakes, sliced spring onions (scallions), cucumber, and sweet bean sauce. Diners wrap the duck and accompaniments in the pancakes. Pickled radish is sometimes included as well.","Peking duck is usually served with:
+
+- Thin wheat pancakes
+- Spring onions (scallions), cut into strips
+- Cucumber, cut into strips
+- Sweet bean sauce (often hoisin-style)
+- Sometimes pickled radish
+
+The duck and accompaniments are wrapped in the pancakes.",,
+2,"Using the paragraph about Jack Kerouac, can you inform me about his upbringing location, his best-known book, its publication date, and which movement he was involved in?
+
+Context:
+Of French-Canadian ancestry, Kerouac was raised in a French-speaking home in Lowell, Massachusetts. He ""learned English at age six and spoke with a marked accent into his late teens."" During World War II, he served in the United States Merchant Marine; he completed his first novel at the time, which was published more than 40 years after his death. His first published book was The Town and the City (1950), and he achieved widespread fame and notoriety with his second, On the Road, in 1957. It made him a beat icon, and he went on to publish 12 more novels and numerous poetry volumes.
+
+Kerouac is recognized for his style of spontaneous prose. Thematically, his work covers topics such as his Catholic spirituality, jazz, travel, promiscuity, life in New York City, Buddhism, drugs, and poverty. He became an underground celebrity and, with other Beats, a progenitor of the hippie movement, although he remained antagonistic toward some of its politically radical elements. He has a lasting legacy, greatly influencing many of the cultural icons of the 1960s, including Bob Dylan, the Beatles, Jerry Garcia and the Doors.
+
+In 1969, at the age of 47, Kerouac died from an abdominal hemorrhage caused by a lifetime of heavy drinking. Since then, his literary prestige has grown, and several previously unseen works have been published.","Jack Kerouac was raised in **Lowell, Massachusetts**. His best-known book is *On the Road*, published in **1957**. He was part of the **Beat movement** and, along with other Beat writers, helped pave the way for the hippie movement.","Jack Kerouac was raised in Lowell, Massachusetts. His most famous book was *On the Road*, published in 1957. He was part of the Beat movement.",,
+3,"For these activities—hiking in a park, stargazing, going to a beach tidepool, dining at a restaurant, looking for shooting stars, and working at a desk—do they typically occur at night or during the day?","- Hiking in a park: usually during the day  
+- Stargazing: at night  
+- Visiting a beach tidepool: usually during the day, often at low tide  
+- Dining at a restaurant: either, though dinner is typically at night  
+- Looking for shooting stars: at night  
+- Working at a desk: usually during the day, though it can be either","- **Hike in a park:** Usually **daytime**
+- **Stargazing:** **Nighttime**
+- **Visiting a beach tidepool:** Usually **daytime**, though the best time depends on the tides
+- **Having dinner at a restaurant:** Usually **evening**
+- **Searching for shooting stars:** **Nighttime**
+- **Doing desk job work:** Usually **daytime**",,
+4,"From the information about Jack Kerouac, please tell me the place he was raised, the title of his most famous work, the year it came out, and the movement he was associated with.
+
+Context:
+Of French-Canadian ancestry, Kerouac was raised in a French-speaking home in Lowell, Massachusetts. He ""learned English at age six and spoke with a marked accent into his late teens."" During World War II, he served in the United States Merchant Marine; he completed his first novel at the time, which was published more than 40 years after his death. His first published book was The Town and the City (1950), and he achieved widespread fame and notoriety with his second, On the Road, in 1957. It made him a beat icon, and he went on to publish 12 more novels and numerous poetry volumes.
+
+Kerouac is recognized for his style of spontaneous prose. Thematically, his work covers topics such as his Catholic spirituality, jazz, travel, promiscuity, life in New York City, Buddhism, drugs, and poverty. He became an underground celebrity and, with other Beats, a progenitor of the hippie movement, although he remained antagonistic toward some of its politically radical elements. He has a lasting legacy, greatly influencing many of the cultural icons of the 1960s, including Bob Dylan, the Beatles, Jerry Garcia and the Doors.
+
+In 1969, at the age of 47, Kerouac died from an abdominal hemorrhage caused by a lifetime of heavy drinking. Since then, his literary prestige has grown, and several previously unseen works have been published.","Jack Kerouac was raised in **Lowell, Massachusetts**. His most famous work is **_On the Road_**, published in **1957**. He was associated with the **Beat movement**.","Jack Kerouac was raised in **Lowell, Massachusetts**. His best-known book is *On the Road*, published in **1957**. He was part of the **Beat movement** and, along with other Beat writers, helped pave the way for the hippie movement.",,
+5,"Given this paragraph about time travel, how practical is it
+
+Context:
+Time travel is the concept of movement between certain points in time, analogous to movement between different points in space by an object or a person, typically with the use of a hypothetical device known as a time machine. Time travel is a widely recognized concept in philosophy and fiction, particularly science fiction. The idea of a time machine was popularized by H. G. Wells' 1895 novel The Time Machine.","As a real technology, time travel is not currently practical. The paragraph describes the idea, not a workable method.
+
+Traveling **forward in time** is allowed by established physics in a limited sense: according to relativity, time passes more slowly for someone moving extremely fast or experiencing very strong gravity. This effect has been measured, but producing a dramatic “leap” into the future would require conditions far beyond current technology.
+
+Traveling **backward in time** remains speculative. Some mathematical solutions in general relativity hint at possibilities, but they may require unrealistic conditions, and no evidence shows that such travel can actually happen.
+
+So time travel is useful as a concept in philosophy and fiction, but a practical time machine—especially one that goes to the past—is not available or known to be feasible.","In practice, time travel is only feasible in a limited sense: **traveling into the future**. According to relativity, time passes more slowly for someone moving extremely fast or near a very strong gravitational field. This effect has been measured, but producing a dramatic “jump” into the future would require conditions far beyond current technology.
+
+**Traveling into the past** remains speculative. Some mathematical solutions to Einstein’s equations suggest possibilities, but there’s no evidence that they can exist in the real universe, and they raise difficult physical problems. No known device can send a person backward in time.
+
+So, the paragraph describes the concept, but it doesn’t establish that a practical time machine is possible.",,
+6,What are the best beach family vacation spots on the east coast?,"Assuming you mean the **U.S. East Coast**, these are some of the best family beach destinations, depending on the kind of trip you want:
+
+- **Outer Banks, North Carolina — best for a relaxed beach-house vacation.** Wide beaches, rental homes with kitchens and pools, lighthouses, and easy day trips to the Wright Brothers Memorial. A car is useful, and some beaches are better for swimming than others.
+- **Hilton Head Island, South Carolina — best for an easygoing resort stay.** Calm, broad beaches, bike paths, pools, and family-friendly resorts. Great if you want a polished, low-stress trip.
+- **Myrtle Beach, South Carolina — best for lots of activities.** Beach time plus mini-golf, amusement rides, aquariums, and family entertainment. It’s busy and built-up, but convenient for kids who like variety.
+- **Ocean City, New Jersey — best classic boardwalk vacation.** A family-oriented boardwalk, amusement rides, and a broad beach. It’s especially popular with younger children; note that beach tags are typically required.
+- **Virginia Beach, Virginia — best for a mix of beach and city attractions.** A lively boardwalk, aquarium, and nearby parks make it easy to fill a week beyond the beach.
+- **Cape Cod, Massachusetts — best for a New England summer.** Charming towns, calm bayside beaches, seafood, and bike trails. Water is cooler, and summer traffic and lodging prices can be high.
+- **Amelia Island, Florida — best for a quieter, scenic getaway.** Relaxed beaches and a historic downtown in Fernandina Beach, with a less hectic feel than Florida’s bigger resort areas.
+- **Ogunquit, Maine — best for coastal scenery.** A beautiful sandy beach, walkable town, and scenic Marginal Way. It’s better for summer beach days than warm-water swimming.
+
+**Quick picks:** Outer Banks for a beach-house week, Hilton Head for a resort, Myrtle Beach for nonstop kid activities, and Cape Cod for a classic New England vacation. Check water conditions and lifeguard coverage when choosing a beach, especially with younger swimmers.","Assuming you mean the **U.S. East Coast**, these are great family-friendly choices:
+
+- **Outer Banks, North Carolina** — Wide beaches, rental homes, wild horses, lighthouses, and plenty of space. Best for families who like a relaxed, outdoorsy vacation; you’ll generally want a car.
+- **Virginia Beach, Virginia** — A classic, convenient beach trip with a lively boardwalk, attractions, restaurants, and a long stretch of beach. Good for mixing beach time with activities.
+- **Ocean City, Maryland** — A traditional family resort town with a boardwalk, rides, mini golf, and lots of casual food. It can be busy in peak summer.
+- **Cape May, New Jersey** — A charming, scenic option with calm-town appeal, historic architecture, and family-friendly beaches. Often a better fit for a quieter getaway than a big boardwalk scene.
+- **Myrtle Beach, South Carolina** — Best for sheer variety: amusement parks, shows, mini golf, water parks, and a broad range of accommodations. It’s more commercial and can be crowded.
+- **Hilton Head Island, South Carolina** — Calm, polished, and very family-oriented, with bike paths, nature activities, and resorts. Great if you want a quieter, resort-style stay.
+- **St. Augustine or Amelia Island, Florida** — Combine beach days with history, wildlife, and sightseeing. Amelia Island is generally more laid-back; St. Augustine offers more attractions.
+- **Kennebunkport or Ogunquit, Maine** — Lovely for a cooler-weather beach vacation, with scenic coves, coastal walks, and charming towns. The water is cold even in summer.
+
+**Quick picks:** For a low-key beach house vacation, try the Outer Banks. For boardwalk fun, choose Ocean City or Virginia Beach. For a quieter resort stay, consider Hilton Head. For beaches plus sightseeing, look at St. Augustine.
+
+Summer weekends are peak season at many of these spots, so booking lodging early can make a big difference.",,
+7,"Can you let me know which material is generally utilized for building rowing shells?
+
+Context:
+Originally made from wood, shells are now almost always made from a composite material (usually a double skin of carbon-fiber reinforced plastic with a sandwich of honeycomb material) for strength and weight advantages. World Rowing rules specify minimum weights for each class of boat so that no individual team will gain a great advantage from the use of expensive materials or technology.","Modern rowing shells are generally made from **carbon-fiber-reinforced plastic**, often with a **honeycomb-core sandwich** between two outer skins. This composite construction keeps the shell strong and lightweight. Historically, shells were made of wood.","Modern rowing shells are typically made from carbon-fiber-reinforced plastic, often with a honeycomb core sandwiched between two layers for strength and lightness. Older shells were made of wood.",,
+8,"Given this paragraph, how many public high schools are in Arlington, Virginia?
+
+Context:
+Arlington Public Schools operates the county's public K-12 education system of 22 elementary schools; 6 middle schools (Dorothy Hamm Middle School, Gunston Middle School, Kenmore Middle School, Swanson Middle School, Thomas Jefferson Middle School, and Williamsburg Middle School); and 3 public high schools (Wakefield High School, Washington-Liberty High School, and Yorktown High School). H-B Woodlawn and Arlington Tech are alternative public schools. Arlington County spends about half of its local revenues on education. For the FY2013 budget, 83 percent of funding was from local revenues, and 12 percent from the state. Per pupil expenditures are expected to average $18,700, well above its neighbors, Fairfax County ($13,600) and Montgomery County ($14,900).","There are 3 public high schools in Arlington, Virginia.",There are 22 elementary schools.,,
+9,Give me a bulleted list of the seven more recent Indian Prime Ministers,"The seven most recent people to serve as Prime Minister of India, in reverse chronological order, are:
+
+- **Narendra Modi** — 2014–present
+- **Manmohan Singh** — 2004–2014
+- **Atal Bihari Vajpayee** — 1996, 1998–2004
+- **Inder Kumar Gujral** — 1997–1998
+- **H. D. Deve Gowda** — 1996–1997
+- **P. V. Narasimha Rao** — 1991–1996
+- **Chandra Shekhar** — 1990–1991","- Narendra Modi (2014–present)
+- Manmohan Singh (2004–2014)
+- Atal Bihari Vajpayee (1998–2004; also briefly in 1996)",,
+10,"Explain to a skeptical colleague the importance for private sector leaders to focus on preserving the institutions of capitalism, despite the inevitable difficulties in the marketplace. Include citations from Jonathan Haidt to strengthen your case.","A useful way to make the case is to separate **preserving capitalism’s institutions** from **defending every market outcome**.
+
+Markets can produce painful failures: layoffs, volatile prices, unequal gains, and firms that behave irresponsibly. Those problems deserve scrutiny and, sometimes, reform. But they are not by themselves proof that the institutions enabling enterprise—property rights, contract enforcement, open competition, reliable public rules, and the freedom to start and build businesses—should be weakened. The private sector depends on those institutions, and it has a direct stake in maintaining their legitimacy.
+
+Jonathan Haidt helps explain why that legitimacy cannot be taken for granted. In *The Righteous Mind*, he argues that moral judgments are often driven first by intuition and emotion, with reasoning coming afterward to defend or revise those judgments (2012, ch. 2). So when people experience an economic shock or see an outcome as unfair, simply telling them that “the market is efficient” is unlikely to persuade them. Leaders need to acknowledge the harm, explain what went wrong, and show how fair rules and practical remedies can address it.
+
+Haidt also emphasizes that people are deeply group-oriented: institutions and shared norms help people cooperate beyond their immediate circle (*The Righteous Mind*, ch. 9, “Why Are We So Groupish?”). That insight cuts both ways for business. Trustworthy institutions make large-scale cooperation possible; when firms appear to exploit loopholes, shift costs onto the public, or demand support without accepting responsibility, they erode the trust on which markets rely.
+
+So the argument to skeptical colleagues is not “markets are always right.” It is: **market failures are reasons to improve the rules and repair harms, not to abandon the institutional framework that makes innovation and broad prosperity possible.** Private-sector leaders should defend that framework by making competition fairer, responding to legitimate grievances, and accepting accountability. That is both a practical defense of capitalism and a way to preserve the public trust it needs.
+
+**References**
+- Haidt, Jonathan. *The Righteous Mind: Why Good People Are Divided by Politics and Religion*. Pantheon, 2012, ch. 2, “The Intuitive Dog and Its Rational Tail.”
+- Haidt, *The Righteous Mind*, ch. 9, “Why Are We So Groupish?”","A market is not a machine that runs by itself. It depends on institutions and habits that let people who don’t know one another trade, invest, and cooperate: enforceable contracts, reliable information, fair competition, respect for property, and confidence that the rules won’t be bent for whoever has the most power.
+
+That matters to managers because everyday business decisions either strengthen or weaken those foundations. Paying suppliers fairly, being honest with customers, competing without deception, and refusing to exploit loopholes may carry short-term costs. But when firms routinely disregard those standards, trust erodes, good businesses are disadvantaged, and people begin to doubt the legitimacy of markets themselves. Upholding capitalism’s institutions is therefore not charity or naïveté; it is part of protecting the conditions under which a business can succeed over time.
+
+Jonathan Haidt offers a useful way to understand why this responsibility can be easy to miss. In *The Righteous Mind*, he argues that people’s moral judgments are shaped by several concerns—not only care and fairness, but also loyalty, authority, and liberty. He also describes our capacity for group cooperation: people can accomplish far more together than alone, but cooperation depends on norms and institutions that channel self-interest toward shared benefit. Applying Haidt’s framework to business, managers should recognize that markets need both individual freedom and a trustworthy social framework. Freedom to compete is valuable; so are rules that prevent fraud, coercion, and favoritism.
+
+This is not an argument to ignore the pressures of running a company. Managers face uncertain demand, limited capital, tough competitors, regulation, and real trade-offs between immediate survival and long-term investment. Those constraints deserve serious attention. But they don’t make institutional responsibility optional. In fact, they make sound institutions more important: a predictable, credible market gives businesses a better chance to plan, take risks, and earn returns without relying on privilege or exploitation.
+
+Haidt does not need to be treated as an advocate for any particular economic system to make the point. His work helps explain why cooperation and shared norms matter. Managers who care about those foundations are not choosing society over business; they are helping preserve the trust and fair rules on which durable business depends.",,
+11,What is the Shiba Inu (crypto)?,"Shiba Inu (SHIB) is a cryptocurrency launched in 2020 and named after the Shiba Inu dog breed. It began as a meme-inspired token and is often described as a “Dogecoin alternative.”
+
+SHIB runs on the Ethereum blockchain. Its broader ecosystem includes other tokens and projects, such as BONE and the Shibarium network. Despite that ecosystem, SHIB is highly speculative: its price can fluctuate sharply, and popularity or community support doesn’t guarantee long-term value.","A **Shiba Inu** is a small, sturdy dog breed from Japan, known for its foxlike face, curled tail, and independent personality. It’s one of Japan’s native breeds.
+
+“Shiba Inu” can also refer to **Shiba Inu (SHIB)**, a cryptocurrency inspired by the breed.",,
+12,Could you tell me which edible weeds thrive in Maryland's climate?,"Maryland’s humid, temperate climate supports many common edible weeds. Good examples include:
+
+| Weed | Edible parts and notes |
+|---|---|
+| **Dandelion** (*Taraxacum officinale*) | Young leaves are less bitter; flowers can be used in salads or fritters. Roots are also used as a cooked vegetable. |
+| **Common purslane** (*Portulaca oleracea*) | Succulent leaves and stems, especially in summer; tangy and good raw or cooked. |
+| **Lamb’s quarters** (*Chenopodium album*) | Young leaves and shoots can be cooked like spinach. Avoid eating large quantities raw. |
+| **Chickweed** (*Stellaria media*) | Tender aboveground parts are often eaten raw or lightly cooked; most abundant in cool weather. |
+| **Violet** (*Viola* species) | Leaves and flowers are edible; use only positively identified violets. |
+| **Broadleaf plantain** (*Plantago major*) | Young leaves can be cooked; older leaves are tougher and stringier. |
+| **Wood sorrel** (*Oxalis* species) | Small leaves and flowers have a lemony taste. It contains oxalic acid, so eat modest amounts, especially if you have kidney-stone concerns. |
+| **Garlic mustard** (*Alliaria petiolata*) | Leaves, flowers, and seeds are edible. It’s invasive in Maryland, so harvesting it can help—but don’t spread its seeds or roots. |
+| **Stinging nettle** (*Urtica dioica*) | Young leaves are edible **only after cooking or drying**, which removes the sting. Wear gloves when gathering. |
+
+A few safety basics: be certain of the identification, avoid roadsides and areas treated with pesticides or contaminated by pets, and check local rules before harvesting on public land. Don’t eat a plant based on a look-alike alone—some poisonous plants resemble edible ones.","Many common weeds grow readily in Maryland’s gardens, lawns, and disturbed areas. These are among the more familiar edible options:
+
+| Weed | Edible parts and notes |
+|---|---|
+| **Dandelion** (*Taraxacum officinale*) | Young leaves are good raw or cooked; flowers can be used in fritters; roots can be roasted. |
+| **Common plantain** (*Plantago major*) and **ribwort plantain** (*P. lanceolata*) | Young, tender leaves can be cooked or added to salads. Older leaves are stringy. |
+| **Common chickweed** (*Stellaria media*) | Tender stems and leaves are often eaten raw or lightly cooked. |
+| **Lamb’s quarters** (*Chenopodium album*) | Young leaves and shoots can be cooked like spinach. |
+| **Purslane** (*Portulaca oleracea*) | Crisp, slightly tart leaves and stems can be eaten raw or cooked. |
+| **Wood sorrel** (*Oxalis* species) | Leaves and flowers have a tart, lemony flavor. Eat in modest amounts; they contain oxalic acid. |
+| **Violets** (*Viola* species) | Leaves and flowers are edible; use young leaves in salads or cooked dishes. |
+| **Garlic mustard** (*Alliaria petiolata*) | Young leaves, flowers, and seeds are edible and garlicky. It’s invasive in Maryland, so don’t let harvested plants set seed. |
+| **Stinging nettle** (*Urtica dioica*) | Young leaves are edible once cooked or dried, which removes the sting. Wear gloves when handling raw plants. |
+| **Common mallow** (*Malva neglecta*) | Young leaves and shoots can be cooked; the leaves have a mild, somewhat mucilaginous texture. |
+
+**Foraging safety:** Eat a wild plant only when you’re certain of its identification—don’t rely on a general description or app alone. Avoid plants from roadsides, treated lawns, and places that may be contaminated, and get permission before harvesting. If you have kidney problems or are prone to kidney stones, ask a clinician before eating plants high in oxalic acid, such as wood sorrel.",,
+13,"Identify which animal species is alive or extinct: Meiolania, Tiger","- **Meiolania:** Extinct  
+- **Tiger:** Alive (extant)","- **Megalania** — extinct  
+- **Sea turtles** — alive (living species)",,
+14,What is the Shiba Inu,"A **Shiba Inu** is a small, sturdy dog breed from Japan, known for its foxlike face, curled tail, and independent personality. It’s one of Japan’s native breeds.
+
+“Shiba Inu” can also refer to **Shiba Inu (SHIB)**, a cryptocurrency inspired by the breed.","Shiba Inu (SHIB) is a cryptocurrency launched in 2020 and named after the Shiba Inu dog breed. It began as a meme-inspired token and is often described as a “Dogecoin alternative.”
+
+SHIB runs on the Ethereum blockchain. Its broader ecosystem includes other tokens and projects, such as BONE and the Shibarium network. Despite that ecosystem, SHIB is highly speculative: its price can fluctuate sharply, and popularity or community support doesn’t guarantee long-term value.",,
+15,"Could you name the first couple who won the Nobel Prize together?
+
+Context:
+Marie Salomea Skłodowska–Curie (/ˈkjʊəri/ KURE-ee, French pronunciation: ​[maʁi kyʁi], Polish pronunciation: [ˈmarja skwɔˈdɔfska kʲiˈri]; born Maria Salomea Skłodowska, Polish: [ˈmarja salɔˈmɛa skwɔˈdɔfska]; 7 November 1867 – 4 July 1934) was a Polish and naturalized-French physicist and chemist who conducted pioneering research on radioactivity. She was the first woman to win a Nobel Prize, the first person to win a Nobel Prize twice, and the only person to win a Nobel Prize in two scientific fields. Her husband, Pierre Curie, was a co-winner of her first Nobel Prize, making them the first-ever married couple to win the Nobel Prize and launching the Curie family legacy of five Nobel Prizes. She was, in 1906, the first woman to become a professor at the University of Paris.",Marie and Pierre Curie were the first married couple to win a Nobel Prize together. They shared the 1903 Nobel Prize in Physics with Henri Becquerel.,Marie and Pierre Curie were the first married couple to win a Nobel Prize. They shared the 1903 Nobel Prize in Physics.,,
+16,Do you know the MTV dating show that Jenny McCarthy hosted?,Yes—*Singled Out*. Jenny McCarthy co-hosted the MTV dating show with Chris Hardwick in the 1990s.,*Singled Out*.,,
+17,"What kind of material do manufacturers usually use for rowing shells?
+
+Context:
+Originally made from wood, shells are now almost always made from a composite material (usually a double skin of carbon-fiber reinforced plastic with a sandwich of honeycomb material) for strength and weight advantages. World Rowing rules specify minimum weights for each class of boat so that no individual team will gain a great advantage from the use of expensive materials or technology.","Modern rowing shells are usually made from **carbon-fiber-reinforced plastic**, often built as two thin outer skins around a lightweight honeycomb core. This composite construction makes them strong and light. Older shells were typically made of wood.","Modern rowing shells are typically made from carbon-fiber-reinforced plastic, often with a honeycomb core sandwiched between two layers for strength and lightness. Older shells were made of wood.",,
+18,Can you tell me what the Shiba Inu is?,"The Shiba Inu is a small-to-medium dog breed from Japan. Originally bred for hunting small game, it’s known for its foxlike appearance, upright ears, curled tail, and confident, independent personality. Shibas are typically alert and energetic, and they can be strong-willed, so early socialization and consistent training help.
+
+The name “Shiba Inu” roughly means “brushwood dog” in Japanese.","A **Shiba Inu** is a small, sturdy dog breed from Japan, known for its foxlike face, curled tail, and independent personality. It’s one of Japan’s native breeds.
+
+“Shiba Inu” can also refer to **Shiba Inu (SHIB)**, a cryptocurrency inspired by the breed.",,
+19,Could you share some advice on how to determine the best spot to enter the water when surfing at a beach I've never been to before?,"Before paddling out at an unfamiliar beach, take a few minutes to study it from shore. The “best” entry is usually a **safe route through the surf**, not simply the shortest walk to the waves.
+
+- **Ask a lifeguard or knowledgeable local** about currents, hazards, tide changes, and the usual paddle-out route. Check beach warnings and any posted signs.
+- **Watch several sets**—ideally for 10–15 minutes. Look for a channel or lull where waves break less often, and notice how water and surfers move. Don’t assume a calm-looking gap is safe: it may be a rip current.
+- **Check the whole route** for rocks, reefs, piers, shallow sandbars, strong shorebreak, and places where waves close out across the beach.
+- **Choose an entry that gives you a clear exit too.** Identify where you’d come back in if conditions change; avoid being swept toward rocks, structures, or a crowded swimming area.
+- **Watch the tide and conditions.** A route that works at one tide or swell size may become unsafe as either changes.
+- **Give swimmers and other surfers plenty of room.** If there’s no clearly safe route, conditions look beyond your ability, or you’re unsure about a current, don’t paddle out—wait for local guidance or choose another spot.
+
+If caught in a rip, don’t try to swim straight against it; stay calm, signal for help, and swim parallel to shore when able.","A few things to check before you paddle out:
+
+- **Ask a lifeguard or local surfer** where the usual entry and exit are, and whether there are hazards or changing conditions.
+- **Watch the beach for 10–15 minutes.** Look for where waves break, where they reform, and where surfers paddle out and come back in.
+- **Check for rip currents:** they often look like a darker, calmer-looking channel with choppy or foamy water moving seaward. Don’t use one as an entry route unless you know how to handle it.
+- **Choose a clear, sandy path** away from rocks, reefs, piers, swimmers, and other surfers. Don’t enter where waves are breaking hard over shallow ground.
+- **Plan your exit before you go in.** Pick a recognizable landmark and a safe place to come back to; currents can carry you down the beach.
+- **If you’re unsure, don’t guess.** Wait for a lifeguard, go with an experienced surfer, or choose a gentler, supervised spot.",,
+20,What exactly is a Shiba Inu?,"A **Shiba Inu** is a small-to-medium dog breed from Japan, originally bred for hunting in mountainous terrain. Shibas are known for their foxlike face, curled tail, and thick coat—often red, black-and-tan, or sesame.
+
+They’re typically alert, confident, independent, and energetic. They can be affectionate with their families but may be reserved with strangers, and their independent streak can make training a challenge. The name roughly means “brushwood dog” in Japanese.
+
+“Shiba Inu” can also refer to the cryptocurrency named after the breed, but the breed itself is a dog.","Shiba Inu (SHIB) is a cryptocurrency launched in 2020 and named after the Shiba Inu dog breed. It began as a meme-inspired token and is often described as a “Dogecoin alternative.”
+
+SHIB runs on the Ethereum blockchain. Its broader ecosystem includes other tokens and projects, such as BONE and the Shibarium network. Despite that ecosystem, SHIB is highly speculative: its price can fluctuate sharply, and popularity or community support doesn’t guarantee long-term value.",,
+21,"Please give me a clear, stepwise guide on crafting a Long Island Ice Tea.","## Long Island Iced Tea
+
+**Ingredients**
+- ½ oz (15 ml) vodka
+- ½ oz (15 ml) gin
+- ½ oz (15 ml) white rum
+- ½ oz (15 ml) tequila
+- ½ oz (15 ml) triple sec
+- ¾ oz (22 ml) fresh lemon juice
+- ½ oz (15 ml) simple syrup
+- Cola, to top
+- Ice
+- Lemon wedge, to garnish
+
+**Steps**
+1. Fill a tall glass with ice.
+2. Add the vodka, gin, rum, tequila, triple sec, lemon juice, and simple syrup.
+3. Stir briefly to combine.
+4. Top with a splash of cola, giving it the color of iced tea.
+5. Garnish with a lemon wedge and serve.
+
+It’s a strong cocktail, so sip slowly.","### Long Island Iced Tea
+
+**Ingredients**
+- ½ oz (15 ml) vodka  
+- ½ oz (15 ml) gin  
+- ½ oz (15 ml) white rum  
+- ½ oz (15 ml) blanco tequila  
+- ½ oz (15 ml) triple sec  
+- ¾ oz (22 ml) fresh lemon juice  
+- ½ oz (15 ml) simple syrup  
+- Cola, to top  
+- Ice and a lemon wedge, for serving  
+
+**Steps**
+1. Fill a cocktail shaker with ice.
+2. Add the vodka, gin, rum, tequila, triple sec, lemon juice, and simple syrup.
+3. Shake until well chilled, about 10–15 seconds.
+4. Fill a tall glass with fresh ice and strain the mixture into it.
+5. Top with a splash of cola and stir gently.
+6. Garnish with a lemon wedge.
+
+Despite the name, it contains no tea—and it’s a strong cocktail, so enjoy it slowly.",,
+22,"Can you list the countries north of the Arctic Circle, ordered according to how close each one is to the North Pole?","Using each country’s **northernmost territory** to measure closeness to the North Pole, the order is:
+
+| Rank | Country | Northernmost territory | Approx. distance from the North Pole |
+|---|---|---|---:|
+| 1 | Denmark* | Greenland | 700 km |
+| 2 | Canada | Ellesmere Island | 760 km |
+| 3 | Russia | Franz Josef Land | 900 km |
+| 4 | Norway | Svalbard | 1,020 km |
+| 5 | United States | Alaska | 2,070 km |
+| 6 | Finland | Lapland | 2,210 km |
+| 7 | Sweden | Lapland | 2,320 km |
+| 8 | Iceland | Grímsey | 2,610 km |
+
+\*Greenland is an autonomous territory within the Kingdom of Denmark; Denmark proper is not north of the Arctic Circle. Distances are approximate, based on latitude.","Using each country’s northernmost land point to rank them from closest to the North Pole:
+
+1. Denmark (via Greenland)
+2. Canada
+3. Russia
+4. Norway
+5. Finland
+6. Sweden
+7. United States
+8. Iceland
+
+Iceland is included because its island of Grímsey extends just north of the Arctic Circle.",,
