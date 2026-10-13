@@ -202,6 +202,8 @@ def test_invalid_cache_sections_are_refused(tmp_path, section, message):
         load_config(write_config(tmp_path, cache=section), set(REGISTRY))
 
 
-def test_the_committed_config_keeps_the_cache_off_until_it_is_measured():
+def test_the_committed_config_serves_the_exact_layer_only():
+    # The slice 4 decision (results/slice4.md): exact layer on, semantic layer off.
     from llm_gateway.routing import DEFAULT_CONFIG_PATH
-    assert load_config(DEFAULT_CONFIG_PATH, set(REGISTRY)).cache.enabled is False
+    cache = load_config(DEFAULT_CONFIG_PATH, set(REGISTRY)).cache
+    assert cache.enabled is True and cache.semantic_threshold is None and cache.features == ("*",)

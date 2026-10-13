@@ -147,6 +147,23 @@ panels.append({
                  "legendFormat": "{{feature}}"}],
 })
 
+timeseries(
+    "Cache hit rate",
+    "Share of the requests the cache was consulted for that it answered, by layer, over the last minute. "
+    "The served config runs the exact layer only (results/slice4.md); a semantic line appears if it is turned on.",
+    [('sum by (layer) (rate(llm_gateway_cache_lookups_total{result="hit"}[1m])) / '
+      'scalar(sum(rate(llm_gateway_cache_lookups_total{layer="exact"}[1m])))', "{{layer}}")],
+    0, 37, w=12, unit="percentunit", maximum=1, no_value="0",
+    overrides=color_overrides({"exact": "#3987e5", "semantic": "#d95926"}))
+
+timeseries(
+    "Saved by the cache, per hour",
+    "What the answers served from the cache cost when they were first computed, as an hourly rate over the "
+    "last minute, by tenant. The semantic layer's embedding spend is counted apart (llm_gateway_embedding_cost_usd).",
+    [("sum by (tenant) (rate(llm_gateway_cache_saved_usd_total[1m])) * 3600", "{{tenant}}")],
+    12, 37, w=12, unit="currencyUSD", no_value="0",
+    overrides=color_overrides({"tenant-a": "#9085e9", "tenant-b": "#d55181", "tenant-c": "#008300"}))
+
 dashboard = {
     "uid": "llm-gateway", "title": "LLM gateway", "tags": ["llm-gateway"], "editable": False,
     "schemaVersion": 41, "version": 1, "time": {"from": "now-15m", "to": "now"}, "refresh": "5s",

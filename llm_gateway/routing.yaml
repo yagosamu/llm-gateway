@@ -54,10 +54,15 @@ breaker:
   p95_budget_ms: 30000  # used by v1 only
   open_seconds: 15
   probe_lease_seconds: 70
-# Response cache (llm_gateway.cache), exact layer: the same request from the same tenant, under the
-# same system prompt, X-Prompt-Version, model and parameters, gets the stored answer. Off until the
-# slice 4 evaluation (harness/cache/prereg.py) has measured it.
+# Response cache (llm_gateway.cache), exact layer only: the same request from the same tenant, under
+# the same system prompt, X-Prompt-Version, model and parameters, gets the stored answer.
+# The semantic layer is built and tested but off (no semantic_threshold), after the slice 4
+# evaluation (results/slice4.md): at its pre-registered floor of 0.96 it added 4.4 points of hit
+# rate and 2 points of savings over the exact layer, but every non-exact request paid the embedding
+# call (p50 2,035 ms against 1,728 ms, p95 above no cache at all), its false-hit rate was bounded only
+# at 6.7%, not 1%, and a real false hit sat at 0.959. Turn it on with semantic_threshold once a
+# pricier tier, a parallel embedding or more labeled hits change that balance.
 cache:
-  enabled: false
+  enabled: true
   ttl_seconds: 86400
   features: ["*"]
