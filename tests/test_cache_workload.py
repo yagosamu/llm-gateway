@@ -51,6 +51,17 @@ def test_the_recorder_splits_off_the_context_the_way_slice_1_joined_it():
     assert row["id"] == "dolly-00001-p2" and row["messages"][1] == {"role": "user", "content": "Name a river"}
 
 
+def test_the_human_sample_balances_judge_accepted_and_rejected_pairs():
+    from harness.cache.label import human_sample
+    pairs = [{"pair_id": f"p{i}"} for i in range(40)]
+    verdicts = {f"p{i}": {"gpt-4.1-mini": True, "claude-sonnet-5-5": i >= 6} for i in range(40)}
+    verdicts.pop("p39")  # not graded by both judges: never sampled
+    items = human_sample(pairs, verdicts)
+    rejected = [p for p in items if not all(verdicts[p["pair_id"]].values())]
+    assert len(items) == 21 and len(rejected) == 6  # 15 accepted, and the only 6 rejected that exist
+    assert "p39" not in {p["pair_id"] for p in items}
+
+
 def test_the_workload_has_the_preregistered_shape():
     intents = workload.select_intents(records())
     texts = {}
