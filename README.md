@@ -1,12 +1,46 @@
 # llm-gateway
 
-An OpenAI-compatible gateway in front of OpenAI, Anthropic and Groq that routes each request by cost, attributes it to a tenant and a feature, and keeps answering when a provider fails. On 238 replayed prompts, **sending every request to the cheapest model kept 95.8% of answers acceptable to two judges at 95.6% less cost than the reference model**, passing a pre-registered quality bar; the learned classifier the plan called for passed too, but saved only 61.6%. **When that model's provider failed every call, failover kept client errors at 0%**, in simulated outages and in a live run of 90 real requests, and a circuit breaker redesigned under a pre-registered study stopped calling the failed provider after 2.7 s instead of 20.2 s. The project's live calls cost US$ 3.91 in total.
+An OpenAI-compatible gateway in front of OpenAI, Anthropic and Groq that routes each request by cost, attributes it to a tenant and a feature, and keeps answering when a provider fails. On 238 replayed prompts, **sending every request to the cheapest model kept 95.8% of answers acceptable to two judges at 95.6% less cost than the reference model**, passing a pre-registered quality bar; the learned classifier the plan called for passed too, but saved only 61.6%. **When that model's provider failed every call, failover kept client errors at 0%**, in simulated outages and in a live run of 90 real requests, and a circuit breaker redesigned under a pre-registered study stopped calling the failed provider after 2.7 s instead of 20.2 s. **An exact response cache keyed on tenant, prompt version, model and parameters cut cost by 19.8% and p50 latency from 2.1 s to 1.7 s** on a production-shaped replay of 1,000 queries; a semantic layer was built, judged and left off, because at its pre-registered floor it made p95 latency worse and its false-hit rate could only be bounded at 6.7%, not 1%. The project's live calls cost US$ 4.64 in total.
 
 [Versão em português](README.pt-br.md)
 
 ## Result
 
-Three slices of four are done. Every number below is recomputed offline from committed recordings and runs, and CI fails if a published number goes stale.
+All four slices are done. Every number below is recomputed offline from committed recordings and runs, and CI fails if a published number goes stale.
+
+### Slice 4: response cache
+
+A cache in front of the model has to prove it saves something without serving wrong answers. The workload ([harness/cache/prereg.py](harness/cache/prereg.py), fixed before any paid call) is 1,000 queries built from Dolly: 600 repeat 160 questions, each asked in its original wording or one of 4 paraphrases written by gpt-4.1-mini, with a Zipf distribution so a few questions come back often; 320 are the Dolly records nearest to those questions by embedding (similar wording, usually another question); 80 are random. Queries come from three tenants. The replay sends them through the real gateway code with gpt-6-luna's recorded answers and recorded embeddings, so it is free and CI repeats it. The hit rate is a property of this workload, which was built to repeat; it is not a claim about real traffic.
+
+| | no cache | exact layer only (served) | exact + semantic at 0.96 |
+|---|---|---|---|
+| hit rate | - | 23.3% | 27.7% (16.7% exact, 11.0% semantic) |
+| cost per 1,000 queries, US$ | 0.0985 | 0.0790 (-19.8%) | 0.0770 (-21.9%) |
+| p50 latency | 2,112 ms | 1,728 ms | 2,035 ms |
+| p95 latency | 6,200 ms | 5,990 ms | 6,314 ms |
+
+Latency is built from the recorded model call and the recorded embedding call; the cache lookup itself is not included.
+
+- **The exact layer is what the gateway serves.** It answers only the same text from the same tenant under the same system prompt, prompt version, model and parameters, so it cannot answer a different question. Only answers that finished normally, from the model the request was meant for, are stored.
+- **The semantic layer was judged, not assumed.** Every distinct semantic hit at any floor from 0.80 to 0.99, 150 pairs, was graded by the slice 2 judges (gpt-4.1-mini and claude-sonnet-5-5): is the cached answer as good for this question as the model's fresh answer? They agreed on all 150. 7 were false hits, 6 of them between different Dolly questions: high schools in Arlington answered with the count of elementary schools (similarity 0.959), "the seven most recent Indian prime ministers" answered with three, Shiba Inu the cryptocurrency answered as the dog breed and the reverse, Meiolania answered as Megalania. The seventh was a paraphrase whose cached answer had a country out of order.
+- **The pre-registered floor met the claim's letter, not its spirit.** The rule picked the lowest floor with at most 0.5% false hits on the tune half: 0.96. On the test half that floor served 0 false hits in 53, a point estimate below 1%, but the exact 95% interval reaches 6.7% (and 28.5% over the 11 distinct pairs behind those hits). The workload is too small to show a rate under 1%. The floor also sits 0.001 above a real false hit.
+- **The semantic layer costs latency on every request it does not answer.** The embedding call took 329 ms at p50 and 477 ms at p95, and every request the exact layer misses pays it. At 0.96 that made p50 slower than the exact layer alone and p95 slower than no cache. The 2 extra points of savings are US$ 0.002 per 1,000 queries, because gpt-6-luna is cheap. That is why it is off; it is one line in routing.yaml to turn on.
+
+| floor | semantic hits | false hits | false-hit rate |
+|---|---|---|---|
+| 0.80 | 269 | 8 | 3.0% |
+| 0.87 | 217 | 2 | 0.9% |
+| 0.90 | 169 | 2 | 1.2% |
+| 0.95 | 128 | 1 | 0.8% |
+| 0.96 | 110 | 0 | 0.0% |
+| 0.98 | 40 | 0 | 0.0% |
+
+Both halves together; the full curve, per half, is in [results/slice4.md](results/slice4.md).
+
+- **The key is what keeps tenants apart.** Replayed with the question alone as the key, 228 of 371 hits would have served an answer computed for another tenant. After the system prompt version changed, 0 hits used an answer stored under the old version; the same 200 queries under the old version got 198 hits.
+- **A blind human check confirmed the judges' rejections.** I graded 22 pairs without seeing the verdicts: 15 the judges accepted and all 7 they rejected. I rejected 6 of the 7 and agreed on 19 of 22. Two disagreements were paraphrases I rejected for leaving out or adding a sentence nobody asked for, which the rubric does not penalize; in the third, the judges caught the country out of order and I did not.
+
+Provider-side prefix caching is out of scope: the system prompt is about 15 tokens, and OpenAI caches prompts of at least 1,024 tokens for GPT-5.6 and later models ([prompt caching guide](https://developers.openai.com/api/docs/guides/prompt-caching)).
 
 ### Slice 3: reliability under provider faults
 
@@ -101,7 +135,7 @@ Details: [results/slice1.md](results/slice1.md). Latency is what one machine saw
 | 1 | spine: API, registry, metadata, log, metrics, record and replay | done |
 | 2 | cost routing: tier map in YAML, judged quality, pre-registered policy comparison, sampled verifier | done |
 | 3 | reliability: per-provider health, circuit breaker, failover, retry queue, chaos test, dashboard | done |
-| 4 | cache: exact and semantic, versioned key, wrong-answer rate under 1% | next |
+| 4 | cache: exact and semantic layers, versioned tenant-scoped key, judged false hits, precision curve | done |
 
 No production system sends traffic to this gateway. The traffic is a public dataset, replayed.
 
@@ -118,7 +152,7 @@ flowchart LR
     G -. "sampled, after the response" .-> V["verifier<br/>high tier + judge"]
     V --> L
     G --> M["/metrics<br/>Prometheus, Grafana"]
-    G <--> RD[("Redis<br/>health, circuits, job queue")]
+    G <--> RD[("Redis<br/>health, circuits, job queue,<br/>response cache")]
     RD --> WK["worker<br/>deferred jobs"]
     WK --> G
     R --> X[("data/recordings/matrix.jsonl")]
@@ -149,7 +183,16 @@ Live model calls happen once: the recording, then the judges. Everything after t
 
 **At least once, with idempotency keys.** A deferred job is stored, acknowledged and finished in Redis transactions, and the same `Idempotency-Key` from the same tenant never creates a second job. Exactly once end to end would need the provider's cooperation: a worker can die after the model answered and before the result is stored. What I gave up: in that window a job is answered twice; the tests count it and saw 0, without a run that hit the window.
 
+**A cache key on everything except the question.** The key holds the tenant, the system message, the client's `X-Prompt-Version`, the model the request is meant for (after routing), temperature and the output limit, plus the messages; the semantic layer searches only among entries that share everything but the messages. A changed system prompt or a bumped version never meets yesterday's answers, and one tenant never gets another's. In Redis the keys are `llmgw:cache/<tenant>/<feature>/<hash>`, with "/" because identifiers may contain ":" and invalidating tenant "a" must not reach tenant "a:b". What I gave up: two tenants asking the same question pay for it twice.
+
+**The semantic layer behind an index contract.** The gateway searches with the Redis Query Engine (an exact, FLAT cosine index whose vector lives in the answer's own hash, so TTL and invalidation remove it); tests and the evaluation replay use an in-memory index with the same contract, and a test against a real Redis, run in CI with a Redis service, holds them to the same neighbours. It caught a real bug: a "-" in a namespace is query syntax unless escaped. What I gave up: the replay does not time Redis lookups, so latency figures leave the lookup out.
+
 ## What did not work
+
+- **The semantic cache, at this price point.** It worked as designed, and the judges found its false hits where they were expected, but on a cheap model it saved US$ 0.002 per 1,000 queries over the exact layer while adding an embedding call to every request the exact layer missed. Its false-hit rate could only be bounded at 6.7%, not the 1% the plan asked for.
+- **The workload was smaller than the claim.** Only 121 of the 160 intents were drawn by the Zipf head, only 150 distinct semantic-hit pairs occurred at any floor, and the hard negatives were mostly not hard (median similarity 0.56 to their intent). Showing a false-hit rate under 1% with confidence needs several hundred judged hits near the chosen floor.
+- **Two places where the pre-registration was wrong.** It said every query must miss after the system prompt changed; queries repeated within those 200 hit answers stored under the new version, so the report counts hits on answers stored under the old version instead (0). It also listed no feature in the key, while the gateway's key holds one; the replay sends every query under one feature to follow the pre-registration.
+- **The instruction-only counterfactual.** It was meant to show what leaving the context out of the embedding would cost; in this workload almost no two texts share an instruction with different contexts, so it found 1 such match in 25,320 pairs and shows little.
 
 - **Breaker v1.** It took 20.2 s to open under a total outage, because the 60 s window still held the healthy calls from before the fault, and in the latency scenario slow calls finishing after the circuit closed reopened it. v2 replaced it.
 - **The first latency test.** The load generator's HTTP client kept its default pool of 100 connections, so with calls taking 37 s requests queued in the client and the load was no longer open loop. The limit was removed and only that scenario was run again; the results note says so.
@@ -194,7 +237,10 @@ uv run python -m harness.chaos.scenarios --study v2   # the breaker comparison, 
 uv run python -m harness.chaos.compare_v2             # results/slice3_breaker_v2.md from the committed runs
 uv run python -m harness.chaos.deferrable             # results/slice3_deferrable.md from the committed runs
 uv run python -m harness.chaos.live --ceiling                  # the live run's worst case, no calls
+uv run python -m harness.cache.evaluate                       # results/slice4.md: the cache replay at every floor, offline
 ```
+
+The served gateway answers repeated requests from the exact cache layer when `LLM_GATEWAY_REDIS_URL` is set (see `cache:` in routing.yaml); `DELETE /admin/cache?tenant=...&feature=...` with `X-Admin-Token` (`LLM_GATEWAY_ADMIN_TOKEN`) invalidates entries. Responses served from the cache say so in `gateway.cache`.
 
 With `LLM_GATEWAY_REDIS_URL` set, the served gateway shares health and circuits through Redis and accepts `X-Deferrable: true`; run `uv run python -m llm_gateway.worker` to drain the queue and `GET /v1/jobs/<id>` for the result.
 

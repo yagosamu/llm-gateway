@@ -1,12 +1,46 @@
 # llm-gateway
 
-Um gateway compatível com a API da OpenAI, na frente de OpenAI, Anthropic e Groq, que roteia cada requisição pelo custo, a atribui a um tenant e a uma feature, e continua respondendo quando um provedor falha. Em 238 prompts reproduzidos, **mandar toda requisição para o modelo mais barato manteve 95,8% das respostas aceitáveis para dois juízes, com 95,6% menos custo que o modelo de referência**, passando numa barra de qualidade pré-registrada; o classificador aprendido que o plano pedia também passou, mas economizou só 61,6%. **Quando o provedor desse modelo falhou em todas as chamadas, o failover manteve os erros do cliente em 0%**, em quedas simuladas e numa execução ao vivo com 90 requisições reais, e um circuit breaker redesenhado sob um estudo pré-registrado parou de chamar o provedor caído depois de 2,7 s, em vez de 20,2 s. As chamadas ao vivo do projeto custaram US$ 3,91 no total.
+Um gateway compatível com a API da OpenAI, na frente de OpenAI, Anthropic e Groq, que roteia cada requisição pelo custo, a atribui a um tenant e a uma feature, e continua respondendo quando um provedor falha. Em 238 prompts reproduzidos, **mandar toda requisição para o modelo mais barato manteve 95,8% das respostas aceitáveis para dois juízes, com 95,6% menos custo que o modelo de referência**, passando numa barra de qualidade pré-registrada; o classificador aprendido que o plano pedia também passou, mas economizou só 61,6%. **Quando o provedor desse modelo falhou em todas as chamadas, o failover manteve os erros do cliente em 0%**, em quedas simuladas e numa execução ao vivo com 90 requisições reais, e um circuit breaker redesenhado sob um estudo pré-registrado parou de chamar o provedor caído depois de 2,7 s, em vez de 20,2 s. **Um cache exato de respostas, com chave por tenant, versão do prompt, modelo e parâmetros, reduziu o custo em 19,8% e a latência p50 de 2,1 s para 1,7 s** num replay de 1.000 consultas no formato de tráfego real; uma camada semântica foi construída, julgada e deixada desligada, porque no limiar pré-registrado ela piorou a latência p95 e sua taxa de acertos errados só pôde ser limitada a 6,7%, não a 1%. As chamadas ao vivo do projeto custaram US$ 4,64 no total.
 
 [English version](README.md)
 
 ## Resultado
 
-Três das quatro fatias estão prontas. Todos os números abaixo são recalculados offline a partir de gravações e execuções commitadas, e o CI falha se um número publicado ficar desatualizado.
+As quatro fatias estão prontas. Todos os números abaixo são recalculados offline a partir de gravações e execuções commitadas, e o CI falha se um número publicado ficar desatualizado.
+
+### Fatia 4: cache de respostas
+
+Um cache na frente do modelo precisa provar que economiza alguma coisa sem servir respostas erradas. A carga ([harness/cache/prereg.py](harness/cache/prereg.py), fixada antes de qualquer chamada paga) tem 1.000 consultas montadas a partir do Dolly: 600 repetem 160 perguntas, cada uma feita com a redação original ou com uma de 4 paráfrases escritas pelo gpt-4.1-mini, numa distribuição de Zipf em que poucas perguntas voltam muitas vezes; 320 são os registros do Dolly mais próximos dessas perguntas por embedding (redação parecida, quase sempre outra pergunta); 80 são aleatórias. As consultas vêm de três tenants. O replay manda tudo pelo código real do gateway, com as respostas gravadas do gpt-6-luna e os embeddings gravados, então não custa nada e o CI o repete. A taxa de acerto é uma propriedade desta carga, que foi construída para repetir; não é uma afirmação sobre tráfego real.
+
+| | sem cache | só a camada exata (servida) | exata + semântica em 0,96 |
+|---|---|---|---|
+| taxa de acerto | - | 23,3% | 27,7% (16,7% exata, 11,0% semântica) |
+| custo por 1.000 consultas, US$ | 0,0985 | 0,0790 (-19,8%) | 0,0770 (-21,9%) |
+| latência p50 | 2.112 ms | 1.728 ms | 2.035 ms |
+| latência p95 | 6.200 ms | 5.990 ms | 6.314 ms |
+
+A latência é montada a partir da chamada ao modelo e da chamada de embedding, ambas gravadas; a consulta ao cache em si não entra.
+
+- **A camada exata é a que o gateway serve.** Ela só responde ao mesmo texto, do mesmo tenant, sob o mesmo system prompt, versão de prompt, modelo e parâmetros, então não pode responder a outra pergunta. Só são guardadas respostas que terminaram normalmente, vindas do modelo a que a requisição se destinava.
+- **A camada semântica foi julgada, não presumida.** Todo acerto semântico distinto em qualquer limiar de 0,80 a 0,99, 150 pares, foi avaliado pelos juízes da fatia 2 (gpt-4.1-mini e claude-sonnet-5-5): a resposta do cache serve tão bem para esta pergunta quanto a resposta nova do modelo? Eles concordaram nos 150. 7 eram acertos errados, 6 deles entre perguntas diferentes do Dolly: escolas de ensino médio em Arlington respondidas com o número de escolas primárias (similaridade 0,959), "os sete primeiros-ministros mais recentes da Índia" respondidos com três, Shiba Inu a criptomoeda respondida como a raça de cachorro e o inverso, Meiolania respondida como Megalania. O sétimo era uma paráfrase cuja resposta do cache tinha um país fora de ordem.
+- **O limiar pré-registrado cumpriu a letra da afirmação, não o espírito.** A regra escolheu o menor limiar com no máximo 0,5% de acertos errados na metade de ajuste: 0,96. Na metade de teste, esse limiar serviu 0 acertos errados em 53, uma estimativa pontual abaixo de 1%, mas o intervalo exato de 95% chega a 6,7% (e a 28,5% nos 11 pares distintos por trás desses acertos). A carga é pequena demais para mostrar uma taxa abaixo de 1%. O limiar também fica 0,001 acima de um acerto errado real.
+- **A camada semântica custa latência em toda requisição que ela não responde.** A chamada de embedding levou 329 ms no p50 e 477 ms no p95, e toda requisição que a camada exata erra a paga. Em 0,96, isso deixou o p50 mais lento que só a camada exata e o p95 mais lento que sem cache. Os 2 pontos a mais de economia são US$ 0,002 por 1.000 consultas, porque o gpt-6-luna é barato. Por isso ela está desligada; ligá-la é uma linha no routing.yaml.
+
+| limiar | acertos semânticos | acertos errados | taxa de acertos errados |
+|---|---|---|---|
+| 0,80 | 269 | 8 | 3,0% |
+| 0,87 | 217 | 2 | 0,9% |
+| 0,90 | 169 | 2 | 1,2% |
+| 0,95 | 128 | 1 | 0,8% |
+| 0,96 | 110 | 0 | 0,0% |
+| 0,98 | 40 | 0 | 0,0% |
+
+As duas metades juntas; a curva completa, por metade, está em [results/slice4.md](results/slice4.md).
+
+- **É a chave que separa os tenants.** No replay com só a pergunta como chave, 228 de 371 acertos teriam servido uma resposta calculada para outro tenant. Depois da troca da versão do system prompt, nenhum acerto usou uma resposta guardada sob a versão antiga; as mesmas 200 consultas sob a versão antiga tiveram 198 acertos.
+- **Uma checagem humana às cegas confirmou as recusas dos juízes.** Avaliei 22 pares sem ver os veredictos: 15 que os juízes aceitaram e todos os 7 que recusaram. Recusei 6 dos 7 e concordei em 19 de 22. Duas discordâncias foram paráfrases que recusei por omitir ou acrescentar uma frase que ninguém pediu, o que o critério não penaliza; na terceira, os juízes pegaram o país fora de ordem e eu não.
+
+O cache de prefixo do provedor ficou fora do escopo: o system prompt tem uns 15 tokens, e a OpenAI só faz cache de prompts com pelo menos 1.024 tokens nos modelos GPT-5.6 e posteriores ([guia de prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching)).
 
 ### Fatia 3: confiabilidade sob falhas de provedor
 
@@ -101,7 +135,7 @@ Detalhes: [results/slice1.md](results/slice1.md). A latência é o que uma máqu
 | 1 | espinha: API, registro, metadados, log, métricas, gravação e replay | pronta |
 | 2 | roteamento por custo: mapa de faixas em YAML, qualidade julgada, comparação pré-registrada de políticas, verificador por amostragem | pronta |
 | 3 | confiabilidade: saúde por provedor, circuit breaker, failover, fila com retry, teste de caos, painel | pronta |
-| 4 | cache: exato e semântico, chave versionada, taxa de resposta errada abaixo de 1% | próxima |
+| 4 | cache: camadas exata e semântica, chave versionada por tenant, acertos errados julgados, curva de precisão | pronta |
 
 Nenhum sistema em produção manda tráfego para este gateway. O tráfego é um dataset público, reproduzido.
 
@@ -118,7 +152,7 @@ flowchart LR
     G -. "por amostragem, depois da resposta" .-> V["verificador<br/>faixa high + juiz"]
     V --> L
     G --> M["/metrics<br/>Prometheus, Grafana"]
-    G <--> RD[("Redis<br/>saúde, circuitos, fila")]
+    G <--> RD[("Redis<br/>saúde, circuitos, fila,<br/>cache de respostas")]
     RD --> WK["worker<br/>tarefas adiadas"]
     WK --> G
     R --> X[("data/recordings/matrix.jsonl")]
@@ -149,7 +183,16 @@ As chamadas ao vivo acontecem uma vez: a gravação e depois os juízes. Tudo o 
 
 **Pelo menos uma vez, com chaves de idempotência.** Uma tarefa adiada é gravada, confirmada e concluída em transações do Redis, e a mesma `Idempotency-Key` do mesmo tenant nunca cria uma segunda tarefa. Exatamente uma vez de ponta a ponta exigiria a cooperação do provedor: um worker pode morrer depois que o modelo respondeu e antes de o resultado ser gravado. Do que abri mão: nessa janela a tarefa é respondida duas vezes; os testes contam isso e viram 0, sem uma execução que caísse na janela.
 
+**Uma chave de cache com tudo menos a pergunta.** A chave guarda o tenant, a mensagem de sistema, o `X-Prompt-Version` do cliente, o modelo a que a requisição se destina (depois do roteamento), a temperatura e o limite de saída, mais as mensagens; a camada semântica só busca entre entradas que compartilham tudo menos as mensagens. Um system prompt alterado ou uma versão nova nunca encontra as respostas de ontem, e um tenant nunca recebe as de outro. No Redis as chaves são `llmgw:cache/<tenant>/<feature>/<hash>`, com "/" porque os identificadores podem conter ":" e invalidar o tenant "a" não pode atingir o tenant "a:b". Do que abri mão: dois tenants que fazem a mesma pergunta pagam por ela duas vezes.
+
+**A camada semântica atrás de um contrato de índice.** O gateway busca com o Redis Query Engine (um índice de cosseno exato, FLAT, cujo vetor fica no próprio registro da resposta, então o TTL e a invalidação o removem); os testes e o replay da avaliação usam um índice em memória com o mesmo contrato, e um teste contra um Redis real, que roda no CI com um serviço Redis, garante que os dois devolvem os mesmos vizinhos. Ele pegou um bug real: um "-" no namespace é sintaxe de consulta se não for escapado. Do que abri mão: o replay não mede o tempo das consultas ao Redis, então os números de latência deixam a consulta de fora.
+
 ## O que não funcionou
+
+- **O cache semântico, neste nível de preço.** Funcionou como projetado, e os juízes acharam os acertos errados onde eles eram esperados, mas com um modelo barato ele economizou US$ 0,002 por 1.000 consultas além da camada exata, enquanto acrescentava uma chamada de embedding a toda requisição que a camada exata errava. Sua taxa de acertos errados só pôde ser limitada a 6,7%, não ao 1% que o plano pedia.
+- **A carga foi menor que a afirmação.** Só 121 dos 160 intents foram sorteados pela distribuição de Zipf, só 150 pares distintos de acerto semântico apareceram em algum limiar, e os negativos difíceis em geral não eram difíceis (similaridade mediana de 0,56 com o intent). Mostrar uma taxa de acertos errados abaixo de 1% com confiança exige algumas centenas de acertos julgados perto do limiar escolhido.
+- **Dois pontos em que o pré-registro estava errado.** Ele dizia que toda consulta deveria errar depois da troca do system prompt; consultas repetidas dentro dessas 200 acertaram respostas guardadas já sob a versão nova, então o relatório conta os acertos em respostas guardadas sob a versão antiga (0). Ele também não listava a feature na chave, enquanto a chave do gateway inclui uma; o replay manda todas as consultas sob uma única feature para seguir o pré-registro.
+- **O contrafactual do embedding sem contexto.** Ele deveria mostrar quanto custaria deixar o contexto fora do embedding; nesta carga quase nenhum par de textos tem a mesma instrução com contextos diferentes, então ele achou 1 caso em 25.320 pares e mostra pouco.
 
 - **O breaker v1.** Ele levou 20,2 s para abrir numa queda total, porque a janela de 60 s ainda guardava as chamadas saudáveis de antes da falha, e no cenário de latência chamadas lentas que terminaram depois do circuito fechar o reabriram. A v2 o substituiu.
 - **O primeiro teste de latência.** O cliente HTTP do gerador de carga manteve o pool padrão de 100 conexões, então, com chamadas levando 37 s, requisições ficaram na fila do próprio cliente e a carga deixou de ser em malha aberta. O limite foi removido e só esse cenário rodou de novo; a nota dos resultados registra isso.
@@ -194,7 +237,10 @@ uv run python -m harness.chaos.scenarios --study v2   # a comparação dos break
 uv run python -m harness.chaos.compare_v2             # results/slice3_breaker_v2.md a partir das execuções commitadas
 uv run python -m harness.chaos.deferrable             # results/slice3_deferrable.md a partir das execuções commitadas
 uv run python -m harness.chaos.live --ceiling                  # pior caso da execução ao vivo, sem chamadas
+uv run python -m harness.cache.evaluate                       # results/slice4.md: o replay do cache em todos os limiares, offline
 ```
+
+O gateway servido responde requisições repetidas pela camada exata do cache quando `LLM_GATEWAY_REDIS_URL` está definida (veja `cache:` no routing.yaml); `DELETE /admin/cache?tenant=...&feature=...` com `X-Admin-Token` (`LLM_GATEWAY_ADMIN_TOKEN`) invalida entradas. Respostas servidas pelo cache dizem isso em `gateway.cache`.
 
 Com `LLM_GATEWAY_REDIS_URL` definida, o gateway servido compartilha a saúde e os circuitos pelo Redis e aceita `X-Deferrable: true`; rode `uv run python -m llm_gateway.worker` para esvaziar a fila e use `GET /v1/jobs/<id>` para pegar o resultado.
 
